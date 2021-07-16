@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Frontend\Interfaces\Web;
 
 use Symfony\Component\HttpFoundation\Response;
 
