@@ -1,0 +1,9 @@
+report/
+doc/
+vendor/
+test/
+.env
+README.md
+phpstan.neon
+docker-compose*
+.git/

@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+
+  nginx:
+    image: nginx:1.15-alpine
+    ports:
+      - "8099:80"
+    volumes:
+      - ./etc/dev/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - .:/app
+    depends_on:
+      - php
+
+  php:
+    build: etc/dev/php
+    ports:
+      - "2299:22"
+    volumes:
+      - .:/app

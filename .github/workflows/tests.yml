@@ -1,0 +1,20 @@
+name: tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Code build, lint and tests
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build
+        run: make env=ci start;make build-dev;make env=ci xoff
+      - name: Code Analyze
+        run: make env=ci cs-check;make env=ci ca
+      - name: Tests
+        run: make env=ci xon;make env=ci test
+#      - name: DB Schema validation
+#        run: make env=ci schema-validate
+#      - name: ARTIFACT
+#        run: make env=ci artifact
