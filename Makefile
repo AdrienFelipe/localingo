@@ -30,8 +30,12 @@ up: ## spin up environment
 		$(COMPOSE) up -d
 
 .PHONY: setup
-setup: ## spin up environment
+setup: ## spin up environment.
+# Create 'app' user from current user id and group.
 		$(EXEC) adduser -Du $$(id -u) -h /app app app
+		$(EXEC) /bin/sh -c "yes app | passwd app"
+# Start ssh server for 'app' user to log in.
+		$(EXEC) /usr/sbin/sshd
 
 .PHONY: install
 install: ## Install project dependencies

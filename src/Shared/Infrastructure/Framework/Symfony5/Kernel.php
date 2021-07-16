@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shared\Infrastructure;
+namespace App\Shared\Infrastructure\Framework\Symfony5;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
