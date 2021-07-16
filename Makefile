@@ -12,7 +12,7 @@ EXEC_U=$(COMPOSE) $(MODE) $(CONTAINER) su app -c
 
 
 .PHONY: start
-start: erase build up setup install ## clean current environment, recreate dependencies and spin up again
+start: erase build up setup ## clean current environment, recreate dependencies and spin up again
 
 .PHONY: stop
 stop: ## stop environment
@@ -37,14 +37,17 @@ setup: ## spin up environment.
 		$(EXEC) /bin/sh -c "yes app | passwd app"
 # Start ssh server for 'app' user to log in.
 		$(EXEC) /usr/sbin/sshd
-
-.PHONY: install
-install: ## Install project dependencies
-		$(EXEC_U) 'COMPOSER_MEMORY_LIMIT=-1 composer install --working-dir=$(FRAMEWORK)'
+## Install project dependencies
+		$(EXEC_U) "COMPOSER_MEMORY_LIMIT=-1 composer --working-dir=$(FRAMEWORK) install"
+		$(EXEC_U) "yarn --cwd=$(FRAMEWORK) install"
 
 .PHONY: composer
 composer: ## Execute composer
 		$(EXEC_U) "COMPOSER_MEMORY_LIMIT=-1 composer --working-dir=$(FRAMEWORK) $(filter-out $@,$(MAKECMDGOALS))"
+
+.PHONY: yarn
+yarn: ## Execute yarn
+		$(EXEC_U) "cd $(FRAMEWORK) && yarn $(filter-out $@,$(MAKECMDGOALS))"
 
 .PHONY: db
 db: ## recreate database
