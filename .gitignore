@@ -12,6 +12,7 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
-###> deptrac ###
-/.deptrac.cache
-###< deptrac ###
+
+###> analyzers ###
+*.cache
+###< analyzers ###

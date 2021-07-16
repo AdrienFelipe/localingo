@@ -13,7 +13,7 @@ class ExampleController
         $number = random_int(0, $max);
 
         return new Response(
-            '<html><body>Example number: ' . $number . '</body></html>'
+            '<html><body>Example number: '.$number.'</body></html>'
         );
     }
 }
