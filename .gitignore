@@ -5,6 +5,7 @@
 
 ###> Local IDE ###
 .idea
+.phpstorm_helpers
 ###< Local IDE ###
 
 ###> symfony/phpunit-bridge ###

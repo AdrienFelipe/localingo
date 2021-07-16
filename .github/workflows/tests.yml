@@ -9,9 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build
-        run: make start
+        run: ENV=ci make start
       - name: Code Analyze
-        run: make cs ca
+        run: ENV=ci make cs ca
 #      - name: Tests
 #        run: make env=ci xon;make env=ci test
 #      - name: DB Schema validation

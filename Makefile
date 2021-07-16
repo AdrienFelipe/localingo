@@ -1,13 +1,14 @@
 PHP_STAN_LEVEL=7
-DOCKER_MODE?=exec
-env=dev
+ENV?=dev
+# Compatibility with non TTY devices (ENV=ci).
+MODE?=exec $(if $(findstring ci,$(ENV)),-T,)
 COMPOSE=docker-compose -f docker-compose.yml
 
 CONTAINER?=php
 FRAMEWORK='./active-framework'
-EXEC=$(COMPOSE) $(DOCKER_MODE) $(CONTAINER)
+EXEC=$(COMPOSE) $(MODE) $(CONTAINER)
 # Execute container as current user
-EXEC_U=$(COMPOSE) $(DOCKER_MODE) $(CONTAINER) su app -c
+EXEC_U=$(COMPOSE) $(MODE) $(CONTAINER) su app -c
 
 
 .PHONY: start
@@ -47,13 +48,13 @@ composer: ## Execute composer
 
 .PHONY: db
 db: ## recreate database
-		$(COMPOSE) ${DOCKER_MODE} $(CONTAINER) sh -lc './bin/console d:d:d --if-exists --force'
-		$(COMPOSE) ${DOCKER_MODE} $(CONTAINER) sh -lc './bin/console d:d:c'
-		$(COMPOSE) ${DOCKER_MODE} $(CONTAINER) sh -lc './bin/console d:m:m -n'
+		$(COMPOSE) ${MODE} $(CONTAINER) sh -lc './bin/console d:d:d --if-exists --force'
+		$(COMPOSE) ${MODE} $(CONTAINER) sh -lc './bin/console d:d:c'
+		$(COMPOSE) ${MODE} $(CONTAINER) sh -lc './bin/console d:m:m -n'
 
 .PHONY: schema-validate
 schema-validate: ## validate database schema
-		$(COMPOSE) ${DOCKER_MODE} php sh -lc './bin/console d:s:v'
+		$(COMPOSE) ${MODE} php sh -lc './bin/console d:s:v'
 
 .PHONY: test
 test: ## execute project tests
@@ -61,11 +62,7 @@ test: ## execute project tests
 
 .PHONY: cs
 cs: ## Code Style (quality)
-		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/php-cs-fixer --no-interaction --diff -v fix'
-
- .PHONY: cs-check
-cs-check: ## executes php cs fixer in dry run mode
-		$(COMPOSE) ${DOCKER_MODE} php sh -lc './vendor/bin/php-cs-fixer --no-interaction --dry-run --diff -v fix'
+		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/php-cs-fixer --no-interaction $(if $(findstring ci,$(ENV)),--dry-run,) --diff -v fix'
 
 .PHONY: ca
 ca: ## Code Analyzers (quality)
@@ -75,7 +72,7 @@ ca: ## Code Analyzers (quality)
 
 .PHONY: sh
 sh: ## gets inside a container (make sh php)
-		$(COMPOSE) ${DOCKER_MODE} $(filter-out $@,$(MAKECMDGOALS)) sh -l
+		$(COMPOSE) ${MODE} $(filter-out $@,$(MAKECMDGOALS)) sh -l
 
 .PHONY: console
 console: ## Execute framework console.
