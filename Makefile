@@ -1,4 +1,3 @@
-PHP_STAN_LEVEL=7
 ENV?=dev
 # Compatibility with non TTY devices (ENV=ci).
 MODE?=exec $(if $(findstring ci,$(ENV)),-T,)
@@ -38,7 +37,7 @@ setup: ## spin up environment.
 # Start ssh server for 'app' user to log in.
 		$(EXEC) /usr/sbin/sshd
 ## Install project dependencies
-		$(EXEC_U) "COMPOSER_MEMORY_LIMIT=-1 composer --working-dir=$(FRAMEWORK) install"
+		$(EXEC_U) "composer --working-dir=$(FRAMEWORK) install"
 		$(EXEC_U) "yarn --cwd=$(FRAMEWORK) install"
 
 .PHONY: composer
@@ -47,7 +46,7 @@ composer: ## Execute composer
 
 .PHONY: yarn
 yarn: ## Execute yarn
-		$(EXEC_U) "cd $(FRAMEWORK) && yarn $(filter-out $@,$(MAKECMDGOALS))"
+		$(EXEC_U) "yarn --cwd=$(FRAMEWORK) $(filter-out $@,$(MAKECMDGOALS))"
 
 .PHONY: db
 db: ## recreate database
@@ -69,7 +68,7 @@ cs: ## Code Style (quality)
 
 .PHONY: ca
 ca: ## Code Analyzers (quality)
-		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/phpstan analyse -l ${PHP_STAN_LEVEL} -c phpstan.neon src tests'
+		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/phpstan analyse -c phpstan.neon src tests'
 		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/psalm --show-info=false'
 		$(EXEC_U) 'php $(FRAMEWORK)/bin/deptrac.phar analyze'
 
