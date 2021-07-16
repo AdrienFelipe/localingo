@@ -1,0 +1,3 @@
+app_lucky_number:
+    path: /number/{max}
+    controller: App\Controller\ExampleController::number

@@ -1,4 +1,0 @@
-controllers:
-  resource: '../src/Shared/UI/Http'
-  prefix: /localingo
-  type: annotation
