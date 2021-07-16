@@ -71,7 +71,7 @@ cs-check: ## executes php cs fixer in dry run mode
 ca: ## Code Analyzers (quality)
 		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/phpstan analyse -l ${PHP_STAN_LEVEL} -c phpstan.neon src tests'
 		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/psalm --show-info=false'
-		#$(COMPOSE) ${DOCKER_MODE} php sh -lc 'php bin/deptrac.phar analyze --formatter-graphviz=0'
+		$(EXEC_U) 'php $(FRAMEWORK)/bin/deptrac.phar analyze'
 
 .PHONY: sh
 sh: ## gets inside a container (make sh php)

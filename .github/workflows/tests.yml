@@ -9,11 +9,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build
-        run: make env=ci start;make build-dev;make env=ci xoff
+        run: make start
       - name: Code Analyze
-        run: make env=ci cs-check;make env=ci ca
-      - name: Tests
-        run: make env=ci xon;make env=ci test
+        run: make cs ca
+#      - name: Tests
+#        run: make env=ci xon;make env=ci test
 #      - name: DB Schema validation
 #        run: make env=ci schema-validate
 #      - name: ARTIFACT
