@@ -17,3 +17,7 @@
 ###> analyzers ###
 *.cache
 ###< analyzers ###
+
+###> yarn ###
+.yarnrc
+###< yarn ###

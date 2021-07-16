@@ -28,14 +28,14 @@ build: ## build environment and initialize composer and project dependencies
 .PHONY: up
 up: ## spin up environment
 		$(COMPOSE) up -d
+# Start ssh server for 'app' user to log in.
+		$(EXEC) /usr/sbin/sshd
 
 .PHONY: setup
 setup: ## spin up environment.
 # Create 'app' user from current user id and group.
 		$(EXEC) adduser -Du $$(id -u) -h /app app app
 		$(EXEC) /bin/sh -c "yes app | passwd app"
-# Start ssh server for 'app' user to log in.
-		$(EXEC) /usr/sbin/sshd
 ## Install project dependencies
 		$(EXEC_U) "composer --working-dir=$(FRAMEWORK) install"
 		$(EXEC_U) "yarn --cwd=$(FRAMEWORK) install"
@@ -53,10 +53,6 @@ db: ## recreate database
 		$(COMPOSE) ${MODE} $(CONTAINER) sh -lc './bin/console d:d:d --if-exists --force'
 		$(COMPOSE) ${MODE} $(CONTAINER) sh -lc './bin/console d:d:c'
 		$(COMPOSE) ${MODE} $(CONTAINER) sh -lc './bin/console d:m:m -n'
-
-.PHONY: schema-validate
-schema-validate: ## validate database schema
-		$(COMPOSE) ${MODE} php sh -lc './bin/console d:s:v'
 
 .PHONY: test
 test: ## execute project tests

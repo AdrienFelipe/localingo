@@ -13,7 +13,10 @@ services:
       - php
 
   php:
-    build: etc/dev/php
+    build:
+      context: etc/dev/php
+      dockerfile: Dockerfile
+      target: dev
     ports:
       - "2299:22"
     volumes:
