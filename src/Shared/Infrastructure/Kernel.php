@@ -3,46 +3,47 @@
 namespace App\Shared\Infrastructure;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class Kernel extends BaseKernel
 {
+    public const FRAMEWORK_DIR = '/app/active-framework';
     use MicroKernelTrait;
 
-    private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
-
-    public function registerBundles(): iterable
+    private static function configPath(): string
     {
-        $contents = require $this->getProjectDir() . '/config/bundles.php';
-        foreach ($contents as $class => $envs) {
-            if ($envs[$this->environment] ?? $envs['all'] ?? false) {
-                yield new $class();
-            }
+        return self::FRAMEWORK_DIR . '/config';
+    }
+
+    protected function configureContainer(ContainerConfigurator $container): void
+    {
+        $container->import(self::configPath() . '/{packages}/*.yaml');
+        $container->import(self::configPath() . '/{packages}/' . $this->environment . '/*.yaml');
+
+        if (is_file(self::configPath() . '/services.yaml')) {
+            $container->import(self::configPath() . '/services.yaml');
+            $container->import(self::configPath() . '/{services}_' . $this->environment . '.yaml');
+        } else {
+            $container->import(self::configPath() . '/{services}.php');
         }
     }
 
-    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
+    protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $c->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
-        $c->setParameter('container.dumper.inline_class_loader', true);
-        $confDir = $this->getProjectDir() . '/config';
+        $routes->import(self::configPath() . '/{routes}/' . $this->environment . '/*.yaml');
+        $routes->import(self::configPath() . '/{routes}/*.yaml');
 
-        $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir . '/{packages}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
+        if (is_file(self::configPath() . '/routes.yaml')) {
+            $routes->import(self::configPath() . '/routes.yaml');
+        } else {
+            $routes->import(self::configPath() . '/{routes}.php');
+        }
     }
 
-    protected function configureRoutes(RouteCollectionBuilder $routes): void
+    public function getProjectDir(): string
     {
-        $confDir = $this->getProjectDir() . '/config';
-
-        $routes->import($confDir . '/{routes}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, '/', 'glob');
-        $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, '/', 'glob');
-        $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, '/', 'glob');
+        return self::FRAMEWORK_DIR;
     }
 }
