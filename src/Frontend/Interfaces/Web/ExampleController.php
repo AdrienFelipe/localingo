@@ -3,17 +3,25 @@
 declare(strict_types=1);
 
 namespace App\Frontend\Interfaces\Web;
-
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class ExampleController
+class ExampleController extends AbstractController
 {
     public function number(int $max): Response
     {
-        $number = random_int(0, $max);
+        $word = 'lodówkę';
+        $case = 'Accusative';
+        $noun = 'lodówka';
+        $gender = 'feminine';
+        $state = 'plural';
 
-        return new Response(
-            '<html><body><span data-controller="hello">Example number<span>: '.$number.'</body></html>'
-        );
+        return $this->render('base.html.twig', [
+            'word' => $word,
+            'case' => $case,
+            'noun' => $noun,
+            'gender' => $gender,
+            'state' => $state,
+        ]);
     }
 }
