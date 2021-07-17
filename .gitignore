@@ -18,6 +18,8 @@
 *.cache
 ###< analyzers ###
 
-###> yarn ###
+###> front ###
 .yarnrc
-###< yarn ###
+.npm
+/.config
+###< front ###
