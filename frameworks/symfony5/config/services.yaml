@@ -27,3 +27,7 @@ services:
     # Redis setup
     Predis\Client:
         arguments: [ '%env(REDIS_DSN)%' ]
+
+    # Session management.
+    App\Shared\Application\Session\SessionInterface:
+        class: App\Shared\Infrastructure\Session\Symfony5Session
