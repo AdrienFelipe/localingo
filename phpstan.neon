@@ -4,3 +4,4 @@ parameters:
         - /app/src/Shared/Infrastructure/Doctrine/Migrations/*
         - /app/src/Infrastructure/Shared/Migrations/*
     inferPrivatePropertyTypeFromConstructor: true
+    checkGenericClassInNonGenericObjectType: false

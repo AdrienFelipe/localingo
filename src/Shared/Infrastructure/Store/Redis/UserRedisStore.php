@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Shared\Infrastructure\Store\Redis;
 
+use App\Localingo\Domain\Entity\User;
 use App\Localingo\Domain\Store\UserStoreInterface;
-use App\Localingo\Domain\User;
+use ErrorException;
 use Predis\Client;
+use TypeError;
 
 class UserRedisStore implements UserStoreInterface
 {
@@ -22,9 +24,14 @@ class UserRedisStore implements UserStoreInterface
     public function load(string $user_id): ?User
     {
         $user_data = $this->redis->get($this->key($user_id));
-        $user = unserialize($user_data, ['allowed_classes' => [User::class]]);
+        try {
+            // TODO: make \__PHP_Incomplete_Class throw an exception from php.ini
+            $user = unserialize($user_data, ['allowed_classes' => true]);
+        } catch (ErrorException | TypeError) {
+            return null;
+        }
 
-        return $user ?: null;
+        return is_a($user, User::class) ? $user : null;
     }
 
     public function save(User $user): void

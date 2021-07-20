@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Shared\Infrastructure\Store\Redis;
 
-use App\Localingo\Domain\Episode;
+use App\Localingo\Domain\Entity\Episode;
+use App\Localingo\Domain\Entity\User;
 use App\Localingo\Domain\Store\EpisodeStoreInterface;
-use App\Localingo\Domain\User;
+use ErrorException;
 use Predis\Client;
+use TypeError;
 
 class EpisodeRedisStore implements EpisodeStoreInterface
 {
@@ -22,8 +24,9 @@ class EpisodeRedisStore implements EpisodeStoreInterface
     {
         $data = $this->redis->get(self::key($user, $episode_id));
         try {
+            // TODO: make \__PHP_Incomplete_Class throw an exception from php.ini
             $episode = unserialize($data, ['allow_classes' => true]);
-        } catch (\Throwable $e) {
+        } catch (ErrorException | TypeError) {
             return null;
         }
 

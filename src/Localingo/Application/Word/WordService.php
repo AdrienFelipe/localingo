@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Localingo\Application\Word;
 
-use App\Localingo\Domain\Word;
+use App\Localingo\Domain\Sample\Sample;
 use function dump;
 use Predis\Client;
 
@@ -63,9 +63,8 @@ class WordService
         $this->clear();
 
         $handle = fopen('/app/files/declinations.tsv', 'rb');
-        if ($handle) {
+        if ($handle && $line = fgets($handle)) {
             // Extract headers.
-            $line = fgets($handle);
             $header = explode("\t", $line);
             $headerSize = count($header);
             $padArray = array_fill(0, $headerSize, '');
@@ -112,7 +111,7 @@ class WordService
         }
     }
 
-    public function getWord(string $key): Word
+    public function getWord(string $key): Sample
     {
         $fields = [
             self::DECLINED_DECLINED,
@@ -132,7 +131,7 @@ class WordService
         // Apply fields names.
         $data = array_combine($fields, $data);
 
-        return new Word(
+        return new Sample(
             $data[self::DECLINED_DECLINED],
             $data[self::DECLINED_DECLINATION],
             $data[self::DECLINED_NUMBER],

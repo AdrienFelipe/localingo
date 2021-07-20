@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Store;
 
-use App\Localingo\Domain\Episode;
-use App\Localingo\Domain\User;
+use App\Localingo\Domain\Entity\Episode;
+use App\Localingo\Domain\Entity\User;
 
 interface EpisodeStoreInterface
 {

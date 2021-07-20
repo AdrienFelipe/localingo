@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Domain;
+namespace App\Localingo\Domain\Sample;
 
-class Word
+class Sample
 {
     private string $declined;
     private string $declination;

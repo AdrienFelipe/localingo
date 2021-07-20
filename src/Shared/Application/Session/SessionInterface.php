@@ -6,7 +6,7 @@ namespace App\Shared\Application\Session;
 
 interface SessionInterface
 {
-    public function set(string $name, $value);
+    public function set(string $name, mixed $value): void;
 
-    public function get(string $name, $default = null);
+    public function get(string $name, mixed $default = null): mixed;
 }

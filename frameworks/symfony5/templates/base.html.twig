@@ -1,4 +1,4 @@
-{# @var word \App\Localingo\Domain\Word #}
+{# @var sample \App\Localingo\Domain\Sample\Sample #}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,22 +13,22 @@
                     <div class="card-header">
                         <div class="row align-items-start">
                             <div class="col">
-                                {{ word.declination }}
+                                {{ sample.declination }}
                             </div>
                             <div class="col text-end">
-                                {{ word.number }}
+                                {{ sample.number }}
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <p class="card-text">{{ word.translation }}</p>
-                        <h5 class="card-title">{{ word.declined }}</h5>
-                        <h6 class="card-subtitle text-muted">{{ word.word }}</h6>
+                        <p class="card-text">{{ sample.translation }}</p>
+                        <h5 class="card-title">{{ sample.declined }}</h5>
+                        <h6 class="card-subtitle text-muted">{{ sample.word }}</h6>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">{{ word.gender }}</li>
-                        <li class="list-group-item">{{ word.state|default('&nbsp;')|raw }}</li>
-                        <li class="list-group-item">{{ word.case|default('&nbsp;')|raw }}</li>
+                        <li class="list-group-item">{{ sample.gender }}</li>
+                        <li class="list-group-item">{{ sample.state|default('&nbsp;')|raw }}</li>
+                        <li class="list-group-item">{{ sample.case|default('&nbsp;')|raw }}</li>
                         <li class="list-group-item">
                             <div class="input-group my-3">
                                 <input type="text" class="form-control" placeholder="Recipient's username"

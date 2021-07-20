@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Domain;
+namespace App\Localingo\Domain\Entity;
+
+use App\Localingo\Domain\Sample\SampleCollection;
 
 class Episode
 {
     private string $id;
     private User $user;
-    private array $samples;
+    private SampleCollection $samples;
 
-    public function __construct(string $id, User $user, array $samples)
+    public function __construct(string $id, User $user, SampleCollection $samples)
     {
         $this->id = $id;
         $this->user = $user;
@@ -27,10 +29,7 @@ class Episode
         return $this->user;
     }
 
-    /**
-     * @return Word[]
-     */
-    public function getSamples(): array
+    public function getSamples(): SampleCollection
     {
         return $this->samples;
     }

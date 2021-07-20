@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Localingo\Application\User;
 
+use App\Localingo\Domain\Entity\User;
 use App\Localingo\Domain\Store\UserStoreInterface;
-use App\Localingo\Domain\User;
 use App\Shared\Application\Session\SessionInterface;
 
 class UserGet
