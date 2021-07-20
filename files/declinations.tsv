@@ -1,4 +1,4 @@
-Décliné	Declination	Number	Gender	Word	Translation	Personal	End	Case
+Declined	Declination	Number	Gender	Word	Translation	State	End	Case
 światu	Dative	Singular	Masculine	świat	world		-C	-C
 rokowi	Dative	Singular	Masculine	rok	year	Impersonal	-C	-C
 doktorowi	Dative	Singular	Masculine	doktor	doctor	Personal	-C	-C
@@ -5404,4 +5404,4 @@ złączom	Dative	Plural	Neutral	złącze	connector	Impersonal	-e	*
 złączami	Instrumental	Plural	Neutral	złącze	connector	Impersonal	-e	*
 złączach	Locative	Plural	Neutral	złącze	connector	Impersonal	-e	*
 złącza	Nominative	Plural	Neutral	złącze	connector	Impersonal	-e	*
-złączy	Genitive	Plural	Neutral	złącze	connector	Impersonal	-e	Exception
+złączy	Genitive	Plural	Neutral	złącze	connector	Impersonal	-e

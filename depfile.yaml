@@ -23,8 +23,8 @@ ruleset:
   Domain:
   Application:
     - Domain
-    - Infrastructure
   Infrastructure:
+    - Domain
     - Application
     - Framework
   Framework:

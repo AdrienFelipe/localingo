@@ -1,5 +1,7 @@
+{# @var word \App\Localingo\Domain\Word #}
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
@@ -11,21 +13,22 @@
                     <div class="card-header">
                         <div class="row align-items-start">
                             <div class="col">
-                                {{ case }}
+                                {{ word.declination }}
                             </div>
                             <div class="col text-end">
-                                {{ state }}
+                                {{ word.number }}
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">{{ word }}</h5>
-                        <h6 class="card-subtitle text-muted">{{ noun }}</h6>
-                        <p class="card-text">fridge</p>
+                        <p class="card-text">{{ word.translation }}</p>
+                        <h5 class="card-title">{{ word.declined }}</h5>
+                        <h6 class="card-subtitle text-muted">{{ word.word }}</h6>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">{{ gender }}</li>
-                        <li class="list-group-item">Impersonal</li>
+                        <li class="list-group-item">{{ word.gender }}</li>
+                        <li class="list-group-item">{{ word.state|default('&nbsp;')|raw }}</li>
+                        <li class="list-group-item">{{ word.case|default('&nbsp;')|raw }}</li>
                         <li class="list-group-item">
                             <div class="input-group my-3">
                                 <input type="text" class="form-control" placeholder="Recipient's username"
