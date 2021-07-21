@@ -20,6 +20,9 @@ class WordRedisRepository implements WordRepositoryInterface
 
     public function getRandomAsList(int $count): array
     {
-        return (array)$this->redis->srandmember(self::WORD_INDEX, $count);
+        // Force int keys, and string values.
+        $values = array_values((array) $this->redis->srandmember(self::WORD_INDEX, $count));
+
+        return array_filter($values, static function ($value) {return is_string($value); });
     }
 }

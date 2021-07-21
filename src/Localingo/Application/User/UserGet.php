@@ -6,7 +6,7 @@ namespace App\Localingo\Application\User;
 
 use App\Localingo\Domain\User\User;
 use App\Localingo\Domain\User\UserRepositoryInterface;
-use App\Shared\Application\Session\SessionInterface;
+use App\Shared\Domain\Session\SessionInterface;
 
 class UserGet
 {

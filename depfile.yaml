@@ -31,6 +31,5 @@ ruleset:
     - Application
   Infrastructure:
     - Domain
-    - Application
     - Framework
   Framework:

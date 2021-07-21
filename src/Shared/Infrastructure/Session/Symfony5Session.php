@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Infrastructure\Session;
 
-use App\Shared\Application\Session\SessionInterface;
+use App\Shared\Domain\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface as SymfonySession;
 
 class Symfony5Session implements SessionInterface

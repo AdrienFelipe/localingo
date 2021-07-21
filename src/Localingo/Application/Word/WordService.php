@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Localingo\Application\Word;
 
-use App\Localingo\Domain\Sample\Sample;
+use App\Localingo\Infrastructure\Repository\Redis\SampleRedisRepository;
 use function dump;
 use Predis\Client;
 
@@ -80,7 +80,7 @@ class WordService
                 $values = array_combine($header, $values);
                 $word = $values[self::DECLINED_WORD];
                 $declination = $values[self::DECLINED_DECLINATION];
-                $key = self::key_pattern($word, $declination, $values[self::DECLINED_NUMBER]);
+                $key = SampleRedisRepository::key_pattern($word, $declination, $values[self::DECLINED_NUMBER]);
                 $this->store->hmset($key, $values);
 
                 // Build declinations set.
@@ -98,6 +98,7 @@ class WordService
             $this->store->del(self::WORD_INDEX);
             $this->store->sadd(self::WORD_INDEX, array_keys($words));
         } else {
+            // TODO: properly handle logs.
             dump('File error');
         }
 
@@ -105,51 +106,5 @@ class WordService
         foreach ($update_hashes as $key => $hash) {
             $this->store->set($key, $hash);
         }
-    }
-
-    public function getWord(string $key): Sample
-    {
-        $fields = [
-            self::DECLINED_DECLINED,
-            self::DECLINED_DECLINATION,
-            self::DECLINED_NUMBER,
-            self::DECLINED_GENDER,
-            self::DECLINED_WORD,
-            self::DECLINED_TRANSLATION,
-            self::DECLINED_STATE,
-            self::DECLINED_CASE,
-        ];
-        $data = (array) $this->store->hmget($key, $fields);
-        // Redis empty strings are returned as null values.
-        $data = array_map(static function (?string $field) {
-            return $field ?? '';
-        }, $data);
-        // Apply fields names.
-        $data = array_combine($fields, $data);
-
-        return new Sample(
-            $data[self::DECLINED_DECLINED],
-            $data[self::DECLINED_DECLINATION],
-            $data[self::DECLINED_NUMBER],
-            $data[self::DECLINED_GENDER],
-            $data[self::DECLINED_WORD],
-            $data[self::DECLINED_TRANSLATION],
-            $data[self::DECLINED_STATE],
-            $data[self::DECLINED_CASE],
-        );
-    }
-
-    public static function key_pattern(?string $word, ?string $declination, ?string $number = null): string
-    {
-        null !== $word or $word = '*';
-        null !== $declination or $declination = '*';
-        null !== $number or $number = '*';
-
-        return implode(':', [
-            self::DECLINED_INDEX,
-            $word,
-            $declination,
-            $number,
-        ]);
     }
 }

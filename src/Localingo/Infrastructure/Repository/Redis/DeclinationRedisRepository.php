@@ -20,6 +20,6 @@ class DeclinationRedisRepository implements DeclinationRepositoryInterface
 
     public function getRandom(): string
     {
-        return (string)$this->redis->srandmember(self::DECLINATION_INDEX);
+        return (string) $this->redis->srandmember(self::DECLINATION_INDEX);
     }
 }

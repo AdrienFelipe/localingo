@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Localingo\UI;
 
-use App\Localingo\Application\Episode\EpisodeService;
+use App\Localingo\Application\Episode\EpisodeCreate;
+use App\Localingo\Application\Episode\EpisodeGetCurrent;
 use App\Localingo\Application\Word\WordService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,12 +13,14 @@ use Symfony\Component\HttpFoundation\Response;
 class LoadDataController extends AbstractController
 {
     private WordService $wordService;
-    private EpisodeService $episodeInitialize;
+    private EpisodeGetCurrent $episodeGetCurrent;
+    private EpisodeCreate $episodeCreate;
 
-    public function __construct(WordService $wordService, EpisodeService $courseService)
+    public function __construct(WordService $wordService, EpisodeGetCurrent $episodeGetCurrent, EpisodeCreate $episodeCreate)
     {
         $this->wordService = $wordService;
-        $this->episodeInitialize = $courseService;
+        $this->episodeGetCurrent = $episodeGetCurrent;
+        $this->episodeCreate = $episodeCreate;
     }
 
     public function call(): Response
@@ -26,8 +29,7 @@ class LoadDataController extends AbstractController
         $this->wordService->initialize();
 
         // Load current episode or create a new one.
-        $episode = $this->episodeInitialize->current() ?: $this->episodeInitialize->new();
-        $this->episodeInitialize->save($episode);
+        $episode = $this->episodeGetCurrent->current() ?: $this->episodeCreate->new();
 
         $sample = $episode->getSamples()->offsetGet(0);
 
