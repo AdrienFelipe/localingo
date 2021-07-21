@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a003436a827284a5852c72f6e10b5ff",
+    "content-hash": "c67d6a01bbf302194fcf7c524c12e098",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -4631,6 +4631,54 @@
             "time": "2021-06-18T07:15:38+00:00"
         },
         {
+            "name": "qossmic/deptrac-shim",
+            "version": "0.14.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/qossmic/deptrac-shim.git",
+                "reference": "c1a52220347dce6816349a1ad9aa30f9cb2cc992"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/qossmic/deptrac-shim/zipball/c1a52220347dce6816349a1ad9aa30f9cb2cc992",
+                "reference": "c1a52220347dce6816349a1ad9aa30f9cb2cc992",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-tokenizer": "*",
+                "ext-zlib": "*",
+                "php": "^7.2 || 8.0.*"
+            },
+            "replace": {
+                "qossmic/deptrac": "self.version"
+            },
+            "suggest": {
+                "ext-dom": "For using the JUnit output formatter"
+            },
+            "bin": [
+                "deptrac"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Simon Mönch",
+                    "email": "simon.moench@qossmic.com",
+                    "role": "maintainer"
+                }
+            ],
+            "description": "deptrac phar distribution",
+            "support": {
+                "issues": "https://github.com/qossmic/deptrac-shim/issues",
+                "source": "https://github.com/qossmic/deptrac-shim/tree/0.14.0"
+            },
+            "time": "2021-06-23T09:00:55+00:00"
+        },
+        {
             "name": "sebastian/diff",
             "version": "4.0.4",
             "source": {
@@ -5109,7 +5157,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2.5",
+        "php": ">=8.0",
         "ext-ctype": "*",
         "ext-iconv": "*"
     },

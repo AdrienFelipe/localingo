@@ -66,7 +66,7 @@ cs: ## Code Style (quality)
 ca: ## Code Analyzers (quality)
 		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/phpstan analyse -c phpstan.neon src tests'
 		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/psalm --show-info=false'
-		$(EXEC_U) 'php $(FRAMEWORK)/bin/deptrac.phar analyze'
+		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/deptrac analyze'
 
 .PHONY: sh
 sh: ## gets inside a container (make sh php)
