@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Infrastructure\Store\Redis;
+namespace App\Localingo\Infrastructure\Repository\Redis;
 
-use App\Localingo\Domain\Entity\Episode;
-use App\Localingo\Domain\Entity\User;
-use App\Localingo\Domain\Store\EpisodeStoreInterface;
+use App\Localingo\Domain\Episode\Episode;
+use App\Localingo\Domain\Episode\EpisodeRepositoryInterface;
+use App\Localingo\Domain\User\User;
 use ErrorException;
 use Predis\Client;
 use TypeError;
 
-class EpisodeRedisStore implements EpisodeStoreInterface
+class EpisodeRedisRepository implements EpisodeRepositoryInterface
 {
     private Client $redis;
 

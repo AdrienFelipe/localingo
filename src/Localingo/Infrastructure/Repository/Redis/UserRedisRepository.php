@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Infrastructure\Store\Redis;
+namespace App\Localingo\Infrastructure\Repository\Redis;
 
-use App\Localingo\Domain\Entity\User;
-use App\Localingo\Domain\Store\UserStoreInterface;
+use App\Localingo\Domain\User\User;
+use App\Localingo\Domain\User\UserRepositoryInterface;
 use ErrorException;
 use Predis\Client;
 use TypeError;
 
-class UserRedisStore implements UserStoreInterface
+class UserRedisRepository implements UserRepositoryInterface
 {
     private const KEY_USER_ID = 'user_id';
 
@@ -42,6 +42,6 @@ class UserRedisStore implements UserStoreInterface
 
     private function key(string $user_id): string
     {
-        return (string) $this::KEY_USER_ID.":{$user_id}";
+        return (string) $this::KEY_USER_ID.":$user_id";
     }
 }

@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Domain\Store;
+namespace App\Localingo\Domain\User;
 
-use App\Localingo\Domain\Entity\User;
-
-interface UserStoreInterface
+interface UserRepositoryInterface
 {
     public function load(string $user_id): ?User;
 

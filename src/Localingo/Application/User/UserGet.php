@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Localingo\Application\User;
 
-use App\Localingo\Domain\Entity\User;
-use App\Localingo\Domain\Store\UserStoreInterface;
+use App\Localingo\Domain\User\User;
+use App\Localingo\Domain\User\UserRepositoryInterface;
 use App\Shared\Application\Session\SessionInterface;
 
 class UserGet
@@ -13,9 +13,9 @@ class UserGet
     private const KEY_USER_ID = 'user_id';
     private const DEFAULT_USER_NAME = 'anonymous';
     private SessionInterface $session;
-    private UserStoreInterface $userStore;
+    private UserRepositoryInterface $userStore;
 
-    public function __construct(SessionInterface $session, UserStoreInterface $userStore)
+    public function __construct(SessionInterface $session, UserRepositoryInterface $userStore)
     {
         $this->session = $session;
         $this->userStore = $userStore;

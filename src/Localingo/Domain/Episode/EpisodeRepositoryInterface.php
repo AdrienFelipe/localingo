@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Domain\Store;
+namespace App\Localingo\Domain\Episode;
 
-use App\Localingo\Domain\Entity\Episode;
-use App\Localingo\Domain\Entity\User;
+use App\Localingo\Domain\User\User;
 
-interface EpisodeStoreInterface
+interface EpisodeRepositoryInterface
 {
     public function load(User $user, string $episode_id): ?Episode;
 

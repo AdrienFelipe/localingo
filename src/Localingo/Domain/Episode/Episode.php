@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Domain\Entity;
+namespace App\Localingo\Domain\Episode;
 
 use App\Localingo\Domain\Sample\SampleCollection;
+use App\Localingo\Domain\User\User;
 
 class Episode
 {

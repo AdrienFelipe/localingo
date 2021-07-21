@@ -1,7 +1,3 @@
-app_lucky_number:
-    path: /number/{max}
-    controller: App\Frontend\Interfaces\Web\ExampleController::number
-
 app_load_data:
     path: /load-data
     controller: App\Localingo\UI\LoadDataController::call

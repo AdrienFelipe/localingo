@@ -6,9 +6,9 @@ namespace App\Localingo\Application\Episode;
 
 use App\Localingo\Application\User\UserGet;
 use App\Localingo\Application\Word\WordService;
-use App\Localingo\Domain\Entity\Episode;
+use App\Localingo\Domain\Episode\Episode;
+use App\Localingo\Domain\Episode\EpisodeRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleCollection;
-use App\Localingo\Domain\Store\EpisodeStoreInterface;
 use App\Shared\Application\Session\SessionInterface;
 use Exception;
 use function implode;
@@ -18,15 +18,15 @@ class EpisodeService
 {
     private const WORDS_BY_EPISODE = 10;
     private const EPISODE_EXPIRE = 604800; // 1 week in seconds.
-    public const KEY_EPISODE_ID = 'episode_id';
+    private const KEY_EPISODE_ID = 'episode_id';
 
     private Client $redis;
     private WordService $wordService;
     private SessionInterface $session;
     private UserGet $userGet;
-    private EpisodeStoreInterface $episodeStore;
+    private EpisodeRepositoryInterface $episodeStore;
 
-    public function __construct(Client $redis, WordService $wordService, SessionInterface $session, UserGet $userGet, EpisodeStoreInterface $episodeStore)
+    public function __construct(Client $redis, WordService $wordService, SessionInterface $session, UserGet $userGet, EpisodeRepositoryInterface $episodeStore)
     {
         $this->redis = $redis;
         $this->wordService = $wordService;
@@ -38,8 +38,8 @@ class EpisodeService
     public function current(): ?Episode
     {
         // Get episode ID from current session.
-        $episodeId = $this->session->get(self::KEY_EPISODE_ID);
-        if (!is_string($episodeId)) {
+        $episodeId = (string) $this->session->get(self::KEY_EPISODE_ID);
+        if (!$episodeId) {
             return null;
         }
 
@@ -54,7 +54,7 @@ class EpisodeService
         // TODO: Check against id collisions (search for existing ids in a while loop).
         try {
             $id = (string) random_int(1, 10000);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $id = '0';
         }
 
@@ -86,17 +86,11 @@ class EpisodeService
         $cursor = '0';
         $keys = [];
         do {
-            // Batch loop redis values.
             $result = (array) $this->redis->scan($cursor, ['match' => $key_pattern]);
-            // Current redis scan cursor.
-            $cursor = (string) $result[0] ?: null;
-            // All values from redis.
-            $values = (array) $result[1] ?: [];
-            // Filter out non string values.
-            $values = array_filter($values, static function (mixed $value) {return is_string($value); });
-            // Keep only desired words from values.
+            $cursor = (string) ($result[0] ?? '0');
+            $values = (array) ($result[1] ?? []);
+            $values = array_filter($values, static function ($value) {return is_string($value); });
             $values = preg_grep($pattern, $values) ?: [];
-            // Build final array without merging.
             array_push($keys, ...$values);
         } while ('0' !== $cursor);
 

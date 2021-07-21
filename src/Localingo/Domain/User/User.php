@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Domain\Entity;
+namespace App\Localingo\Domain\User;
 
 class User
 {
