@@ -30,7 +30,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "/app/src/"
+            "App\\": "src/"
         }
     },
     "autoload-dev": {

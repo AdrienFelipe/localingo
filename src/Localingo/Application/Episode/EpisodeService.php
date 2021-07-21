@@ -6,11 +6,13 @@ namespace App\Localingo\Application\Episode;
 
 use App\Localingo\Application\User\UserGet;
 use App\Localingo\Application\Word\WordService;
+use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
 use App\Localingo\Domain\Episode\Episode;
 use App\Localingo\Domain\Episode\EpisodeRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleCollection;
 use App\Shared\Application\Session\SessionInterface;
 use Exception;
+use App\Localingo\Domain\Word\WordRepositoryInterface;
 use function implode;
 use Predis\Client;
 
@@ -24,21 +26,25 @@ class EpisodeService
     private WordService $wordService;
     private SessionInterface $session;
     private UserGet $userGet;
-    private EpisodeRepositoryInterface $episodeStore;
+    private EpisodeRepositoryInterface $episodeRepository;
+    private WordRepositoryInterface $wordRepository;
+    private DeclinationRepositoryInterface $declinationRepository;
 
-    public function __construct(Client $redis, WordService $wordService, SessionInterface $session, UserGet $userGet, EpisodeRepositoryInterface $episodeStore)
+    public function __construct(Client $redis, WordService $wordService, SessionInterface $session, UserGet $userGet, EpisodeRepositoryInterface $episodeRepository, WordRepositoryInterface $wordRepository, DeclinationRepositoryInterface $declinationRepository)
     {
         $this->redis = $redis;
         $this->wordService = $wordService;
         $this->session = $session;
         $this->userGet = $userGet;
-        $this->episodeStore = $episodeStore;
+        $this->episodeRepository = $episodeRepository;
+        $this->wordRepository = $wordRepository;
+        $this->declinationRepository = $declinationRepository;
     }
 
     public function current(): ?Episode
     {
         // Get episode ID from current session.
-        $episodeId = (string) $this->session->get(self::KEY_EPISODE_ID);
+        $episodeId = (string)$this->session->get(self::KEY_EPISODE_ID);
         if (!$episodeId) {
             return null;
         }
@@ -46,14 +52,14 @@ class EpisodeService
         // Get current session user.
         $user = $this->userGet->current();
 
-        return $user ? $this->episodeStore->load($user, $episodeId) : null;
+        return $user ? $this->episodeRepository->load($user, $episodeId) : null;
     }
 
     public function new(): Episode
     {
         // TODO: Check against id collisions (search for existing ids in a while loop).
         try {
-            $id = (string) random_int(1, 10000);
+            $id = (string)random_int(1, 10000);
         } catch (Exception) {
             $id = '0';
         }
@@ -69,7 +75,7 @@ class EpisodeService
     public function save(Episode $episode): void
     {
         // Save to store.
-        $this->episodeStore->save($episode, self::EPISODE_EXPIRE);
+        $this->episodeRepository->save($episode, self::EPISODE_EXPIRE);
         // Save to session.
         $this->session->set(self::KEY_EPISODE_ID, $episode->getId());
     }
@@ -77,19 +83,20 @@ class EpisodeService
     private function select_samples(): SampleCollection
     {
         // Choose declination.
-        $declination = (string) $this->redis->srandmember(WordService::DECLINATION_INDEX);
-        // Choose words.
-        $words = (array) $this->redis->srandmember(WordService::WORD_INDEX, self::WORDS_BY_EPISODE);
+        $declination = $this->declinationRepository->getRandom();
+        $words = $this->wordRepository->getRandomAsList(self::WORDS_BY_EPISODE);
         $key_pattern = WordService::key_pattern(null, $declination);
-        $pattern = '/:('.implode('|', $words).'):/';
+        $pattern = '/:(' . implode('|', $words) . '):/';
 
         $cursor = '0';
         $keys = [];
         do {
-            $result = (array) $this->redis->scan($cursor, ['match' => $key_pattern]);
-            $cursor = (string) ($result[0] ?? '0');
-            $values = (array) ($result[1] ?? []);
-            $values = array_filter($values, static function ($value) {return is_string($value); });
+            $result = (array)$this->redis->scan($cursor, ['match' => $key_pattern]);
+            $cursor = (string)($result[0] ?? '0');
+            $values = (array)($result[1] ?? []);
+            $values = array_filter($values, static function ($value) {
+                return is_string($value);
+            });
             $values = preg_grep($pattern, $values) ?: [];
             array_push($keys, ...$values);
         } while ('0' !== $cursor);
