@@ -4,25 +4,31 @@ exclude_files:
 layers:
   - name: Domain
     collectors:
-      - type: className
-        regex: App\\.*\\Domain\\.*
+      - type: directory
+        regex: src/.*/Domain/.*
   - name: Application
     collectors:
-      - type: className
-        regex: App\\.*\\Application\\.*
+      - type: directory
+        regex: src/.*/Application/.*
+  - name: UI
+    collectors:
+      - type: directory
+        regex: src/.*/UI/.*
   - name: Infrastructure
     collectors:
-      - type: className
-        regex: App\\.*\\Infrastructure\\.*
+      - type: directory
+        regex: src/.*/Infrastructure/.*
   - name: Framework
     collectors:
-      - type: className
-        regex: Symfony\\.*
+      - type: classNameRegex
+        regex: '/^(?!App\\).*\\.*/'
 
 ruleset:
   Domain:
   Application:
     - Domain
+  UI:
+    - Application
   Infrastructure:
     - Domain
     - Application
