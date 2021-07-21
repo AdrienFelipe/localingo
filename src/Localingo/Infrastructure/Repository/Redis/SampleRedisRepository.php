@@ -28,6 +28,12 @@ class SampleRedisRepository implements SampleRepositoryInterface
         $this->redis = $redis;
     }
 
+    public function saveFromRawData(string $word, string $declination, string $number, array $values): void
+    {
+        $key = self::key_pattern($word, $declination, $number);
+        $this->redis->hmset($key, $values);
+    }
+
     public function load(string $key): Sample
     {
         $fields = [

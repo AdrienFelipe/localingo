@@ -20,6 +20,7 @@ class EpisodeSession implements EpisodeSessionInterface
 
     public function loadEpisodeId(): ?string
     {
+        /** @var ?string $episodeId */
         $episodeId = $this->session->get(self::KEY_EPISODE_ID);
 
         return is_string($episodeId) ? $episodeId : null;

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Application\Word;
+namespace App\Localingo\Application\LocalData;
 
-use App\Localingo\Infrastructure\Repository\Redis\SampleRedisRepository;
-use function dump;
+use App\Localingo\Domain\LocalData\LocalDataRepositoryInterface;
+use App\Localingo\Domain\Sample\SampleRepositoryInterface;
 use Predis\Client;
 
-class WordService
+class LocalDataInitialize
 {
     public const DECLINATION_INDEX = 'declination';
     public const WORD_INDEX = 'word';
@@ -24,15 +24,14 @@ class WordService
     private const DECLINED_CASE = 'Case';
 
     private Client $store;
+    private LocalDataRepositoryInterface $dataRepository;
+    private SampleRepositoryInterface $sampleRepository;
 
-    public function __construct(Client $redis)
+    public function __construct(Client $redis, LocalDataRepositoryInterface $dataRepository, SampleRepositoryInterface $sampleRepository)
     {
         $this->store = $redis;
-    }
-
-    public function clear(): void
-    {
-        $this->store->flushall();
+        $this->dataRepository = $dataRepository;
+        $this->sampleRepository = $sampleRepository;
     }
 
     /**
@@ -43,14 +42,13 @@ class WordService
         // File hashes to update.
         $update_hashes = [];
 
-        // Check for changes in the files.
+        // Check for files changes, and if so update hashes.
         $files = ['declinations.tsv', 'words.tsv'];
         foreach ($files as $filename) {
             $new_hash = hash_file('md5', "/app/files/{$filename}");
-            $key = "file:{$filename}:hash";
-            $previous_hash = (string) $this->store->get($key);
-            if ($new_hash !== $previous_hash) {
-                $update_hashes[$key] = $new_hash;
+            $previous_hash = $this->dataRepository->loadFileHash($filename);
+            if ($new_hash && $new_hash !== $previous_hash) {
+                $update_hashes[$filename] = $new_hash;
             }
         }
 
@@ -59,8 +57,8 @@ class WordService
             return;
         }
 
-        // Empty to start over.
-        $this->clear();
+        // Empty all to start over.
+        $this->dataRepository->clearAllData();
 
         $handle = fopen('/app/files/declinations.tsv', 'rb');
         if ($handle && $line = fgets($handle)) {
@@ -80,8 +78,7 @@ class WordService
                 $values = array_combine($header, $values);
                 $word = $values[self::DECLINED_WORD];
                 $declination = $values[self::DECLINED_DECLINATION];
-                $key = SampleRedisRepository::key_pattern($word, $declination, $values[self::DECLINED_NUMBER]);
-                $this->store->hmset($key, $values);
+                $this->sampleRepository->saveFromRawData($word, $declination, $values[self::DECLINED_NUMBER], $values);
 
                 // Build declinations set.
                 isset($declinations[$declination]) or $declinations[$declination] = count($declinations);
@@ -98,13 +95,13 @@ class WordService
             $this->store->del(self::WORD_INDEX);
             $this->store->sadd(self::WORD_INDEX, array_keys($words));
         } else {
-            // TODO: properly handle logs.
-            dump('File error');
+            // TODO: properly handle error logs.
+            echo 'File error';
         }
 
         // Save hashes.
-        foreach ($update_hashes as $key => $hash) {
-            $this->store->set($key, $hash);
+        foreach ($update_hashes as $filename => $hash) {
+            $this->dataRepository->saveFileHash($filename, $hash);
         }
     }
 }

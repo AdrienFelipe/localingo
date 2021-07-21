@@ -6,19 +6,19 @@ namespace App\Localingo\UI;
 
 use App\Localingo\Application\Episode\EpisodeCreate;
 use App\Localingo\Application\Episode\EpisodeGetCurrent;
-use App\Localingo\Application\Word\WordService;
+use App\Localingo\Application\LocalData\LocalDataInitialize;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
 class LoadDataController extends AbstractController
 {
-    private WordService $wordService;
+    private LocalDataInitialize $dataInitialize;
     private EpisodeGetCurrent $episodeGetCurrent;
     private EpisodeCreate $episodeCreate;
 
-    public function __construct(WordService $wordService, EpisodeGetCurrent $episodeGetCurrent, EpisodeCreate $episodeCreate)
+    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGetCurrent $episodeGetCurrent, EpisodeCreate $episodeCreate)
     {
-        $this->wordService = $wordService;
+        $this->dataInitialize = $dataInitialize;
         $this->episodeGetCurrent = $episodeGetCurrent;
         $this->episodeCreate = $episodeCreate;
     }
@@ -26,7 +26,7 @@ class LoadDataController extends AbstractController
     public function call(): Response
     {
         // Load data to memory.
-        $this->wordService->initialize();
+        $this->dataInitialize->initialize();
 
         // Load current episode or create a new one.
         $episode = $this->episodeGetCurrent->current() ?: $this->episodeCreate->new();
