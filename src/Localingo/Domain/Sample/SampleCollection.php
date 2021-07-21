@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Localingo\Domain\Sample;
 
 /**
- * @method Sample[] getIterator()
+ * @extends \ArrayObject<int, Sample>
  */
 class SampleCollection extends \ArrayObject
 {
     /**
-     * @param Sample[] $samples
+     * @param array<int, Sample> $samples
      */
     public function __construct(array $samples = [])
     {

@@ -37,8 +37,9 @@ class EpisodeService
 
     public function current(): ?Episode
     {
-        // Get episode ID from current session or exit if none defined.
-        if (!$episodeId = $this->session->get(self::KEY_EPISODE_ID)) {
+        // Get episode ID from current session.
+        $episodeId = $this->session->get(self::KEY_EPISODE_ID);
+        if (!is_string($episodeId)) {
             return null;
         }
 
@@ -76,19 +77,28 @@ class EpisodeService
     private function select_samples(): SampleCollection
     {
         // Choose declination.
-        $declination = $this->redis->srandmember(WordService::DECLINATION_INDEX);
+        $declination = (string) $this->redis->srandmember(WordService::DECLINATION_INDEX);
         // Choose words.
         $words = (array) $this->redis->srandmember(WordService::WORD_INDEX, self::WORDS_BY_EPISODE);
         $key_pattern = WordService::key_pattern(null, $declination);
         $pattern = '/:('.implode('|', $words).'):/';
 
-        $result = ['0'];
+        $cursor = '0';
         $keys = [];
         do {
-            $result = $this->redis->scan($result[0], ['match' => $key_pattern]);
-            $values = preg_grep($pattern, $result[1]) ?: [];
+            // Batch loop redis values.
+            $result = (array) $this->redis->scan($cursor, ['match' => $key_pattern]);
+            // Current redis scan cursor.
+            $cursor = (string) $result[0] ?: null;
+            // All values from redis.
+            $values = (array) $result[1] ?: [];
+            // Filter out non string values.
+            $values = array_filter($values, static function (mixed $value) {return is_string($value); });
+            // Keep only desired words from values.
+            $values = preg_grep($pattern, $values) ?: [];
+            // Build final array without merging.
             array_push($keys, ...$values);
-        } while ('0' !== $result[0]);
+        } while ('0' !== $cursor);
 
         $samples = [];
         foreach ($keys as $key) {

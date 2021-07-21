@@ -5,16 +5,23 @@ declare(strict_types=1);
 namespace App\Shared\Infrastructure\Session;
 
 use App\Shared\Application\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface as SymfonySession;
 
-class Symfony5Session extends Session implements SessionInterface
+class Symfony5Session implements SessionInterface
 {
+    private SymfonySession $session;
+
+    public function __construct(SymfonySession $session)
+    {
+        $this->session = $session;
+    }
+
     /**
      * Enforce type-hinting.
      */
     public function set(string $name, mixed $value): void
     {
-        parent::set($name, $value);
+        $this->session->set($name, $value);
     }
 
     /**
@@ -22,6 +29,6 @@ class Symfony5Session extends Session implements SessionInterface
      */
     public function get(string $name, mixed $default = null): mixed
     {
-        return parent::get($name, $default);
+        return $this->session->get($name, $default);
     }
 }

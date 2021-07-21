@@ -24,7 +24,7 @@ class UserGet
     public function current(): ?User
     {
         $user_id = $this->session->get(self::KEY_USER_ID);
-        if (null === $user_id) {
+        if (!is_string($user_id)) {
             return null;
         }
 

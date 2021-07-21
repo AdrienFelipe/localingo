@@ -23,9 +23,10 @@ class UserRedisStore implements UserStoreInterface
 
     public function load(string $user_id): ?User
     {
-        $user_data = $this->redis->get($this->key($user_id));
+        $user_data = (string) $this->redis->get($this->key($user_id));
         try {
             // TODO: make \__PHP_Incomplete_Class throw an exception from php.ini
+            /** @var mixed|User $user */
             $user = unserialize($user_data, ['allowed_classes' => true]);
         } catch (ErrorException | TypeError) {
             return null;
@@ -41,6 +42,6 @@ class UserRedisStore implements UserStoreInterface
 
     private function key(string $user_id): string
     {
-        return $this::KEY_USER_ID.":{$user_id}";
+        return (string) $this::KEY_USER_ID.":{$user_id}";
     }
 }

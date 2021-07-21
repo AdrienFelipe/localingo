@@ -22,9 +22,10 @@ class EpisodeRedisStore implements EpisodeStoreInterface
 
     public function load(User $user, string $episode_id): ?Episode
     {
-        $data = $this->redis->get(self::key($user, $episode_id));
+        $data = (string) $this->redis->get(self::key($user, $episode_id));
         try {
             // TODO: make \__PHP_Incomplete_Class throw an exception from php.ini
+            /** @var ?Episode $episode */
             $episode = unserialize($data, ['allow_classes' => true]);
         } catch (ErrorException | TypeError) {
             return null;

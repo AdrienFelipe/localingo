@@ -48,7 +48,7 @@ class WordService
         foreach ($files as $filename) {
             $new_hash = hash_file('md5', "/app/files/{$filename}");
             $key = "file:{$filename}:hash";
-            $previous_hash = $this->store->get($key);
+            $previous_hash = (string) $this->store->get($key);
             if ($new_hash !== $previous_hash) {
                 $update_hashes[$key] = $new_hash;
             }
@@ -70,8 +70,6 @@ class WordService
             $padArray = array_fill(0, $headerSize, '');
             $declinations = [];
             $words = [];
-
-            $time_start = microtime(true);
 
             // Extract remaining lines.
             while (($line = fgets($handle)) !== false) {
@@ -99,8 +97,6 @@ class WordService
             // Save words set.
             $this->store->del(self::WORD_INDEX);
             $this->store->sadd(self::WORD_INDEX, array_keys($words));
-
-            echo microtime(true) - $time_start;
         } else {
             dump('File error');
         }
@@ -123,7 +119,7 @@ class WordService
             self::DECLINED_STATE,
             self::DECLINED_CASE,
         ];
-        $data = $this->store->hmget($key, $fields);
+        $data = (array) $this->store->hmget($key, $fields);
         // Redis empty strings are returned as null values.
         $data = array_map(static function (?string $field) {
             return $field ?? '';
