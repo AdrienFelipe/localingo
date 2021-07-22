@@ -25,3 +25,11 @@ services:
     # Session management.
     App\Shared\Domain\Session\SessionInterface:
         class: App\Shared\Infrastructure\Framework\Symfony5\Symfony5Session
+
+    # Controllers access.
+    App\Localingo\UI\:
+        resource: '../src/Localingo/UI/'
+        public: true
+
+    App\Shared\Domain\Controller\ResponseInterface:
+        class: App\Shared\Infrastructure\Framework\Symfony5\Symfony5Response
