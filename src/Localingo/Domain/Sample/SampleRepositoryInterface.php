@@ -9,7 +9,7 @@ interface SampleRepositoryInterface
     /**
      * @param string[] $values
      */
-    public function saveFromRawData(string $word, string $declination, string $number, array $values): void;
+    public function saveFromRawData(array $values): void;
 
     /**
      * @param array<int, string> $words

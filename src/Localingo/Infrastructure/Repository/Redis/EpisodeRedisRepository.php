@@ -47,6 +47,6 @@ class EpisodeRedisRepository implements EpisodeRepositoryInterface
 
     private static function key(User $user, string $episode_id): string
     {
-        return "episode:{$user->getId()}:{$episode_id}";
+        return "episode:{$user->getId()}:$episode_id";
     }
 }

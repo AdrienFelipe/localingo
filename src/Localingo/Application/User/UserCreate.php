@@ -9,7 +9,6 @@ use App\Localingo\Domain\User\UserRepositoryInterface;
 
 class UserCreate
 {
-    private const KEY_USER_ID = 'user_id';
     private const DEFAULT_USER_NAME = 'anonymous';
     private UserSession $session;
     private UserRepositoryInterface $userStore;

@@ -11,15 +11,15 @@ use Predis\Client;
 
 class SampleRedisRepository implements SampleRepositoryInterface
 {
-    private const DECLINED_INDEX = 'declined';
-    private const DECLINED_DECLINED = 'Declined';
-    private const DECLINED_DECLINATION = 'Declination';
-    private const DECLINED_NUMBER = 'Number';
-    private const DECLINED_GENDER = 'Gender';
-    private const DECLINED_WORD = 'Word';
-    private const DECLINED_TRANSLATION = 'Translation';
-    private const DECLINED_STATE = 'State';
-    private const DECLINED_CASE = 'Case';
+    private const SAMPLE_INDEX = 'declined';
+    private const SAMPLE_DECLINED = 'Declined';
+    private const SAMPLE_DECLINATION = 'Declination';
+    private const SAMPLE_NUMBER = 'Number';
+    private const SAMPLE_GENDER = 'Gender';
+    private const SAMPLE_WORD = 'Word';
+    private const SAMPLE_TRANSLATION = 'Translation';
+    private const SAMPLE_STATE = 'State';
+    private const SAMPLE_CASE = 'Case';
 
     private Client $redis;
 
@@ -28,23 +28,27 @@ class SampleRedisRepository implements SampleRepositoryInterface
         $this->redis = $redis;
     }
 
-    public function saveFromRawData(string $word, string $declination, string $number, array $values): void
+    public function saveFromRawData(array $values): void
     {
-        $key = self::key_pattern($word, $declination, $number);
+        $key = self::key_pattern(
+            $values[self::SAMPLE_WORD],
+            $values[self::SAMPLE_DECLINATION],
+            $values[self::SAMPLE_NUMBER]
+        );
         $this->redis->hmset($key, $values);
     }
 
     public function load(string $key): Sample
     {
         $fields = [
-            self::DECLINED_DECLINED,
-            self::DECLINED_DECLINATION,
-            self::DECLINED_NUMBER,
-            self::DECLINED_GENDER,
-            self::DECLINED_WORD,
-            self::DECLINED_TRANSLATION,
-            self::DECLINED_STATE,
-            self::DECLINED_CASE,
+            self::SAMPLE_DECLINED,
+            self::SAMPLE_DECLINATION,
+            self::SAMPLE_NUMBER,
+            self::SAMPLE_GENDER,
+            self::SAMPLE_WORD,
+            self::SAMPLE_TRANSLATION,
+            self::SAMPLE_STATE,
+            self::SAMPLE_CASE,
         ];
         $data = (array) $this->redis->hmget($key, $fields);
         // Redis empty strings are returned as null values.
@@ -55,14 +59,14 @@ class SampleRedisRepository implements SampleRepositoryInterface
         $data = array_combine($fields, $data);
 
         return new Sample(
-            $data[self::DECLINED_DECLINED],
-            $data[self::DECLINED_DECLINATION],
-            $data[self::DECLINED_NUMBER],
-            $data[self::DECLINED_GENDER],
-            $data[self::DECLINED_WORD],
-            $data[self::DECLINED_TRANSLATION],
-            $data[self::DECLINED_STATE],
-            $data[self::DECLINED_CASE],
+            $data[self::SAMPLE_DECLINED],
+            $data[self::SAMPLE_DECLINATION],
+            $data[self::SAMPLE_NUMBER],
+            $data[self::SAMPLE_GENDER],
+            $data[self::SAMPLE_WORD],
+            $data[self::SAMPLE_TRANSLATION],
+            $data[self::SAMPLE_STATE],
+            $data[self::SAMPLE_CASE],
         );
     }
 
@@ -99,7 +103,7 @@ class SampleRedisRepository implements SampleRepositoryInterface
         null !== $number or $number = '*';
 
         return implode(':', [
-            self::DECLINED_INDEX,
+            self::SAMPLE_INDEX,
             $word,
             $declination,
             $number,

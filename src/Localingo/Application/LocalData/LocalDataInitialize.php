@@ -11,18 +11,14 @@ use App\Localingo\Domain\Word\WordRepositoryInterface;
 
 class LocalDataInitialize
 {
-    public const DECLINATION_INDEX = 'declination';
-    public const WORD_INDEX = 'word';
     private const FILES_DIR = '/app/files';
     private const FILES_CHECK = [
         'declinations' => 'declinations.tsv',
         'words' => 'words.tsv',
     ];
 
-    public const DECLINED_INDEX = 'declined';
-    private const DECLINED_DECLINATION = 'Declination';
-    private const DECLINED_NUMBER = 'Number';
-    private const DECLINED_WORD = 'Word';
+    private const COLUMN_DECLINATION = 'Declination';
+    private const COLUMN_WORD = 'Word';
 
     private LocalDataRepositoryInterface $dataRepository;
     private SampleRepositoryInterface $sampleRepository;
@@ -78,13 +74,14 @@ class LocalDataInitialize
                     $values += $padArray;
                 }
                 $values = array_combine($header, $values);
-                $word = $values[self::DECLINED_WORD];
-                $declination = $values[self::DECLINED_DECLINATION];
-                $this->sampleRepository->saveFromRawData($word, $declination, $values[self::DECLINED_NUMBER], $values);
+                $this->sampleRepository->saveFromRawData($values);
 
                 // Build declinations set.
+                $declination = $values[self::COLUMN_DECLINATION];
                 isset($declinations[$declination]) or $declinations[$declination] = count($declinations);
+
                 // Build words set.
+                $word = $values[self::COLUMN_WORD];
                 isset($words[$word]) or $words[$word] = count($words);
             }
             fclose($handle);

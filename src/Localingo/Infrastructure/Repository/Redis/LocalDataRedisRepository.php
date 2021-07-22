@@ -33,6 +33,6 @@ class LocalDataRedisRepository implements LocalDataRepositoryInterface
 
     private function hashKey(string $filename): string
     {
-        return "file:{$filename}:hash";
+        return "file:$filename:hash";
     }
 }
