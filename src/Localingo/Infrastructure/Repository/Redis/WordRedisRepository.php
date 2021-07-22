@@ -18,6 +18,12 @@ class WordRedisRepository implements WordRepositoryInterface
         $this->redis = $redis;
     }
 
+    public function saveAllFromRawData(array $string_words): void
+    {
+        $this->redis->del(self::WORD_INDEX);
+        $this->redis->sadd(self::WORD_INDEX, $string_words);
+    }
+
     public function getRandomAsList(int $count): array
     {
         // Force int keys, and string values.

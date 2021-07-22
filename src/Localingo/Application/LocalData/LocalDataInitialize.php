@@ -4,34 +4,37 @@ declare(strict_types=1);
 
 namespace App\Localingo\Application\LocalData;
 
+use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
 use App\Localingo\Domain\LocalData\LocalDataRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
-use Predis\Client;
+use App\Localingo\Domain\Word\WordRepositoryInterface;
 
 class LocalDataInitialize
 {
     public const DECLINATION_INDEX = 'declination';
     public const WORD_INDEX = 'word';
+    private const FILES_DIR = '/app/files';
+    private const FILES_CHECK = [
+        'declinations' => 'declinations.tsv',
+        'words' => 'words.tsv',
+    ];
 
     public const DECLINED_INDEX = 'declined';
-    private const DECLINED_DECLINED = 'Declined';
     private const DECLINED_DECLINATION = 'Declination';
     private const DECLINED_NUMBER = 'Number';
-    private const DECLINED_GENDER = 'Gender';
     private const DECLINED_WORD = 'Word';
-    private const DECLINED_TRANSLATION = 'Translation';
-    private const DECLINED_STATE = 'State';
-    private const DECLINED_CASE = 'Case';
 
-    private Client $store;
     private LocalDataRepositoryInterface $dataRepository;
     private SampleRepositoryInterface $sampleRepository;
+    private DeclinationRepositoryInterface $declinationRepository;
+    private WordRepositoryInterface $wordRepository;
 
-    public function __construct(Client $redis, LocalDataRepositoryInterface $dataRepository, SampleRepositoryInterface $sampleRepository)
+    public function __construct(LocalDataRepositoryInterface $dataRepository, SampleRepositoryInterface $sampleRepository, DeclinationRepositoryInterface $declinationRepository, WordRepositoryInterface $wordRepository)
     {
-        $this->store = $redis;
         $this->dataRepository = $dataRepository;
         $this->sampleRepository = $sampleRepository;
+        $this->declinationRepository = $declinationRepository;
+        $this->wordRepository = $wordRepository;
     }
 
     /**
@@ -43,9 +46,8 @@ class LocalDataInitialize
         $update_hashes = [];
 
         // Check for files changes, and if so update hashes.
-        $files = ['declinations.tsv', 'words.tsv'];
-        foreach ($files as $filename) {
-            $new_hash = hash_file('md5', "/app/files/{$filename}");
+        foreach (self::FILES_CHECK as $filename) {
+            $new_hash = hash_file('md5', self::FILES_DIR."/$filename");
             $previous_hash = $this->dataRepository->loadFileHash($filename);
             if ($new_hash && $new_hash !== $previous_hash) {
                 $update_hashes[$filename] = $new_hash;
@@ -60,7 +62,7 @@ class LocalDataInitialize
         // Empty all to start over.
         $this->dataRepository->clearAllData();
 
-        $handle = fopen('/app/files/declinations.tsv', 'rb');
+        $handle = fopen(self::FILES_DIR.'/'.self::FILES_CHECK['declinations'], 'rb');
         if ($handle && $line = fgets($handle)) {
             // Extract headers.
             $header = explode("\t", $line);
@@ -88,12 +90,10 @@ class LocalDataInitialize
             fclose($handle);
 
             // Save declinations set.
-            $this->store->del(self::DECLINATION_INDEX);
-            $this->store->sadd(self::DECLINATION_INDEX, array_keys($declinations));
+            $this->declinationRepository->saveAllFromRawData(array_keys($declinations));
 
             // Save words set.
-            $this->store->del(self::WORD_INDEX);
-            $this->store->sadd(self::WORD_INDEX, array_keys($words));
+            $this->wordRepository->saveAllFromRawData(array_keys($words));
         } else {
             // TODO: properly handle error logs.
             echo 'File error';

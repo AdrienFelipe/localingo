@@ -18,6 +18,13 @@ class DeclinationRedisRepository implements DeclinationRepositoryInterface
         $this->redis = $redis;
     }
 
+    public function saveAllFromRawData(array $string_declinations): void
+    {
+        // Remove all previous data first.
+        $this->redis->del(self::DECLINATION_INDEX);
+        $this->redis->sadd(self::DECLINATION_INDEX, $string_declinations);
+    }
+
     public function getRandom(): string
     {
         return (string) $this->redis->srandmember(self::DECLINATION_INDEX);
