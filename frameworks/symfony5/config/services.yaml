@@ -31,5 +31,9 @@ services:
         resource: '../src/Localingo/UI/'
         public: true
 
+    # Controllers response.
     App\Shared\Domain\Controller\ResponseInterface:
         class: App\Shared\Infrastructure\Framework\Symfony5\Symfony5Response
+
+    App\Localingo\Domain\Exercise\ExerciseFormInterface:
+        class: App\Shared\Infrastructure\Framework\Symfony5\Symfony5ExerciseForm

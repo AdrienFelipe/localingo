@@ -94,4 +94,24 @@ class Sample
     {
         $this->gender = $gender;
     }
+
+    public function setWord(string $word): void
+    {
+        $this->word = $word;
+    }
+
+    public function setTranslation(string $translation): void
+    {
+        $this->translation = $translation;
+    }
+
+    public function setState(string $state): void
+    {
+        $this->state = $state;
+    }
+
+    public function setCase(string $case): void
+    {
+        $this->case = $case;
+    }
 }
