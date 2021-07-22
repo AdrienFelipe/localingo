@@ -27,10 +27,10 @@ class HomeController
     public function call(): mixed
     {
         // Load data to memory.
-        $this->dataInitialize->initialize();
+        ($this->dataInitialize)();
 
         // Load current episode or create a new one.
-        $episode = $this->episodeGetCurrent->current() ?: $this->episodeCreate->new();
+        $episode = ($this->episodeGetCurrent)() ?: ($this->episodeCreate)();
 
         $sample = $episode->getSamples()->offsetGet(0);
 

@@ -22,7 +22,7 @@ class SampleBuildCollection
         $this->sampleRepository = $sampleRepository;
     }
 
-    public function handle(int $count): SampleCollection
+    public function __invoke(int $count): SampleCollection
     {
         $declination = $this->declinationRepository->getRandom();
         $words = $this->wordRepository->getRandomAsList($count);

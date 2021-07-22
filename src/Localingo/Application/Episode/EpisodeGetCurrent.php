@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace App\Localingo\Application\Episode;
 
-use App\Localingo\Application\User\UserGet;
+use App\Localingo\Application\User\UserGetCurrent;
 use App\Localingo\Domain\Episode\Episode;
 use App\Localingo\Domain\Episode\EpisodeRepositoryInterface;
 
 class EpisodeGetCurrent
 {
     private EpisodeSession $episodeSession;
-    private UserGet $userGet;
+    private UserGetCurrent $userGetCurrent;
     private EpisodeRepositoryInterface $episodeRepository;
 
     public function __construct(
         EpisodeSession $session,
-        UserGet $userGet,
+        UserGetCurrent $userGetCurrent,
         EpisodeRepositoryInterface $episodeRepository,
     ) {
         $this->episodeSession = $session;
-        $this->userGet = $userGet;
+        $this->userGetCurrent = $userGetCurrent;
         $this->episodeRepository = $episodeRepository;
     }
 
-    public function current(): ?Episode
+    public function __invoke(): ?Episode
     {
         // Get episode ID from current session.
         $episodeId = $this->episodeSession->loadEpisodeId();
@@ -33,7 +33,7 @@ class EpisodeGetCurrent
         }
 
         // Get current session user.
-        $user = $this->userGet->current();
+        $user = ($this->userGetCurrent)();
 
         return $user ? $this->episodeRepository->load($user, $episodeId) : null;
     }

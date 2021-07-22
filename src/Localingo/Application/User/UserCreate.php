@@ -6,38 +6,27 @@ namespace App\Localingo\Application\User;
 
 use App\Localingo\Domain\User\User;
 use App\Localingo\Domain\User\UserRepositoryInterface;
-use App\Shared\Domain\Session\SessionInterface;
 
-class UserGet
+class UserCreate
 {
     private const KEY_USER_ID = 'user_id';
     private const DEFAULT_USER_NAME = 'anonymous';
-    private SessionInterface $session;
+    private UserSession $session;
     private UserRepositoryInterface $userStore;
 
-    public function __construct(SessionInterface $session, UserRepositoryInterface $userStore)
+    public function __construct(UserSession $session, UserRepositoryInterface $userStore)
     {
         $this->session = $session;
         $this->userStore = $userStore;
     }
 
-    public function current(): ?User
-    {
-        $user_id = $this->session->get(self::KEY_USER_ID);
-        if (!is_string($user_id)) {
-            return null;
-        }
-
-        return $this->userStore->load($user_id);
-    }
-
-    public function new(string $name = self::DEFAULT_USER_NAME): User
+    public function __invoke(string $name = self::DEFAULT_USER_NAME): User
     {
         $user = new User($name);
         // Persist user.
         $this->userStore->save($user);
         // Keep track of the user within its session.
-        $this->session->set(self::KEY_USER_ID, $user->getId());
+        $this->session->saveEpisodeId($user);
 
         return $user;
     }

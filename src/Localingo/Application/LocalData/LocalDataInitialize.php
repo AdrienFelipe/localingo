@@ -40,7 +40,7 @@ class LocalDataInitialize
     /**
      * Load data to memory.
      */
-    public function initialize(): void
+    public function __invoke(): void
     {
         // File hashes to update.
         $update_hashes = [];
