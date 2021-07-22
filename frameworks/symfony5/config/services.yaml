@@ -11,29 +11,15 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
+    # From infrastructure, exclude all but defined services to avoid further autoload failure.
     App\:
-        resource: '../src/'
-        exclude:
-            - '../src/Shared/Infrastructure/Framework/'
+        resource: '../src/*/{Application,Domain,UI,Infrastructure/{Repository/Redis,Framework/Symfony5}}'
 
     # Redis setup
     Predis\Client:
         arguments: [ '%env(REDIS_DSN)%' ]
 
-    # Session management.
-    App\Shared\Domain\Session\SessionInterface:
-        class: App\Shared\Infrastructure\Framework\Symfony5\Symfony5Session
-
-    # Controllers access.
+    # Controllers access as non Symfony class.
     App\Localingo\UI\:
         resource: '../src/Localingo/UI/'
         public: true
-
-    # Controllers response.
-    App\Shared\Domain\Controller\ResponseInterface:
-        class: App\Shared\Infrastructure\Framework\Symfony5\Symfony5Response
-
-    App\Localingo\Domain\Exercise\ExerciseFormInterface:
-        class: App\Shared\Infrastructure\Framework\Symfony5\Symfony5ExerciseForm
