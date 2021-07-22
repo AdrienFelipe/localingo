@@ -7,16 +7,15 @@ namespace App\Localingo\Application\Episode;
 use App\Localingo\Application\User\UserGet;
 use App\Localingo\Domain\Episode\Episode;
 use App\Localingo\Domain\Episode\EpisodeRepositoryInterface;
-use App\Localingo\Domain\Episode\EpisodeSessionInterface;
 
 class EpisodeGetCurrent
 {
-    private EpisodeSessionInterface $episodeSession;
+    private EpisodeSession $episodeSession;
     private UserGet $userGet;
     private EpisodeRepositoryInterface $episodeRepository;
 
     public function __construct(
-        EpisodeSessionInterface $session,
+        EpisodeSession $session,
         UserGet $userGet,
         EpisodeRepositoryInterface $episodeRepository,
     ) {

@@ -8,7 +8,6 @@ use App\Localingo\Application\Sample\SampleBuildCollection;
 use App\Localingo\Application\User\UserGet;
 use App\Localingo\Domain\Episode\Episode;
 use App\Localingo\Domain\Episode\EpisodeRepositoryInterface;
-use App\Localingo\Infrastructure\Session\EpisodeSession;
 use Exception;
 
 class EpisodeCreate

@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Infrastructure\Session;
+namespace App\Localingo\Application\Episode;
 
 use App\Localingo\Domain\Episode\Episode;
-use App\Localingo\Domain\Episode\EpisodeSessionInterface;
 use App\Shared\Domain\Session\SessionInterface;
 
-class EpisodeSession implements EpisodeSessionInterface
+class EpisodeSession
 {
     private const KEY_EPISODE_ID = 'episode_id';
     private SessionInterface $session;
