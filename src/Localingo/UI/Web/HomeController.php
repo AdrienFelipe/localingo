@@ -37,7 +37,7 @@ class HomeController
 
         $sample = $episode->getSamples()->offsetGet(0);
 
-        $template = 'sample_card.html.twig';
+        $template = 'exercise_card.html.twig';
         $variables = [
             'sample' => $sample,
             'form' => $this->homeForm->build($sample),

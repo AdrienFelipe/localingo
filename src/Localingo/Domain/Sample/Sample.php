@@ -13,7 +13,7 @@ class Sample
     private string $word;
     private string $translation;
     private string $state;
-    private string $case;
+    private ?string $case;
 
     public function __construct(
         string $declined,
@@ -23,7 +23,7 @@ class Sample
         string $word,
         string $translation,
         string $state,
-        string $case,
+        ?string $case,
     ) {
         $this->declined = $declined;
         $this->declination = $declination;
@@ -70,7 +70,7 @@ class Sample
         return $this->state;
     }
 
-    public function getCase(): string
+    public function getCase(): ?string
     {
         return $this->case;
     }
@@ -110,7 +110,7 @@ class Sample
         $this->state = $state;
     }
 
-    public function setCase(string $case): void
+    public function setCase(?string $case): void
     {
         $this->case = $case;
     }
