@@ -34,11 +34,11 @@ class HomeController
 
         $sample = $episode->getSamples()->offsetGet(0);
 
-        $template = 'base.html.twig';
+        $template = 'sample_card.html.twig';
         $variables = [
             'sample' => $sample,
         ];
 
-        return $this->response->build($template, $variables);
+        return $this->response->build($template, $variables, $sample);
     }
 }

@@ -1,0 +1,54 @@
+{# @var sample \App\Localingo\Domain\Sample\Sample #}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+
+    <div class="container">
+        <div class="row justify-content-center mt-4">
+            <div class="col-auto">
+                <div class="card bg-light" style="width: 20rem;">
+                    {{ form_start(form) }}
+                    <div class="card-header border-0">
+                        <div class="row align-items-start">
+                            <div class="col">
+                                {{ sample.declination }}
+                            </div>
+                            <div class="col text-end">
+                                {{ sample.number }}
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_row(form.translation) }}
+                    {{ form_row(form.declined) }}
+                    {{ form_row(form.word) }}
+                    {{ form_row(form.gender) }}
+                    {{ form_row(form.state) }}
+                    {{ form_row(form.case) }}
+                    <div class="card-footer">
+                        <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+</html>

@@ -74,4 +74,24 @@ class Sample
     {
         return $this->case;
     }
+
+    public function setDeclined(string $declined): void
+    {
+        $this->declined = $declined;
+    }
+
+    public function setDeclination(string $declination): void
+    {
+        $this->declination = $declination;
+    }
+
+    public function setNumber(string $number): void
+    {
+        $this->number = $number;
+    }
+
+    public function setGender(string $gender): void
+    {
+        $this->gender = $gender;
+    }
 }
