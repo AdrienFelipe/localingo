@@ -20,7 +20,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
     public function build(Sample $sample): FormView
     {
         $request = Request::createFromGlobals();
-        $exercise = new Exercise(ExerciseType::translation(), $sample);
+        $exercise = new Exercise(ExerciseType::declined(), $sample);
 
         $floatingConf = [
             'required' => false,
@@ -48,7 +48,6 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
         // Declined input setup.
         $isDeclined = $exercise->getType()->isDeclined();
         $declinedConf['attr'] = array_merge($declinedConf['attr'], ['disabled' => !$isDeclined, 'readonly' => !$isDeclined]);
-        $wordConf['attr'] = array_merge($wordConf['attr'], ['disabled' => !$isDeclined, 'readonly' => !$isDeclined]);
 
         $builder = $this->createFormBuilder($exercise->getDTO())
             ->add('translation', TextType::class, $translationConf)
@@ -59,7 +58,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
             ->add('case', TextType::class, $whiteConf)
             ->add('next', SubmitType::class, [
                 'label' => 'Check',
-                'row_attr' => ['class' => 'p-2 d-grid'],
+                'row_attr' => ['class' => 'p-2 d-grid border-top'],
             ]);
         $form = $builder->getForm();
 
@@ -67,10 +66,30 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var ExerciseDTO $submittedDTO */
             $submittedDTO = $form->getData();
-            /** @var ?mixed $value */
-            foreach ((array) $submittedDTO as $property => $value) {
-                if (!$value) {
-                    $submittedDTO->$property = $exercise->getDTO()->$property;
+            /** @var array<string, ?string> $submittedValues */
+            $submittedValues = (array) $submittedDTO;
+            foreach ($submittedValues as $property => $submittedValue) {
+                /** @var ?string $exerciseValue */
+                $exerciseValue = $exercise->getDTO()->$property;
+                $sampleValue = strtolower((string) ExerciseDTO::fromSample($sample)->$property);
+                if (!$submittedValue) {
+                    $submittedDTO->$property = $sampleValue;
+                } elseif (!$exerciseValue) {
+                    $submittedValue = strtolower(trim($submittedValue));
+                    $item = $builder->get($property);
+                    $options = $builder->get($property)->getOptions();
+                    $class = $submittedValue === $sampleValue ? 'is-valid' : 'is-invalid';
+                    /** @psalm-suppress MixedArrayAccess **/
+                    if (is_string($options['attr']['class'] ?? null)) {
+                        /** @psalm-suppress MixedOperand, MixedArrayAssignment **/
+                        $options['attr']['class'] .= " $class";
+                    } else {
+                        /** @psalm-suppress MixedArrayAssignment **/
+                        $options['attr']['class'] = $class;
+                    }
+                    $builder->remove($property);
+                    $type = $item->getType()->getInnerType()::class;
+                    $builder->add($property, $type, $options);
                 }
             }
 
