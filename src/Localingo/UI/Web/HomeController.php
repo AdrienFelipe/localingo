@@ -6,7 +6,8 @@ namespace App\Localingo\UI\Web;
 
 use App\Localingo\Application\Episode\EpisodeCreate;
 use App\Localingo\Application\Episode\EpisodeGetCurrent;
-use App\Localingo\Application\Exercise\ExerciseValidation;
+use App\Localingo\Application\Exercise\ExerciseBuildForm;
+use App\Localingo\Application\Exercise\ExerciseGetCorrections;
 use App\Localingo\Application\LocalData\LocalDataInitialize;
 use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Exercise\ExerciseFormInterface;
@@ -20,9 +21,10 @@ class HomeController
     private EpisodeCreate $episodeCreate;
     private ResponseInterface $response;
     private ExerciseFormInterface $exerciseForm;
-    private ExerciseValidation $exerciseValidation;
+    private ExerciseGetCorrections $exerciseValidation;
+    private ExerciseBuildForm $exerciseBuildForm;
 
-    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGetCurrent $episodeGetCurrent, EpisodeCreate $episodeCreate, ResponseInterface $response, ExerciseFormInterface $exerciseForm, ExerciseValidation $exerciseValidation)
+    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGetCurrent $episodeGetCurrent, EpisodeCreate $episodeCreate, ResponseInterface $response, ExerciseFormInterface $exerciseForm, ExerciseGetCorrections $exerciseValidation, ExerciseBuildForm $exerciseBuildForm)
     {
         $this->dataInitialize = $dataInitialize;
         $this->episodeGetCurrent = $episodeGetCurrent;
@@ -30,6 +32,7 @@ class HomeController
         $this->response = $response;
         $this->exerciseForm = $exerciseForm;
         $this->exerciseValidation = $exerciseValidation;
+        $this->exerciseBuildForm = $exerciseBuildForm;
     }
 
     public function call(): mixed
@@ -43,25 +46,22 @@ class HomeController
 
         $exercise = new Exercise(ExerciseType::declined(), $sample);
 
-        $this->exerciseForm->initialize($exercise);
-        if (!$this->exerciseForm->isSubmitted()) {
-            // Form was not yet submitted: display exercise questions.
-            /** @psalm-suppress MixedAssignment */
-            $form = $this->exerciseForm->buildExerciseForm($exercise);
-        } else {
-            // Form was submitted: display corrections.
-            $submittedDTO = $this->exerciseForm->getSubmitted();
-            $corrections = $this->exerciseValidation->getCorrections($exercise, $submittedDTO);
-            /** @psalm-suppress MixedAssignment */
-            $form = $this->exerciseForm->buildAnswersForm($exercise, $corrections);
-        }
-
         $template = 'exercise_card.html.twig';
         $variables = [
             'sample' => $sample,
-            'form' => $form,
+            'form' => ($this->exerciseBuildForm)($exercise),
         ];
 
         return $this->response->build($template, $variables);
+    }
+
+    public function getExerciseForm(): ExerciseFormInterface
+    {
+        return $this->exerciseForm;
+    }
+
+    public function getExerciseValidation(): ExerciseGetCorrections
+    {
+        return $this->exerciseValidation;
     }
 }
