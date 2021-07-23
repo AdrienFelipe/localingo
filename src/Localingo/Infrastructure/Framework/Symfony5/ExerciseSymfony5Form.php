@@ -56,15 +56,12 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
      */
     public function buildExerciseForm(Exercise $exercise): FormView
     {
-        /** @psalm-suppress PossiblyNullReference  */
-        return $this->form->createView();
+        return $this->formBuilder($exercise)->getForm()->createView();
     }
 
     public function buildAnswersForm(Exercise $exercise, array $corrections): FormView
     {
-        $form = $this->formBuilder($exercise, $corrections)->getForm();
-
-        return $form->createView();
+        return $this->formBuilder($exercise, $corrections)->getForm()->createView();
     }
 
     /**
@@ -119,6 +116,8 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
                 'class' => "border-0 rounded-0 bg-light $style_classes $correction_classes",
                 'disabled' => !($isExercise && $isQuestion),
                 'readonly' => !($isExercise && $isQuestion),
+                'autocomplete' => 'off',
+                'autofocus ' => true,
             ],
             'row_attr' => [
                 'class' => 'form-floating mb-1 border-top',

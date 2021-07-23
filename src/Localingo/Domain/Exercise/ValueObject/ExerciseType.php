@@ -16,6 +16,17 @@ class ExerciseType
         $this->value = $value;
     }
 
+    /**
+     * @return self[]
+     */
+    public static function getAll(): array
+    {
+        return [
+            self::translation(),
+            self::declined(),
+        ];
+    }
+
     public static function translation(): self
     {
         return new self(self::TYPE_TRANSLATION);

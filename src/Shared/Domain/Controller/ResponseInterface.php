@@ -9,5 +9,5 @@ interface ResponseInterface
     /**
      * @param array<string, mixed> $variables
      */
-    public function build(string $template, array $variables): mixed;
+    public function build(string $template, array $variables = []): mixed;
 }

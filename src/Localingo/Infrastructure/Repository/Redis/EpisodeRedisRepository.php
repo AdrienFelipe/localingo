@@ -6,6 +6,7 @@ namespace App\Localingo\Infrastructure\Repository\Redis;
 
 use App\Localingo\Domain\Episode\Episode;
 use App\Localingo\Domain\Episode\EpisodeRepositoryInterface;
+use App\Localingo\Domain\Episode\Exception\EpisodeVersionException;
 use App\Localingo\Domain\User\User;
 use ErrorException;
 use Predis\Client;
@@ -27,7 +28,7 @@ class EpisodeRedisRepository implements EpisodeRepositoryInterface
             // TODO: make \__PHP_Incomplete_Class throw an exception from php.ini
             /** @var ?Episode $episode */
             $episode = unserialize($data, ['allow_classes' => true]);
-        } catch (ErrorException | TypeError) {
+        } catch (ErrorException | TypeError | EpisodeVersionException) {
             return null;
         }
 

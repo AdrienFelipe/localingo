@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Exercise;
 
+use App\Localingo\Domain\Exercise\ValueObject\ExerciseState;
 use App\Localingo\Domain\Exercise\ValueObject\ExerciseType;
 use App\Localingo\Domain\Sample\Sample;
 
@@ -11,6 +12,7 @@ class Exercise
 {
     private Sample $sample;
     private ExerciseType $type;
+    private ExerciseState $state;
     /** @var string[] */
     private array $questions;
 
@@ -18,6 +20,7 @@ class Exercise
     {
         $this->type = $type;
         $this->sample = $sample;
+        $this->state = ExerciseState::open();
         $this->questions = $this->buildQuestions($type);
     }
 
@@ -64,5 +67,26 @@ class Exercise
         }
 
         return $dto;
+    }
+
+    public function getState(): ExerciseState
+    {
+        return $this->state;
+    }
+
+    /**
+     * @throws Exception\ExerciseMissingStateOrder
+     */
+    public function previousState(): void
+    {
+        $this->state = $this->state->previous();
+    }
+
+    /**
+     * @throws Exception\ExerciseMissingStateOrder
+     */
+    public function nextState(): void
+    {
+        $this->state = $this->state->next();
     }
 }

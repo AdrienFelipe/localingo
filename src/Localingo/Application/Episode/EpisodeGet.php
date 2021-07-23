@@ -8,7 +8,7 @@ use App\Localingo\Application\User\UserGetCurrent;
 use App\Localingo\Domain\Episode\Episode;
 use App\Localingo\Domain\Episode\EpisodeRepositoryInterface;
 
-class EpisodeGetCurrent
+class EpisodeGet
 {
     private EpisodeSession $episodeSession;
     private UserGetCurrent $userGetCurrent;
@@ -24,7 +24,7 @@ class EpisodeGetCurrent
         $this->episodeRepository = $episodeRepository;
     }
 
-    public function __invoke(): ?Episode
+    public function current(): ?Episode
     {
         // Get episode ID from current session.
         $episodeId = $this->episodeSession->loadEpisodeId();

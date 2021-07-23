@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Symfony5Response extends AbstractController implements ResponseInterface
 {
-    public function build(string $template, array $variables): Response
+    public function build(string $template, array $variables = []): Response
     {
         return $this->render($template, $variables);
     }

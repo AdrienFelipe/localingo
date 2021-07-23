@@ -5,51 +5,91 @@ declare(strict_types=1);
 namespace App\Localingo\UI\Web;
 
 use App\Localingo\Application\Episode\EpisodeCreate;
-use App\Localingo\Application\Episode\EpisodeGetCurrent;
+use App\Localingo\Application\Episode\EpisodeGet;
+use App\Localingo\Application\Episode\EpisodeSave;
 use App\Localingo\Application\Exercise\ExerciseBuildForm;
 use App\Localingo\Application\Exercise\ExerciseGetCorrections;
 use App\Localingo\Application\LocalData\LocalDataInitialize;
-use App\Localingo\Domain\Exercise\Exercise;
+use App\Localingo\Domain\Episode\ValueObject\EpisodeState;
+use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
 use App\Localingo\Domain\Exercise\ExerciseFormInterface;
-use App\Localingo\Domain\Exercise\ValueObject\ExerciseType;
 use App\Shared\Domain\Controller\ResponseInterface;
 
 class HomeController
 {
     private LocalDataInitialize $dataInitialize;
-    private EpisodeGetCurrent $episodeGetCurrent;
+    private EpisodeGet $episodeGet;
     private EpisodeCreate $episodeCreate;
+    private EpisodeSave $episodeSave;
     private ResponseInterface $response;
     private ExerciseFormInterface $exerciseForm;
     private ExerciseGetCorrections $exerciseValidation;
     private ExerciseBuildForm $exerciseBuildForm;
 
-    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGetCurrent $episodeGetCurrent, EpisodeCreate $episodeCreate, ResponseInterface $response, ExerciseFormInterface $exerciseForm, ExerciseGetCorrections $exerciseValidation, ExerciseBuildForm $exerciseBuildForm)
+    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGet $episodeGet, EpisodeCreate $episodeCreate, EpisodeSave $episodeSave, ResponseInterface $response, ExerciseFormInterface $exerciseForm, ExerciseGetCorrections $exerciseValidation, ExerciseBuildForm $exerciseBuildForm)
     {
         $this->dataInitialize = $dataInitialize;
-        $this->episodeGetCurrent = $episodeGetCurrent;
+        $this->episodeGet = $episodeGet;
         $this->episodeCreate = $episodeCreate;
+        $this->episodeSave = $episodeSave;
         $this->response = $response;
         $this->exerciseForm = $exerciseForm;
         $this->exerciseValidation = $exerciseValidation;
         $this->exerciseBuildForm = $exerciseBuildForm;
     }
 
+    /**
+     * @throws ExerciseMissingStateOrder
+     */
     public function call(): mixed
     {
         // Load data from local files.
         ($this->dataInitialize)();
 
         // Load current episode or create a new one.
-        $episode = ($this->episodeGetCurrent)() ?: ($this->episodeCreate)();
-        $sample = $episode->getSamples()->offsetGet(0);
+        $episode = $this->episodeGet->current() ?: $this->episodeCreate->new();
+        $exercise = $episode->getCurrentExercise();
 
-        $exercise = new Exercise(ExerciseType::declined(), $sample);
+        // Only display exercises that are not done yet.
+        if (!$exercise || $episode->getState()->is_next()) {
+            $exercise = $episode->nextExercise();
+            $episode->setState(EpisodeState::question());
+        }
+
+        if (!$exercise) {
+            // No exercises are left, go to finish page.
+            $episode->setState(EpisodeState::finished());
+
+            return $this->response->build('home.html.twig');
+        }
+
+        // Form MUST first be initialized.
+        $this->exerciseForm->initialize($exercise);
+        // Form was not yet submitted: display exercise questions.
+        if (!$this->exerciseForm->isSubmitted() || $episode->getState()->is_question()) {
+            /** @psalm-suppress MixedAssignment */
+            $form = $this->exerciseForm->buildExerciseForm($exercise);
+            // Update episode state.
+            $episode->setState(EpisodeState::answer());
+        } else {
+            // Form was submitted: display corrections.
+            $submittedDTO = $this->exerciseForm->getSubmitted();
+            $corrections = ($this->exerciseValidation)($exercise, $submittedDTO);
+            /** @psalm-suppress MixedAssignment */
+            $form = $this->exerciseForm->buildAnswersForm($exercise, $corrections);
+            // Update episode state.
+            $episode->setState(EpisodeState::next());
+            // Update exercise state.
+            $isCorrect = !in_array(false, $corrections, true);
+            $isCorrect ? $exercise->nextState() : $exercise->previousState();
+        }
+
+        $this->episodeSave->apply($episode);
 
         $template = 'exercise_card.html.twig';
         $variables = [
-            'sample' => $sample,
-            'form' => ($this->exerciseBuildForm)($exercise),
+            'sample' => $exercise->getSample(),
+            'form' => $form,
         ];
 
         return $this->response->build($template, $variables);
