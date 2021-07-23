@@ -12,7 +12,7 @@ use Exception;
 
 class EpisodeCreate
 {
-    private const WORDS_BY_EPISODE = 2;
+    private const WORDS_BY_EPISODE = 1;
     private UserGetCurrent $userGetCurrent;
     private UserCreate $userCreate;
     private SampleBuildCollection $buildSamples;

@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+
+    <meta charset="UTF-8">
+    <title>{% block title %}LocaLingo!{% endblock %}</title>
+
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-auto">
+                <div class="card bg-light" style="width: 20rem;">
+                    <div class="card-header">
+                        Episode completed
+                    </div>
+                    <div class="card-body justify-content-center">
+                        <h2 class="text-success text-center">Great job!</h2>
+                        <i class="fab fa-500px"></i>
+                    </div>
+                    <div class="p-2 d-grid border-top">
+                        <a class="btn-success btn" href="/">Start new?</a>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+</html>

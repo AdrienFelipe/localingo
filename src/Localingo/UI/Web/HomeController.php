@@ -47,7 +47,10 @@ class HomeController
         ($this->dataInitialize)();
 
         // Load current episode or create a new one.
-        $episode = $this->episodeGet->current() ?: $this->episodeCreate->new();
+        $episode = $this->episodeGet->current();
+        if (!$episode || $episode->getState()->is_finished()) {
+            $episode = $this->episodeCreate->new();
+        }
         $exercise = $episode->getCurrentExercise();
 
         // Only display exercises that are not done yet.
@@ -56,11 +59,11 @@ class HomeController
             $episode->setState(EpisodeState::question());
         }
 
-        if (!$exercise) {
-            // No exercises are left, go to finish page.
+        // No exercises are left, go to finish page.
+        if (!$exercise || true) {
             $episode->setState(EpisodeState::finished());
 
-            return $this->response->build('home.html.twig');
+            return $this->response->build('episode_over.html.twig');
         }
 
         // Form MUST first be initialized.
