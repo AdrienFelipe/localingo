@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Localingo\Infrastructure\Framework\Symfony5;
 
-use App\Localingo\Application\Exercise\ExerciseValidation;
 use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Exercise\ExerciseDTO;
 use App\Localingo\Domain\Exercise\ExerciseFormInterface;
-use App\Localingo\Domain\Exercise\ValueObject\ExerciseType;
-use App\Localingo\Domain\Sample\Sample;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -22,29 +20,49 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
     private const STYLE_ROW_BIG = 'big';
     private const STYLE_ROW_NORMAL = 'normal';
 
-    private ExerciseValidation $exerciseValidation;
+    /**
+     * @psalm-suppress TooManyTemplateParams
+     *
+     * @var ?FormInterface <string, FormInterface>
+     */
+    private ?FormInterface $form = null;
 
-    public function __construct(ExerciseValidation $exerciseValidation)
-    {
-        $this->exerciseValidation = $exerciseValidation;
-    }
-
-    public function build(Sample $sample): FormView
+    public function initialize(Exercise $exercise): void
     {
         $request = Request::createFromGlobals();
-        $exercise = new Exercise(ExerciseType::declined(), $sample);
+        $this->form = $this->formBuilder($exercise)->getForm();
+        $this->form->handleRequest($request);
+    }
 
-        $form = $this->formBuilder($exercise)->getForm();
-        $form->handleRequest($request);
+    public function isSubmitted(): bool
+    {
+        /** @psalm-suppress PossiblyNullReference  */
+        return $this->form->isSubmitted() && $this->form->isValid();
+    }
 
-        // Form was submitted.
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var ExerciseDTO $submittedDTO */
-            $submittedDTO = $form->getData();
-            $corrections = $this->exerciseValidation->getCorrections($exercise, $submittedDTO);
-            // Build a brand new form with all the values.
-            $form = $this->formBuilder($exercise, $corrections)->getForm();
-        }
+    public function getSubmitted(): ExerciseDTO
+    {
+        /**
+           @psalm-suppress PossiblyNullReference
+         * @var ExerciseDTO
+         */
+        return $this->form->getData();
+    }
+
+    /**
+     * @psalm-suppress TooManyTemplateParams
+     *
+     * @return FormView<mixed>
+     */
+    public function buildExerciseForm(Exercise $exercise): FormView
+    {
+        /** @psalm-suppress PossiblyNullReference  */
+        return $this->form->createView();
+    }
+
+    public function buildAnswersForm(Exercise $exercise, array $corrections): FormView
+    {
+        $form = $this->formBuilder($exercise, $corrections)->getForm();
 
         return $form->createView();
     }
@@ -54,7 +72,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
      *
      * @psalm-suppress TooManyTemplateParams
      *
-     * @return FormBuilderInterface<mixed,mixed>
+     * @return FormBuilderInterface<mixed>
      */
     private function formBuilder(Exercise $exercise, array $corrections = []): FormBuilderInterface
     {
