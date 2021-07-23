@@ -28,7 +28,7 @@ class EpisodeGetCurrent
     {
         // Get episode ID from current session.
         $episodeId = $this->episodeSession->loadEpisodeId();
-        if (null === $episodeId) {
+        if ($episodeId === null) {
             return null;
         }
 

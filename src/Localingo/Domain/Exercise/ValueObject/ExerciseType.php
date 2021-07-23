@@ -23,7 +23,7 @@ class ExerciseType
 
     public function isTranslation(): bool
     {
-        return self::TYPE_TRANSLATION === $this->value;
+        return $this->value === self::TYPE_TRANSLATION;
     }
 
     public static function declined(): self
@@ -33,6 +33,6 @@ class ExerciseType
 
     public function isDeclined(): bool
     {
-        return self::TYPE_DECLINED === $this->value;
+        return $this->value === self::TYPE_DECLINED;
     }
 }

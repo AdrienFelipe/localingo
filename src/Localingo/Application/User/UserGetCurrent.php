@@ -21,7 +21,7 @@ class UserGetCurrent
     public function __invoke(): ?User
     {
         $user_id = $this->session->loadUserId();
-        if (null === $user_id) {
+        if ($user_id === null) {
             return null;
         }
 

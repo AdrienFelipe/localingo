@@ -86,7 +86,7 @@ class SampleRedisRepository implements SampleRepositoryInterface
             });
             $values = preg_grep($pattern, $values) ?: [];
             array_push($keys, ...$values);
-        } while ('0' !== $cursor);
+        } while ($cursor !== '0');
 
         $samples = [];
         foreach ($keys as $key) {
@@ -98,9 +98,9 @@ class SampleRedisRepository implements SampleRepositoryInterface
 
     public static function key_pattern(?string $word, ?string $declination, ?string $number = null): string
     {
-        null !== $word or $word = '*';
-        null !== $declination or $declination = '*';
-        null !== $number or $number = '*';
+        $word !== null or $word = '*';
+        $declination !== null or $declination = '*';
+        $number !== null or $number = '*';
 
         return implode(':', [
             self::SAMPLE_INDEX,
