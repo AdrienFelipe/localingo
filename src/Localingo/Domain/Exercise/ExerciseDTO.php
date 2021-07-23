@@ -42,4 +42,17 @@ class ExerciseDTO
             $sample->getCase(),
         );
     }
+
+    /**
+     * Allows access to object properties by reference, protecting from further breaking on refactor.
+     */
+    public function asPropertyNames(): self
+    {
+        $properties = clone $this;
+        foreach (array_keys((array) $properties) as $property) {
+            $properties->$property = $property;
+        }
+
+        return $properties;
+    }
 }

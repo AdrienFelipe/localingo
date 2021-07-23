@@ -11,25 +11,29 @@ class Exercise
 {
     private Sample $sample;
     private ExerciseType $type;
-    private ExerciseDTO $DTO;
+    /** @var string[] */
+    private array $questions;
 
     public function __construct(ExerciseType $type, Sample $sample)
     {
         $this->type = $type;
         $this->sample = $sample;
-        $this->DTO = $this->setupDTO($type, $sample);
+        $this->questions = $this->buildQuestions($type);
     }
 
-    private function setupDTO(ExerciseType $type, Sample $sample): ExerciseDTO
+    /**
+     * @return string[]
+     */
+    private function buildQuestions(ExerciseType $type): array
     {
-        $dto = ExerciseDTO::fromSample($sample);
+        $questions = [];
         if ($type->isTranslation()) {
-            $dto->translation = null;
+            $questions[] = (string) $this->getDTO()->asPropertyNames()->translation;
         } elseif ($type->isDeclined()) {
-            $dto->declined = null;
+            $questions[] = (string) $this->getDTO()->asPropertyNames()->declined;
         }
 
-        return $dto;
+        return $questions;
     }
 
     public function getSample(): Sample
@@ -42,8 +46,23 @@ class Exercise
         return $this->type;
     }
 
-    public function getDTO(): ExerciseDTO
+    /**
+     * @return string[]
+     */
+    public function getQuestions(): array
     {
-        return clone $this->DTO;
+        return $this->questions;
+    }
+
+    public function getDTO(bool $asExercise = false): ExerciseDTO
+    {
+        $dto = ExerciseDTO::fromSample($this->sample);
+        if ($asExercise) {
+            foreach ($this->questions as $question) {
+                $dto->$question = null;
+            }
+        }
+
+        return $dto;
     }
 }
