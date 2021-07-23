@@ -21,6 +21,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
 {
     private const STYLE_ROW_BIG = 'big';
     private const STYLE_ROW_NORMAL = 'normal';
+
     private ExerciseValidation $exerciseValidation;
 
     public function __construct(ExerciseValidation $exerciseValidation)
@@ -60,8 +61,9 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
         $isExercise = !$corrections;
         $questions = $exercise->getQuestions();
         $exerciseDTO = $exercise->getDTO($isExercise);
-
         $builder = $this->createFormBuilder($exerciseDTO);
+
+        // Exercise values.
         $properties = $exercise->getDTO()->asPropertyNames();
         $this->addTextRow($builder, (string) $properties->translation, self::STYLE_ROW_BIG, $isExercise, $questions, $corrections);
         $this->addTextRow($builder, (string) $properties->declined, self::STYLE_ROW_BIG, $isExercise, $questions, $corrections);
@@ -69,10 +71,9 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
         $this->addTextRow($builder, (string) $properties->gender, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
         $this->addTextRow($builder, (string) $properties->state, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
         $this->addTextRow($builder, (string) $properties->case, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
-        $builder->add('next', SubmitType::class, [
-            'label' => 'Check',
-            'row_attr' => ['class' => 'p-2 d-grid border-top'],
-        ]);
+
+        // Submit button.
+        $this->addSubmitRow($builder, $isExercise);
 
         return $builder;
     }
@@ -106,5 +107,21 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
             ],
         ];
         $builder->add($name, TextType::class, $floatingConf);
+    }
+
+    /**
+     * @psalm-suppress TooManyTemplateParams
+     *
+     * @param FormBuilderInterface<mixed> $builder
+     */
+    private function addSubmitRow(FormBuilderInterface $builder, bool $isExercise): void
+    {
+        $label = $isExercise ? 'Check' : 'Next';
+        $class = $isExercise ? 'btn-primary' : 'btn-success';
+        $builder->add('next', SubmitType::class, [
+            'label' => $label,
+            'attr' => ['class' => "$class btn"],
+            'row_attr' => ['class' => 'p-2 d-grid border-top'],
+        ]);
     }
 }
