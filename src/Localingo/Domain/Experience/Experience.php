@@ -85,4 +85,45 @@ class Experience
     {
         return $this->caseExperiences->getOrAdd($sample->getCase());
     }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function serialize(): array
+    {
+        return [
+            'user' => $this->user->getId(),
+            'version' => $this->version,
+            'declinations' => $this->declinationExperiences->serializeArray(),
+            'words' => $this->wordExperiences->serializeArray(),
+            'samples' => $this->sampleExperiences->serializeArray(),
+            'cases' => $this->caseExperiences->serializeArray(),
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function unserialize(array $data): self
+    {
+        $this->version = (int) ($data['version'] ?? 0);
+
+        /** @var array<string, array> $items */
+        $items = (array) ($data['declinations'] ?? []);
+        $this->declinationExperiences = (new ExperienceItemCollection())->unserializeArray($items);
+
+        /** @var array<string, array> $items */
+        $items = (array) ($data['words'] ?? []);
+        $this->wordExperiences = (new ExperienceItemCollection())->unserializeArray($items);
+
+        /** @var array<string, array> $items */
+        $items = (array) ($data['samples'] ?? []);
+        $this->sampleExperiences = (new ExperienceItemCollection())->unserializeArray($items);
+
+        /** @var array<string, array> $items */
+        $items = (array) ($data['samples'] ?? []);
+        $this->caseExperiences = (new ExperienceItemCollection())->unserializeArray($items);
+
+        return $this;
+    }
 }

@@ -36,7 +36,10 @@ setup: ## spin up environment.
 # Create 'app' user from current user id and group.
 		$(EXEC) adduser -Du $$(id -u) -h /app app app
 		$(EXEC) /bin/sh -c "yes app | passwd app"
-## Install project dependencies
+# Make sure /app/files folder is writable by www-data
+		$(EXEC) chown app:www-data /app/files
+		$(EXEC) chmod g+wr /app/files
+# Install project dependencies
 		$(EXEC_U) "composer --working-dir=$(FRAMEWORK) install"
 		$(EXEC_U) "yarn --cwd=$(FRAMEWORK) install"
 

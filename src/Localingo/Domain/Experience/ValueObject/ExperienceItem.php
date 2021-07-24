@@ -47,4 +47,29 @@ class ExperienceItem
         $this->good *= self::FACTOR_GOOD ** ($days / self::FACTOR_GOOD_DAYS);
         $this->updated = new \DateTimeImmutable();
     }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function serialize(): array
+    {
+        return [
+            'good' => (int) ceil($this->good),
+            'bad' => (int) ceil($this->bad),
+            'updated' => $this->updated->format('Y-m-d'),
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $values
+     */
+    public function unserialize(array $values): self
+    {
+        $this->good = (float) $values['good'];
+        $this->bad = (float) $values['bad'];
+        $updated = (string) $values['updated'];
+        $this->updated = \DateTimeImmutable::createFromFormat('Y-m-d', $updated) ?: new \DateTimeImmutable();
+
+        return $this;
+    }
 }

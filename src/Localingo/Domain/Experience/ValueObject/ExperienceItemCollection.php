@@ -6,6 +6,9 @@ namespace App\Localingo\Domain\Experience\ValueObject;
 
 /**
  * @extends \ArrayObject<string, ExperienceItem>
+ * @psalm-suppress ImplementedReturnTypeMismatch
+ *
+ * @method ExperienceItem[] getIterator()
  */
 class ExperienceItemCollection extends \ArrayObject
 {
@@ -28,5 +31,33 @@ class ExperienceItemCollection extends \ArrayObject
         $this->offsetSet($key, $item);
 
         return $item;
+    }
+
+    /**
+     * @return array<string, array>
+     */
+    public function serializeArray(): array
+    {
+        $data = [];
+        foreach ($this->getIterator() as $key => $item) {
+            $data[$key] = $item->serialize();
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array<string, array> $data
+     */
+    public function unserializeArray(array $data): self
+    {
+        /** @var array<string, mixed> $values */
+        foreach ($data as $key => $values) {
+            $item = new ExperienceItem($key);
+            $item->unserialize($values);
+            $this->offsetSet($key, $item);
+        }
+
+        return $this;
     }
 }
