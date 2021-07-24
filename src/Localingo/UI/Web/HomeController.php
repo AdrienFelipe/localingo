@@ -60,8 +60,9 @@ class HomeController
         }
 
         // No exercises are left, go to finish page.
-        if (!$exercise || true) {
+        if (!$exercise) {
             $episode->setState(EpisodeState::finished());
+            $this->episodeSave->apply($episode);
 
             return $this->response->build('episode_over.html.twig');
         }
