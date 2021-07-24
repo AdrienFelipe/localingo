@@ -23,7 +23,7 @@ class EpisodeState
         return new self(self::STATE_QUESTION);
     }
 
-    public function is_question(): bool
+    public function isQuestion(): bool
     {
         return $this->value === self::STATE_QUESTION;
     }
@@ -33,7 +33,7 @@ class EpisodeState
         return new self(self::STATE_ANSWER);
     }
 
-    public function is_answer(): bool
+    public function isAnswer(): bool
     {
         return $this->value === self::STATE_ANSWER;
     }
@@ -43,7 +43,7 @@ class EpisodeState
         return new self(self::STATE_NEXT);
     }
 
-    public function is_next(): bool
+    public function isNext(): bool
     {
         return $this->value === self::STATE_NEXT;
     }
@@ -53,7 +53,7 @@ class EpisodeState
         return new self(self::STATE_FINISHED);
     }
 
-    public function is_finished(): bool
+    public function isFinished(): bool
     {
         return $this->value === self::STATE_FINISHED;
     }

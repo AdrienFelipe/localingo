@@ -34,16 +34,27 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
         $this->form->handleRequest($request);
     }
 
-    public function isSubmitted(): bool
+    public function isSubmitted(Exercise $exercise): bool
     {
-        /** @psalm-suppress PossiblyNullReference  */
+        // Initialize form if not done yet.
+        if ($this->form === null) {
+            $this->initialize($exercise);
+        }
+
+        /** @psalm-suppress PossiblyNullReference */
         return $this->form->isSubmitted() && $this->form->isValid();
     }
 
-    public function getSubmitted(): ExerciseDTO
+    public function getSubmitted(Exercise $exercise): ExerciseDTO
     {
+        // Initialize form if not done yet.
+        if ($this->form === null) {
+            $this->initialize($exercise);
+        }
+
         /**
-           @psalm-suppress PossiblyNullReference
+         * @psalm-suppress PossiblyNullReference
+         *
          * @var ExerciseDTO
          */
         return $this->form->getData();
@@ -56,12 +67,12 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
      */
     public function buildExerciseForm(Exercise $exercise): FormView
     {
-        return $this->formBuilder($exercise)->getForm()->createView();
+        return $this->formBuilder($exercise, true)->getForm()->createView();
     }
 
     public function buildAnswersForm(Exercise $exercise, array $corrections): FormView
     {
-        return $this->formBuilder($exercise, $corrections)->getForm()->createView();
+        return $this->formBuilder($exercise, false, $corrections)->getForm()->createView();
     }
 
     /**
@@ -71,9 +82,8 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
      *
      * @return FormBuilderInterface<mixed>
      */
-    private function formBuilder(Exercise $exercise, array $corrections = []): FormBuilderInterface
+    private function formBuilder(Exercise $exercise, bool $isExercise = true, array $corrections = []): FormBuilderInterface
     {
-        $isExercise = !$corrections;
         $questions = $exercise->getQuestions();
         $exerciseDTO = $exercise->getDTO($isExercise);
         $builder = $this->createFormBuilder($exerciseDTO);

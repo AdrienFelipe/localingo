@@ -8,6 +8,7 @@ use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
 
 class ExerciseState
 {
+    private const STATE_NEW = 'new';
     private const STATE_FAILED = 'failed';
     private const STATE_OPEN = 'open';
     private const STATE_DONE = 'done';
@@ -25,12 +26,22 @@ class ExerciseState
         $this->value = $value;
     }
 
+    public static function new(): self
+    {
+        return new self(self::STATE_NEW);
+    }
+
+    public function isNew(): bool
+    {
+        return $this->value === self::STATE_NEW;
+    }
+
     public static function failed(): self
     {
         return new self(self::STATE_FAILED);
     }
 
-    public function is_failed(): bool
+    public function isFailed(): bool
     {
         return $this->value === self::STATE_FAILED;
     }
@@ -40,7 +51,7 @@ class ExerciseState
         return new self(self::STATE_OPEN);
     }
 
-    public function is_open(): bool
+    public function isOpen(): bool
     {
         return $this->value === self::STATE_OPEN;
     }
@@ -50,7 +61,7 @@ class ExerciseState
         return new self(self::STATE_DONE);
     }
 
-    public function is_done(): bool
+    public function isDone(): bool
     {
         return $this->value === self::STATE_DONE;
     }
@@ -75,6 +86,11 @@ class ExerciseState
      */
     public function next(): self
     {
+        // 'New' state should only happen once.
+        if ($this->value === self::STATE_NEW) {
+            return self::open();
+        }
+
         $key = array_search($this->value, self::STATES_ORDER);
         if (!is_int($key)) {
             throw new ExerciseMissingStateOrder();

@@ -27,7 +27,7 @@ class ExerciseCollection extends ArrayObject
     {
         // Keep only 'not done' exercises.
         $exercises = array_filter($this->getArrayCopy(), static function (Exercise $exercise) {
-            return !$exercise->getState()->is_done();
+            return !$exercise->getState()->isDone();
         });
         // Exit with null if no exercises were left.
         if (!$keys = array_keys($exercises)) {

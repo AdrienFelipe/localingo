@@ -6,11 +6,9 @@ namespace App\Localingo\Domain\Exercise;
 
 interface ExerciseFormInterface
 {
-    public function initialize(Exercise $exercise): void;
+    public function isSubmitted(Exercise $exercise): bool;
 
-    public function isSubmitted(): bool;
-
-    public function getSubmitted(): ExerciseDTO;
+    public function getSubmitted(Exercise $exercise): ExerciseDTO;
 
     public function buildExerciseForm(Exercise $exercise): mixed;
 

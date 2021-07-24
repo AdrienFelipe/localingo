@@ -20,7 +20,7 @@ class Exercise
     {
         $this->type = $type;
         $this->sample = $sample;
-        $this->state = ExerciseState::open();
+        $this->state = ExerciseState::new();
         $this->questions = $this->buildQuestions($type);
     }
 
@@ -54,14 +54,14 @@ class Exercise
      */
     public function getQuestions(): array
     {
-        return $this->questions;
+        return $this->state->isNew() ? [] : $this->questions;
     }
 
     public function getDTO(bool $asExercise = false): ExerciseDTO
     {
         $dto = ExerciseDTO::fromSample($this->sample);
         if ($asExercise) {
-            foreach ($this->questions as $question) {
+            foreach ($this->getQuestions() as $question) {
                 $dto->$question = null;
             }
         }
