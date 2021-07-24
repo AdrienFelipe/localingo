@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain\Controller;
 
+use App\Shared\Domain\Templating\ValueObject\Template;
+
 interface ResponseInterface
 {
-    /**
-     * @param array<string, mixed> $variables
-     */
-    public function build(string $template, array $variables = []): mixed;
+    public function build(Template $template): mixed;
 }

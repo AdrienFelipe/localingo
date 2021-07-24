@@ -14,6 +14,7 @@ use App\Localingo\Domain\Episode\ValueObject\EpisodeState;
 use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
 use App\Localingo\Domain\Exercise\ExerciseFormInterface;
 use App\Shared\Domain\Controller\ResponseInterface;
+use App\Shared\Domain\Templating\TemplatingInterface;
 
 class HomeController
 {
@@ -25,8 +26,9 @@ class HomeController
     private ExerciseFormInterface $exerciseForm;
     private ExerciseGetCorrections $exerciseValidation;
     private ExerciseBuildForm $exerciseBuildForm;
+    private TemplatingInterface $templating;
 
-    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGet $episodeGet, EpisodeCreate $episodeCreate, EpisodeSave $episodeSave, ResponseInterface $response, ExerciseFormInterface $exerciseForm, ExerciseGetCorrections $exerciseValidation, ExerciseBuildForm $exerciseBuildForm)
+    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGet $episodeGet, EpisodeCreate $episodeCreate, EpisodeSave $episodeSave, ResponseInterface $response, ExerciseFormInterface $exerciseForm, ExerciseGetCorrections $exerciseValidation, ExerciseBuildForm $exerciseBuildForm, TemplatingInterface $templating)
     {
         $this->dataInitialize = $dataInitialize;
         $this->episodeGet = $episodeGet;
@@ -36,6 +38,7 @@ class HomeController
         $this->exerciseForm = $exerciseForm;
         $this->exerciseValidation = $exerciseValidation;
         $this->exerciseBuildForm = $exerciseBuildForm;
+        $this->templating = $templating;
     }
 
     /**
@@ -64,7 +67,7 @@ class HomeController
             $episode->setState(EpisodeState::finished());
             $this->episodeSave->apply($episode);
 
-            return $this->response->build('episode_over.html.twig');
+            return $this->response->build($this->templating->episodeOver());
         }
 
         // Form MUST first be initialized.
@@ -87,16 +90,11 @@ class HomeController
             $isCorrect = !in_array(false, $corrections, true);
             $isCorrect ? $exercise->nextState() : $exercise->previousState();
         }
-
         $this->episodeSave->apply($episode);
 
-        $template = 'exercise_card.html.twig';
-        $variables = [
-            'sample' => $exercise->getSample(),
-            'form' => $form,
-        ];
+        $template = $this->templating->episodeCard($exercise->getSample(), $form);
 
-        return $this->response->build($template, $variables);
+        return $this->response->build($template);
     }
 
     public function getExerciseForm(): ExerciseFormInterface

@@ -13,7 +13,7 @@ services:
 
     # From infrastructure, exclude all but defined services to avoid further autoload failure.
     App\:
-        resource: '../src/*/{Application,Domain,UI,Infrastructure/{Repository/Redis,Framework/Symfony5}}'
+        resource: '../src/*/{Application,Domain,UI,Infrastructure/{Framework/Symfony5,Repository/Redis,Templating/Twig}}'
 
     # Redis setup
     Predis\Client:
