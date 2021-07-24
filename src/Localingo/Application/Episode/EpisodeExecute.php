@@ -7,12 +7,12 @@ namespace App\Localingo\Application\Episode;
 use App\Localingo\Application\Exercise\ExerciseGetCorrections;
 use App\Localingo\Application\LocalData\LocalDataInitialize;
 use App\Localingo\Domain\Episode\Episode;
+use App\Localingo\Domain\Episode\EpisodeTemplateInterface;
 use App\Localingo\Domain\Episode\ValueObject\EpisodeState;
 use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
 use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Exercise\ExerciseFormInterface;
 use App\Shared\Domain\Templating\Template;
-use App\Shared\Domain\Templating\TemplatingInterface;
 
 class EpisodeExecute
 {
@@ -22,9 +22,9 @@ class EpisodeExecute
     private EpisodeSave $episodeSave;
     private ExerciseFormInterface $exerciseForm;
     private ExerciseGetCorrections $exerciseValidation;
-    private TemplatingInterface $templating;
+    private EpisodeTemplateInterface $episodeTemplate;
 
-    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGet $episodeGet, EpisodeCreate $episodeCreate, EpisodeSave $episodeSave, ExerciseFormInterface $exerciseForm, ExerciseGetCorrections $exerciseValidation, TemplatingInterface $templating)
+    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGet $episodeGet, EpisodeCreate $episodeCreate, EpisodeSave $episodeSave, ExerciseFormInterface $exerciseForm, ExerciseGetCorrections $exerciseValidation, EpisodeTemplateInterface $episodeTemplate)
     {
         $this->dataInitialize = $dataInitialize;
         $this->episodeGet = $episodeGet;
@@ -32,7 +32,7 @@ class EpisodeExecute
         $this->episodeSave = $episodeSave;
         $this->exerciseForm = $exerciseForm;
         $this->exerciseValidation = $exerciseValidation;
-        $this->templating = $templating;
+        $this->episodeTemplate = $episodeTemplate;
     }
 
     /**
@@ -96,7 +96,7 @@ class EpisodeExecute
         $episode->setState(EpisodeState::answer());
         $this->episodeSave->apply($episode);
 
-        return $this->templating->episodeCard($exercise->getSample(), $form);
+        return $this->episodeTemplate->episodeCard($exercise->getSample(), $form);
     }
 
     /**
@@ -116,7 +116,7 @@ class EpisodeExecute
         $isCorrect ? $exercise->nextState() : $exercise->previousState();
         $this->episodeSave->apply($episode);
 
-        return $this->templating->episodeCard($exercise->getSample(), $form);
+        return $this->episodeTemplate->episodeCard($exercise->getSample(), $form);
     }
 
     private function getFinished(Episode $episode): Template
@@ -124,6 +124,6 @@ class EpisodeExecute
         $episode->setState(EpisodeState::finished());
         $this->episodeSave->apply($episode);
 
-        return $this->templating->episodeOver();
+        return $this->episodeTemplate->episodeOver();
     }
 }
