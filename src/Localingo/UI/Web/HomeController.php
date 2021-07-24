@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Localingo\UI\Web;
 
-use App\Localingo\Application\Episode\EpisodeExecute;
+use App\Localingo\Application\Episode\EpisodeRender;
 use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
 use App\Shared\Domain\Controller\ResponseInterface;
 
 class HomeController
 {
     private ResponseInterface $response;
-    private EpisodeExecute $episodeExecute;
+    private EpisodeRender $episodeExecute;
 
-    public function __construct(ResponseInterface $response, EpisodeExecute $episodeExecute)
+    public function __construct(ResponseInterface $response, EpisodeRender $episodeExecute)
     {
         $this->response = $response;
         $this->episodeExecute = $episodeExecute;

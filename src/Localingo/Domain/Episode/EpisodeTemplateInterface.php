@@ -11,5 +11,5 @@ interface EpisodeTemplateInterface
 {
     public function episodeCard(Sample $sample, mixed $form): Template;
 
-    public function episodeOver(): Template;
+    public function episodeFinished(): Template;
 }

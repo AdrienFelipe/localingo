@@ -5,125 +5,50 @@ declare(strict_types=1);
 namespace App\Localingo\Application\Episode;
 
 use App\Localingo\Application\Exercise\ExerciseGetCorrections;
-use App\Localingo\Application\LocalData\LocalDataInitialize;
 use App\Localingo\Domain\Episode\Episode;
-use App\Localingo\Domain\Episode\EpisodeTemplateInterface;
 use App\Localingo\Domain\Episode\ValueObject\EpisodeState;
 use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
 use App\Localingo\Domain\Exercise\Exercise;
-use App\Localingo\Domain\Exercise\ExerciseFormInterface;
-use App\Shared\Domain\Templating\Template;
+use App\Localingo\Domain\Exercise\ExerciseDTO;
 
 class EpisodeExecute
 {
-    private LocalDataInitialize $dataInitialize;
-    private EpisodeGet $episodeGet;
-    private EpisodeCreate $episodeCreate;
     private EpisodeSave $episodeSave;
-    private ExerciseFormInterface $exerciseForm;
     private ExerciseGetCorrections $exerciseValidation;
-    private EpisodeTemplateInterface $episodeTemplate;
 
-    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGet $episodeGet, EpisodeCreate $episodeCreate, EpisodeSave $episodeSave, ExerciseFormInterface $exerciseForm, ExerciseGetCorrections $exerciseValidation, EpisodeTemplateInterface $episodeTemplate)
+    public function __construct(EpisodeSave $episodeSave, ExerciseGetCorrections $exerciseValidation)
     {
-        $this->dataInitialize = $dataInitialize;
-        $this->episodeGet = $episodeGet;
-        $this->episodeCreate = $episodeCreate;
         $this->episodeSave = $episodeSave;
-        $this->exerciseForm = $exerciseForm;
         $this->exerciseValidation = $exerciseValidation;
-        $this->episodeTemplate = $episodeTemplate;
     }
 
-    /**
-     * @throws ExerciseMissingStateOrder
-     */
-    public function getTemplate(): Template
+    public function applyQuestion(Episode $episode): void
     {
-        // Load data from local files.
-        ($this->dataInitialize)();
-
-        // Load current episode or create a new one.
-        $episode = $this->getEpisode();
-        $exercise = $this->getExercise($episode);
-
-        // No exercises are left, go to finish page.
-        if (!$exercise) {
-            return $this->getFinished($episode);
-        }
-
-        // Simplify conditional reading.
-        $exerciseIsNotNew = !$exercise->getState()->isNew();
-        $formWasNotSubmitted = !$this->exerciseForm->isSubmitted($exercise);
-        $episodeIsQuestion = $episode->getState()->isQuestion();
-
-        // Render and display the 'question' template.
-        if ($exerciseIsNotNew && ($formWasNotSubmitted || $episodeIsQuestion)) {
-            return $this->getQuestion($episode, $exercise);
-        }
-
-        // Render and display the 'answer' template.
-        return $this->getAnswer($episode, $exercise);
-    }
-
-    private function getEpisode(): Episode
-    {
-        $episode = $this->episodeGet->current();
-        if (!$episode || $episode->getState()->isFinished()) {
-            $episode = $this->episodeCreate->new();
-        }
-
-        return $episode;
-    }
-
-    private function getExercise(Episode $episode): ?Exercise
-    {
-        $exercise = $episode->getCurrentExercise();
-
-        if (!$exercise || $episode->getState()->isNext()) {
-            $exercise = $episode->nextExercise();
-            $episode->setState(EpisodeState::question());
-        }
-
-        return $exercise;
-    }
-
-    private function getQuestion(Episode $episode, Exercise $exercise): Template
-    {
-        /** @psalm-suppress MixedAssignment */
-        $form = $this->exerciseForm->buildExerciseForm($exercise);
-        // Update episode state.
         $episode->setState(EpisodeState::answer());
         $this->episodeSave->apply($episode);
-
-        return $this->episodeTemplate->episodeCard($exercise->getSample(), $form);
     }
 
     /**
+     * @return array<string, bool>
+     *
      * @throws ExerciseMissingStateOrder
      */
-    private function getAnswer(Episode $episode, Exercise $exercise): Template
+    public function applyAnswer(Exercise $exercise, ExerciseDTO $answers): array
     {
-        // Form was submitted: display corrections.
-        $submittedDTO = $this->exerciseForm->getSubmitted($exercise);
-        $corrections = ($this->exerciseValidation)($exercise, $submittedDTO);
-        /** @psalm-suppress MixedAssignment */
-        $form = $this->exerciseForm->buildAnswersForm($exercise, $corrections);
+        $corrections = ($this->exerciseValidation)($exercise, $answers);
         // Update episode state.
-        $episode->setState(EpisodeState::next());
+        $exercise->getEpisode()->setState(EpisodeState::next());
         // Update exercise state.
         $isCorrect = !in_array(false, $corrections, true);
         $isCorrect ? $exercise->nextState() : $exercise->previousState();
-        $this->episodeSave->apply($episode);
+        $this->episodeSave->apply($exercise->getEpisode());
 
-        return $this->episodeTemplate->episodeCard($exercise->getSample(), $form);
+        return $corrections;
     }
 
-    private function getFinished(Episode $episode): Template
+    public function applyFinished(Episode $episode): void
     {
         $episode->setState(EpisodeState::finished());
         $this->episodeSave->apply($episode);
-
-        return $this->episodeTemplate->episodeOver();
     }
 }

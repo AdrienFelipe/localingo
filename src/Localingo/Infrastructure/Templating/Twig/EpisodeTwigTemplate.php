@@ -15,7 +15,7 @@ class EpisodeTwigTemplate implements EpisodeTemplateInterface
         return new Template('exercise_card.html.twig', ['sample' => $sample, 'form' => $form]);
     }
 
-    public function episodeOver(): Template
+    public function episodeFinished(): Template
     {
         return new Template('episode_over.html.twig');
     }

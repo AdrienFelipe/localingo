@@ -14,7 +14,7 @@ use App\Localingo\Domain\User\User;
 
 class Episode
 {
-    private const VERSION = 4;
+    private const VERSION = 5;
 
     private string $id;
     private User $user;
@@ -81,7 +81,7 @@ class Episode
         $exercises = new ExerciseCollection();
         foreach ($samples as $sample) {
             foreach (ExerciseType::getAll() as $type) {
-                $exercises->append(new Exercise($type, $sample));
+                $exercises->append(new Exercise($this, $type, $sample));
             }
         }
 

@@ -4,20 +4,23 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Exercise;
 
+use App\Localingo\Domain\Episode\Episode;
 use App\Localingo\Domain\Exercise\ValueObject\ExerciseState;
 use App\Localingo\Domain\Exercise\ValueObject\ExerciseType;
 use App\Localingo\Domain\Sample\Sample;
 
 class Exercise
 {
-    private Sample $sample;
+    private Episode $episode;
     private ExerciseType $type;
+    private Sample $sample;
     private ExerciseState $state;
     /** @var string[] */
     private array $questions;
 
-    public function __construct(ExerciseType $type, Sample $sample)
+    public function __construct(Episode $episode, ExerciseType $type, Sample $sample)
     {
+        $this->episode = $episode;
         $this->type = $type;
         $this->sample = $sample;
         $this->state = ExerciseState::new();
@@ -42,6 +45,11 @@ class Exercise
     public function getSample(): Sample
     {
         return $this->sample;
+    }
+
+    public function getEpisode(): Episode
+    {
+        return $this->episode;
     }
 
     public function getType(): ExerciseType

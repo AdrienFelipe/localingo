@@ -67,7 +67,10 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
      */
     public function buildExerciseForm(Exercise $exercise): FormView
     {
-        return $this->formBuilder($exercise, true)->getForm()->createView();
+        $questions = $exercise->getQuestions();
+        $questions = array_combine($questions, array_fill(0, count($questions), true));
+
+        return $this->formBuilder($exercise, true, $questions)->getForm()->createView();
     }
 
     public function buildAnswersForm(Exercise $exercise, array $corrections): FormView
@@ -84,7 +87,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
      */
     private function formBuilder(Exercise $exercise, bool $isExercise = true, array $corrections = []): FormBuilderInterface
     {
-        $questions = $exercise->getQuestions();
+        $questions = array_keys($corrections);
         $exerciseDTO = $exercise->getDTO($isExercise);
         $builder = $this->createFormBuilder($exerciseDTO);
 
