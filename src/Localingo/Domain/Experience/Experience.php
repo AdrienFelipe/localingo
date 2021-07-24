@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Experience;
 
+use App\Localingo\Domain\Experience\Exception\ExperienceVersionException;
 use App\Localingo\Domain\Experience\ValueObject\ExperienceItem;
 use App\Localingo\Domain\Experience\ValueObject\ExperienceItemCollection;
 use App\Localingo\Domain\Sample\Sample;
@@ -11,6 +12,9 @@ use App\Localingo\Domain\User\User;
 
 class Experience
 {
+    private const VERSION = 1;
+
+    private int $version;
     private User $user;
     private ExperienceItemCollection $declinationExperiences;
     private ExperienceItemCollection $wordExperiences;
@@ -19,11 +23,24 @@ class Experience
 
     public function __construct(User $user)
     {
+        $this->version = self::VERSION;
         $this->user = $user;
         $this->declinationExperiences = new ExperienceItemCollection();
         $this->wordExperiences = new ExperienceItemCollection();
         $this->sampleExperiences = new ExperienceItemCollection();
         $this->caseExperiences = new ExperienceItemCollection();
+    }
+
+    /**
+     * Make sure only up to date entities are unserialized.
+     *
+     * @throws ExperienceVersionException
+     */
+    public function __wakeup(): void
+    {
+        if ($this->version !== self::VERSION) {
+            throw new ExperienceVersionException();
+        }
     }
 
     public function getUser(): User

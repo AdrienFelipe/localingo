@@ -16,12 +16,12 @@ class Episode
 {
     private const VERSION = 5;
 
+    private int $version;
     private string $id;
     private User $user;
     private SampleCollection $samples;
     private ExerciseCollection $exercises;
     private ?int $currentExerciseKey;
-    private int $version;
     private EpisodeState $state;
 
     public function __construct(string $id, User $user, SampleCollection $samples)
@@ -36,6 +36,8 @@ class Episode
     }
 
     /**
+     * Make sure only up to date entities are unserialized.
+     *
      * @throws EpisodeVersionException
      */
     public function __wakeup(): void
