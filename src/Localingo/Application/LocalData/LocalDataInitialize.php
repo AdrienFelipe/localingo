@@ -60,6 +60,8 @@ class LocalDataInitialize
 
         $handle = fopen(self::FILES_DIR.'/'.self::FILES_CHECK['declinations'], 'rb');
         if ($handle && $line = fgets($handle)) {
+            // Remove (trailing) line breaks.
+            $line = preg_replace('/[\r\n]/', '', $line);
             // Extract headers.
             $header = explode("\t", $line);
             $headerSize = count($header);
@@ -69,6 +71,9 @@ class LocalDataInitialize
 
             // Extract remaining lines.
             while (($line = fgets($handle)) !== false) {
+                // Remove (trailing) line breaks.
+                $line = preg_replace('/[\r\n]$/', '', $line);
+
                 $values = explode("\t", $line);
                 if (count($values) !== $headerSize) {
                     $values += $padArray;
