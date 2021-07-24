@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Localingo\Infrastructure\Templating\Twig;
 
 use App\Localingo\Domain\Sample\Sample;
+use App\Shared\Domain\Templating\Template;
 use App\Shared\Domain\Templating\TemplatingInterface;
-use App\Shared\Domain\Templating\ValueObject\Template;
 
 class TwigTemplates implements TemplatingInterface
 {

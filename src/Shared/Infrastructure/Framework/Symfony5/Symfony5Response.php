@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Shared\Infrastructure\Framework\Symfony5;
 
 use App\Shared\Domain\Controller\ResponseInterface;
-use App\Shared\Domain\Templating\ValueObject\Template;
+use App\Shared\Domain\Templating\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 

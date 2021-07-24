@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Domain\Templating\ValueObject;
+namespace App\Shared\Domain\Templating;
 
 class Template
 {
