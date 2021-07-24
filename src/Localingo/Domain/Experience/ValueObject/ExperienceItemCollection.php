@@ -19,10 +19,13 @@ class ExperienceItemCollection extends \ArrayObject
 
     public function getOrAdd(string $key): ExperienceItem
     {
-        if (!$item = $this->offsetGet($key)) {
-            $item = new ExperienceItem($key);
-            $this->offsetSet($key, $item);
+        if ($this->offsetExists($key)) {
+            return $this->offsetGet($key);
         }
+
+        // Add a new item as it does not exist.
+        $item = new ExperienceItem($key);
+        $this->offsetSet($key, $item);
 
         return $item;
     }

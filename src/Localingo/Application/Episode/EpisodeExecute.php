@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Localingo\Application\Episode;
 
-use App\Localingo\Application\Exercise\ExerciseGetCorrections;
+use App\Localingo\Application\Exercise\ExerciseExecute;
+use App\Localingo\Application\Exercise\ExerciseValidate;
 use App\Localingo\Domain\Episode\Episode;
 use App\Localingo\Domain\Episode\ValueObject\EpisodeState;
 use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
@@ -14,12 +15,14 @@ use App\Localingo\Domain\Exercise\ExerciseDTO;
 class EpisodeExecute
 {
     private EpisodeSave $episodeSave;
-    private ExerciseGetCorrections $exerciseValidation;
+    private ExerciseValidate $exerciseValidate;
+    private ExerciseExecute $exerciseExecute;
 
-    public function __construct(EpisodeSave $episodeSave, ExerciseGetCorrections $exerciseValidation)
+    public function __construct(EpisodeSave $episodeSave, ExerciseValidate $exerciseValidate, ExerciseExecute $exerciseExecute)
     {
         $this->episodeSave = $episodeSave;
-        $this->exerciseValidation = $exerciseValidation;
+        $this->exerciseValidate = $exerciseValidate;
+        $this->exerciseExecute = $exerciseExecute;
     }
 
     public function applyQuestion(Episode $episode): void
@@ -35,13 +38,15 @@ class EpisodeExecute
      */
     public function applyAnswer(Exercise $exercise, ExerciseDTO $answers): array
     {
-        $corrections = ($this->exerciseValidation)($exercise, $answers);
-        // Update episode state.
-        $exercise->getEpisode()->setState(EpisodeState::next());
         // Update exercise state.
-        $isCorrect = !in_array(false, $corrections, true);
-        $isCorrect ? $exercise->nextState() : $exercise->previousState();
-        $this->episodeSave->apply($exercise->getEpisode());
+        $corrections = $this->exerciseValidate->getCorrections($exercise, $answers);
+        $isCorrect = $this->exerciseValidate->isCorrect($corrections);
+        $this->exerciseExecute->applyAnswer($exercise, $isCorrect);
+
+        // Update episode state.
+        $episode = $exercise->getEpisode();
+        $episode->setState(EpisodeState::next());
+        $this->episodeSave->apply($episode);
 
         return $corrections;
     }

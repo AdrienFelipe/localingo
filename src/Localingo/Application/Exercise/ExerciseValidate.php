@@ -7,12 +7,12 @@ namespace App\Localingo\Application\Exercise;
 use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Exercise\ExerciseDTO;
 
-class ExerciseGetCorrections
+class ExerciseValidate
 {
     /**
      * @return array<string, bool>
      */
-    public function __invoke(Exercise $exercise, ExerciseDTO $answers): array
+    public function getCorrections(Exercise $exercise, ExerciseDTO $answers): array
     {
         $corrections = [];
         foreach ($exercise->getQuestions() as $question) {
@@ -22,5 +22,13 @@ class ExerciseGetCorrections
         }
 
         return $corrections;
+    }
+
+    /**
+     * @param array<string, bool> $corrections
+     */
+    public function isCorrect(array $corrections): bool
+    {
+        return !in_array(false, $corrections, true);
     }
 }

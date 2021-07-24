@@ -18,17 +18,15 @@ class EpisodeRender
     private LocalDataInitialize $dataInitialize;
     private EpisodeGet $episodeGet;
     private EpisodeCreate $episodeCreate;
-    private EpisodeSave $episodeSave;
     private ExerciseFormInterface $exerciseForm;
     private EpisodeTemplateInterface $episodeTemplate;
     private EpisodeExecute $episodeExecute;
 
-    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGet $episodeGet, EpisodeCreate $episodeCreate, EpisodeSave $episodeSave, EpisodeExecute $episodeExecute, ExerciseFormInterface $exerciseForm, EpisodeTemplateInterface $episodeTemplate)
+    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGet $episodeGet, EpisodeCreate $episodeCreate, EpisodeExecute $episodeExecute, ExerciseFormInterface $exerciseForm, EpisodeTemplateInterface $episodeTemplate)
     {
         $this->dataInitialize = $dataInitialize;
         $this->episodeGet = $episodeGet;
         $this->episodeCreate = $episodeCreate;
-        $this->episodeSave = $episodeSave;
         $this->exerciseForm = $exerciseForm;
         $this->episodeTemplate = $episodeTemplate;
         $this->episodeExecute = $episodeExecute;

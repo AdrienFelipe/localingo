@@ -39,7 +39,7 @@ class Experience
         $this->getCaseExperience($sample)->addGood();
     }
 
-    public function addBad(Sample $sample, float $score): void
+    public function addBad(Sample $sample, float $score = 1): void
     {
         $this->getDeclinationExperience($sample)->addBad($score);
         $this->getWordExperience($sample)->addBad($score);
