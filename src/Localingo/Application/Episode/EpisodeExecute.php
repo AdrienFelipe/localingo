@@ -6,6 +6,7 @@ namespace App\Localingo\Application\Episode;
 
 use App\Localingo\Application\Exercise\ExerciseExecute;
 use App\Localingo\Application\Exercise\ExerciseValidate;
+use App\Localingo\Application\Experience\ExperienceExecute;
 use App\Localingo\Domain\Episode\Episode;
 use App\Localingo\Domain\Episode\ValueObject\EpisodeState;
 use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
@@ -17,12 +18,14 @@ class EpisodeExecute
     private EpisodeSave $episodeSave;
     private ExerciseValidate $exerciseValidate;
     private ExerciseExecute $exerciseExecute;
+    private ExperienceExecute $experienceExecute;
 
-    public function __construct(EpisodeSave $episodeSave, ExerciseValidate $exerciseValidate, ExerciseExecute $exerciseExecute)
+    public function __construct(EpisodeSave $episodeSave, ExerciseValidate $exerciseValidate, ExerciseExecute $exerciseExecute, ExperienceExecute $experienceExecute)
     {
         $this->episodeSave = $episodeSave;
         $this->exerciseValidate = $exerciseValidate;
         $this->exerciseExecute = $exerciseExecute;
+        $this->experienceExecute = $experienceExecute;
     }
 
     public function applyQuestion(Episode $episode): void
@@ -55,5 +58,6 @@ class EpisodeExecute
     {
         $episode->setState(EpisodeState::finished());
         $this->episodeSave->apply($episode);
+        $this->experienceExecute->applyFinished($episode);
     }
 }

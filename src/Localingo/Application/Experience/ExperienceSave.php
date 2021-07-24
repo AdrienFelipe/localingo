@@ -22,9 +22,13 @@ class ExperienceSave
         $this->file = $file;
     }
 
-    public function apply(Experience $experience): void
+    public function toRepository(Experience $experience): void
     {
         $this->repository->save($experience);
+    }
+
+    public function toFile(Experience $experience): void
+    {
         $this->file->write($experience);
     }
 }
