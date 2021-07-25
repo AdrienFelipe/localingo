@@ -35,6 +35,8 @@ class Exercise
         $questions = [];
         if ($type->isTranslation()) {
             $questions[] = (string) $this->getDTO()->asPropertyNames()->translation;
+        } elseif ($type->isWord()) {
+            $questions[] = (string) $this->getDTO()->asPropertyNames()->word;
         } elseif ($type->isDeclined()) {
             $questions[] = (string) $this->getDTO()->asPropertyNames()->declined;
         }
@@ -73,7 +75,7 @@ class Exercise
         // Simplify readability.
         $type = $this->type;
         $sample = $this->sample;
-        $key = "$type:{$sample->getWord()}";
+        $key = $sample->getWord().":$type";
 
         // Merge similar cases to avoid repetition.
         if ($type->isTranslation() || $type->isWord()) {

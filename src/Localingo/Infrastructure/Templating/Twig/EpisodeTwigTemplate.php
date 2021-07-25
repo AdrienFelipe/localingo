@@ -10,9 +10,14 @@ use App\Shared\Domain\Templating\Template;
 
 class EpisodeTwigTemplate implements EpisodeTemplateInterface
 {
-    public function episodeCard(Sample $sample, mixed $form): Template
+    public function declinationCard(Sample $sample, mixed $form): Template
     {
-        return new Template('exercise_card.html.twig', ['sample' => $sample, 'form' => $form]);
+        return new Template('exercise_card_declination.html.twig', ['sample' => $sample, 'form' => $form]);
+    }
+
+    public function simpleCard(Sample $sample, mixed $form): Template
+    {
+        return new Template('exercise_card_simple.html.twig', ['sample' => $sample, 'form' => $form]);
     }
 
     public function episodeFinished(): Template

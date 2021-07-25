@@ -9,7 +9,9 @@ use App\Shared\Domain\Templating\Template;
 
 interface EpisodeTemplateInterface
 {
-    public function episodeCard(Sample $sample, mixed $form): Template;
+    public function declinationCard(Sample $sample, mixed $form): Template;
+
+    public function simpleCard(Sample $sample, mixed $form): Template;
 
     public function episodeFinished(): Template;
 }

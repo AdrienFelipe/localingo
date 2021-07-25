@@ -91,7 +91,7 @@ class EpisodeRender
         $form = $this->exerciseForm->buildExerciseForm($exercise);
         $this->episodeExecute->applyQuestion($exercise->getEpisode());
 
-        return $this->episodeTemplate->episodeCard($exercise->getSample(), $form);
+        return $this->selectCard($exercise, $form);
     }
 
     /**
@@ -105,7 +105,7 @@ class EpisodeRender
         /** @psalm-suppress MixedAssignment */
         $form = $this->exerciseForm->buildAnswersForm($exercise, $corrections);
 
-        return $this->episodeTemplate->episodeCard($exercise->getSample(), $form);
+        return $this->selectCard($exercise, $form);
     }
 
     private function applyFinished(Episode $episode): Template
@@ -113,5 +113,14 @@ class EpisodeRender
         $this->episodeExecute->applyFinished($episode);
 
         return $this->episodeTemplate->episodeFinished();
+    }
+
+    private function selectCard(Exercise $exercise, mixed $form): Template
+    {
+        if ($exercise->getType()->isDeclined()) {
+            return $this->episodeTemplate->declinationCard($exercise->getSample(), $form);
+        }
+
+        return $this->episodeTemplate->simpleCard($exercise->getSample(), $form);
     }
 }

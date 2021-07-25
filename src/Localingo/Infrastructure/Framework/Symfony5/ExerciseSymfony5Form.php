@@ -8,6 +8,7 @@ use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Exercise\ExerciseDTO;
 use App\Localingo\Domain\Exercise\ExerciseFormInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,6 +20,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
 {
     private const STYLE_ROW_BIG = 'big';
     private const STYLE_ROW_NORMAL = 'normal';
+    private const STYLE_ROW_HIDDEN = 'hidden';
 
     /**
      * @psalm-suppress TooManyTemplateParams
@@ -91,11 +93,20 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
         $exerciseDTO = $exercise->getDTO($isExercise);
         $builder = $this->createFormBuilder($exerciseDTO);
 
+        $type = $exercise->getType();
+        if ($type->isWord() || $type->isTranslation()) {
+            $declinedStyle = self::STYLE_ROW_HIDDEN;
+            $wordStyle = self::STYLE_ROW_BIG;
+        } else {
+            $declinedStyle = self::STYLE_ROW_BIG;
+            $wordStyle = self::STYLE_ROW_NORMAL;
+        }
+
         // Exercise values.
         $properties = $exercise->getDTO()->asPropertyNames();
         $this->addTextRow($builder, (string) $properties->translation, self::STYLE_ROW_BIG, $isExercise, $questions, $corrections);
-        $this->addTextRow($builder, (string) $properties->declined, self::STYLE_ROW_BIG, $isExercise, $questions, $corrections);
-        $this->addTextRow($builder, (string) $properties->word, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
+        $this->addTextRow($builder, (string) $properties->declined, $declinedStyle, $isExercise, $questions, $corrections);
+        $this->addTextRow($builder, (string) $properties->word, $wordStyle, $isExercise, $questions, $corrections);
         $this->addTextRow($builder, (string) $properties->gender, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
         $this->addTextRow($builder, (string) $properties->state, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
         $this->addTextRow($builder, (string) $properties->case, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
@@ -136,7 +147,8 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
                 'class' => 'form-floating mb-1 border-top',
             ],
         ];
-        $builder->add($name, TextType::class, $floatingConf);
+        $type = $style === self::STYLE_ROW_HIDDEN ? HiddenType::class : TextType::class;
+        $builder->add($name, $type, $floatingConf);
     }
 
     /**
