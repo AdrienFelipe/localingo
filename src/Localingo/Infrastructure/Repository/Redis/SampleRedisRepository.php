@@ -11,15 +11,7 @@ use Predis\Client;
 
 class SampleRedisRepository implements SampleRepositoryInterface
 {
-    private const SAMPLE_INDEX = 'declined';
-    private const SAMPLE_DECLINED = 'Declined';
-    private const SAMPLE_DECLINATION = 'Declination';
-    private const SAMPLE_NUMBER = 'Number';
-    private const SAMPLE_GENDER = 'Gender';
-    private const SAMPLE_WORD = 'Word';
-    private const SAMPLE_TRANSLATION = 'Translation';
-    private const SAMPLE_STATE = 'State';
-    private const SAMPLE_CASE = 'Case';
+    private const SAMPLE_INDEX = 'sample';
 
     private Client $redis;
 
@@ -28,27 +20,27 @@ class SampleRedisRepository implements SampleRepositoryInterface
         $this->redis = $redis;
     }
 
-    public function saveFromRawData(array $values): void
+    public function saveFromRawData(array $data): void
     {
         $key = self::key_pattern(
-            $values[self::SAMPLE_WORD],
-            $values[self::SAMPLE_DECLINATION],
-            $values[self::SAMPLE_NUMBER]
+            $data[self::FILE_WORD],
+            $data[self::FILE_DECLINATION],
+            $data[self::FILE_NUMBER]
         );
-        $this->redis->hmset($key, $values);
+        $this->redis->hmset($key, $data);
     }
 
     public function load(string $key): Sample
     {
         $fields = [
-            self::SAMPLE_DECLINED,
-            self::SAMPLE_DECLINATION,
-            self::SAMPLE_NUMBER,
-            self::SAMPLE_GENDER,
-            self::SAMPLE_WORD,
-            self::SAMPLE_TRANSLATION,
-            self::SAMPLE_STATE,
-            self::SAMPLE_CASE,
+            self::FILE_DECLINED,
+            self::FILE_DECLINATION,
+            self::FILE_NUMBER,
+            self::FILE_GENDER,
+            self::FILE_WORD,
+            self::FILE_TRANSLATION,
+            self::FILE_STATE,
+            self::FILE_CASE,
         ];
         $data = (array) $this->redis->hmget($key, $fields);
         // Redis empty strings are returned as null values.
@@ -59,14 +51,14 @@ class SampleRedisRepository implements SampleRepositoryInterface
         $data = array_combine($fields, $data);
 
         return new Sample(
-            $data[self::SAMPLE_DECLINED],
-            $data[self::SAMPLE_DECLINATION],
-            $data[self::SAMPLE_NUMBER],
-            $data[self::SAMPLE_GENDER],
-            $data[self::SAMPLE_WORD],
-            $data[self::SAMPLE_TRANSLATION],
-            $data[self::SAMPLE_STATE],
-            $data[self::SAMPLE_CASE],
+            $data[self::FILE_DECLINED],
+            $data[self::FILE_DECLINATION],
+            $data[self::FILE_NUMBER],
+            $data[self::FILE_GENDER],
+            $data[self::FILE_WORD],
+            $data[self::FILE_TRANSLATION],
+            $data[self::FILE_STATE],
+            $data[self::FILE_CASE],
         );
     }
 

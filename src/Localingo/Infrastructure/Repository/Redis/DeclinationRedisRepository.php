@@ -9,7 +9,7 @@ use Predis\Client;
 
 class DeclinationRedisRepository implements DeclinationRepositoryInterface
 {
-    public const DECLINATION_INDEX = 'declination';
+    private const DECLINATION_INDEX = 'declinations';
 
     private Client $redis;
 
@@ -18,15 +18,16 @@ class DeclinationRedisRepository implements DeclinationRepositoryInterface
         $this->redis = $redis;
     }
 
-    public function saveAllFromRawData(array $string_declinations): void
+    public function saveFromRawData(array $data): void
     {
-        // Remove all previous data first.
-        $this->redis->del(self::DECLINATION_INDEX);
-        $this->redis->sadd(self::DECLINATION_INDEX, $string_declinations);
+        $values = [$data[self::FILE_DECLINATION] => $data[self::FILE_PRIORITY]];
+        $this->redis->zadd(self::DECLINATION_INDEX, $values);
     }
 
     public function getRandom(): string
     {
-        return (string) $this->redis->srandmember(self::DECLINATION_INDEX);
+        $results = (array) $this->redis->zrange(self::DECLINATION_INDEX, 0, 0);
+
+        return (string) reset($results);
     }
 }

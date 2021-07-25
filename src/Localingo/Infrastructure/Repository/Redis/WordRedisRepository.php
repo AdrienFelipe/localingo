@@ -9,7 +9,7 @@ use Predis\Client;
 
 class WordRedisRepository implements WordRepositoryInterface
 {
-    public const WORD_INDEX = 'word';
+    private const WORD_INDEX = 'words';
 
     private Client $redis;
 
@@ -18,16 +18,16 @@ class WordRedisRepository implements WordRepositoryInterface
         $this->redis = $redis;
     }
 
-    public function saveAllFromRawData(array $string_words): void
+    public function saveFromRawData(array $data): void
     {
-        $this->redis->del(self::WORD_INDEX);
-        $this->redis->sadd(self::WORD_INDEX, $string_words);
+        $values = [$data[self::FILE_WORD] => $data[self::FILE_PRIORITY]];
+        $this->redis->zadd(self::WORD_INDEX, $values);
     }
 
     public function getRandomAsList(int $count): array
     {
         // Force int keys, and string values.
-        $values = array_values((array) $this->redis->srandmember(self::WORD_INDEX, $count));
+        $values = array_values((array) $this->redis->zrange(self::WORD_INDEX, 0, $count - 1));
 
         return array_filter($values, static function ($value) {return is_string($value); });
     }

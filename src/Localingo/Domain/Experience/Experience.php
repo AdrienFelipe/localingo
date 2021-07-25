@@ -14,6 +14,13 @@ class Experience
 {
     private const VERSION = 1;
 
+    private const KEY_USER = 'user';
+    private const KEY_VERSION = 'version';
+    private const KEY_DECLINATIONS = 'declinations';
+    private const KEY_WORDS = 'words';
+    private const KEY_SAMPLES = 'samples';
+    private const KEY_CASES = 'cases';
+
     private int $version;
     private User $user;
     private ExperienceItemCollection $declinationExperiences;
@@ -92,12 +99,12 @@ class Experience
     public function serialize(): array
     {
         return [
-            'user' => $this->user->getId(),
-            'version' => $this->version,
-            'declinations' => $this->declinationExperiences->serializeArray(),
-            'words' => $this->wordExperiences->serializeArray(),
-            'samples' => $this->sampleExperiences->serializeArray(),
-            'cases' => $this->caseExperiences->serializeArray(),
+            self::KEY_USER => $this->user->getId(),
+            self::KEY_VERSION => $this->version,
+            self::KEY_DECLINATIONS => $this->declinationExperiences->serializeArray(),
+            self::KEY_WORDS => $this->wordExperiences->serializeArray(),
+            self::KEY_SAMPLES => $this->sampleExperiences->serializeArray(),
+            self::KEY_CASES => $this->caseExperiences->serializeArray(),
         ];
     }
 
@@ -106,22 +113,22 @@ class Experience
      */
     public function unserialize(array $data): self
     {
-        $this->version = (int) ($data['version'] ?? 0);
+        $this->version = (int) ($data[self::KEY_VERSION] ?? 0);
 
         /** @var array<string, array> $items */
-        $items = (array) ($data['declinations'] ?? []);
+        $items = (array) ($data[self::KEY_DECLINATIONS] ?? []);
         $this->declinationExperiences = (new ExperienceItemCollection())->unserializeArray($items);
 
         /** @var array<string, array> $items */
-        $items = (array) ($data['words'] ?? []);
+        $items = (array) ($data[self::KEY_WORDS] ?? []);
         $this->wordExperiences = (new ExperienceItemCollection())->unserializeArray($items);
 
         /** @var array<string, array> $items */
-        $items = (array) ($data['samples'] ?? []);
+        $items = (array) ($data[self::KEY_SAMPLES] ?? []);
         $this->sampleExperiences = (new ExperienceItemCollection())->unserializeArray($items);
 
         /** @var array<string, array> $items */
-        $items = (array) ($data['samples'] ?? []);
+        $items = (array) ($data[self::KEY_CASES] ?? []);
         $this->caseExperiences = (new ExperienceItemCollection())->unserializeArray($items);
 
         return $this;

@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Declination;
 
-interface DeclinationRepositoryInterface
-{
-    /**
-     * Creates all declinations from a list of strings. Deletes all previous data.
-     *
-     * @param array<int,string> $string_declinations
-     */
-    public function saveAllFromRawData(array $string_declinations): void;
+use App\Localingo\Domain\LocalData\LocalDataRawInterface;
 
+interface DeclinationRepositoryInterface extends LocalDataRawInterface
+{
     public function getRandom(): string;
 }

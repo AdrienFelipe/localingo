@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Word;
 
-interface WordRepositoryInterface
-{
-    /**
-     * Creates all words from a list of strings. Deletes all previous data.
-     *
-     * @param array<int, string> $string_words
-     */
-    public function saveAllFromRawData(array $string_words): void;
+use App\Localingo\Domain\LocalData\LocalDataRawInterface;
 
+interface WordRepositoryInterface extends LocalDataRawInterface
+{
     /**
      * @return array<int, string>
      */

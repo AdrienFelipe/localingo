@@ -1,510 +1,510 @@
-Word	State
-świat
-rok
-doktor
-koszmar
-metr
-obiad
-ser
-but
-długopis
-kolor
-list
-samochód
-syn
-kot
-buziak
-kelner
-pomidor
-ptak
-problem
-kwiat
-stół
-pociąg
-chleb
-burak
-pająk
-wieczór
-pokój
-nóż
-pomarańcz
-talerz
-przyjaciel
-owoc
-klucz
-deszcz
-miesiąc
-kapelusz
-koń
-słoń
-mężczyzna
-tata
-brat
-widelec
-dzień
-czerwiec
-lipiec
-palec
-piątek
-poniedziałek
-ranek
-tydzień
-koniec
-kubek
-marzec
-wtorek
-drzwi
-dziadek
-wujek
-lew
-ojciec
-chłopiec
-pies
-stopa
-ręka
-ziemia
-matka
-praca
-liczba
-woda
-babcia
-ciocia
-droga
-herbata
-kawa
-mama
-ryba
-zupa
-głowa
-szkoła
-książka
-muzyka
-córka
-kanapka
-łyżka
-dziewczyna
-rodzina
-ulica
-lampa
-niedziela
-patelnia
-koszula
-lodówka
-zima
-sukienka
-kobieta
-kaczka
-siostra
-kuchnia
-pomarańcza
-łazienka
-pomoc
-mysz
-noc
-próba
-pogoda
-prawda
-winda
-gwiazda
-waga
-spodnie
-sypialnia
-świnia
-historia
-pustynia
-armia
-awaria
-bakteria
-biologia
-komedia
-niania
-teoria
-magia
-strategia
-zbrodnia
-anomalia
-fobia
-Francja
-kolacja
-policja
-fuksja
-restauracja
-eksplozja
-hipokryzja
-jedzenie
-słońce
-oko
-miasto
-morze
-biurko
-szkło
-warzywo
-pytanie
-rano
-śniadanie
-zwierzę
-łóżko
-jajko
-ramię
-lato
-dziecko
-mleko
-mięso
-jabłko
-czas
-obraz
-wiatr
-śnieg
-fryzjer
-kilometr
-komputer
-piekarnik
-polak
-pożar
-rower
-stanik
-strażak
-szalik
-urok
-zegar
-telefon
-telewizor
-lód
-wyścig
-sklep
-bar
-histeryk
-śrubokręt
-tygrys
-ziemniak
-kciuk
-wiek
-mocz
-włamywacz
-prysznic
-tłuszcz
-wąż
-strumień
-ogień
-rysunek
-fiołek
-napiwek
-zegarek
-piasek
-cukier
-młotek
-worek
-usta
-pieniądze
-włosy
-noworodek
-grupa
-rzeka
-gra
-kulka
-Wenezuela
-gazeta
-szklanka
-roślina
-fala
-ściana
-krowa
-chmura
-żona
-rzecz
-sól
-łódź
-pasja
-szyja
-agresja
-inwazja
-aplikacja
-populacja
-nauka
-piosenka
-ciężarówka
-słowo
-zdanie
-imię
-krzesło
-pisklę
-dom
-jarmark
-parking
-pomocnik
-ręcznik
-toster
-ogród
-bank
-sąsiad
-sznur
-wyciąg
-wróg
-dolar
-przewodnik
-papier
-akumulator
-archeolog
-autokar
-bagażnik
-befsztyk
-bilet
-blog
-bukiet
-byk
-chomik
-ciężar
-cydr
-czołg
-dialog
-dług
-drapieżnik
-dystans
-dziwak
-dźwięk
-haker
-hamburger
-homar
-honor
-humor
-hydraulik
-imbir
-inżynier
-kalmar
-kawaler
-kontener
-kran
-królik
-labirynt
-lider
-litr
-marketing
-mechanik
-menadżer
-monitoring
-motor
-mózg
-nawyk
-okrąg
-pakiet
-park
-partner
-pasażer
-pieg
-pisuar
-posąg
-potwór
-prawnik
-projektor
-radiator
-recykling
-robak
-róg
-rybak
-seler
-słonecznik
-smar
-smok
-smoking
-stomatolog
-trener
-wentylator
-wilk
-wojownik
-żar
-makaron
-stek
-kraj
-miecz
-autostopowicz
-bagaż
-bicz
-ból
-dreszcz
-kamuflaż
-kurcz
-palacz
-płacz
-podgrzewacz
-ryż
-szpital
-kamień
-gość
-cień
-płomień
-śmieć
-kolega
-kominek
-czosnek
-ołówek
-pocałunek
-wypadek
-taniec
-bunkier
-hamulec
-boczek
-budynek
-cukierek
-garnek
-listek
-ogonek
-pączek
-pasek
-pęczek
-pępek
-przypadek
-smutek
-trunek
-zamek
-zaułek
-węgiel
-mięsień
-rynek
-rudzielec
-kochanek
-wnuczek
-siostrzeniec
-przyczyna
-opona
-para
-planeta
-cebula
-kula
-makrela
-morela
-paranoja
-sala
-wina
-czapka
-wanna
-kąpiel
-myśl
-moc
-rozpacz
-miłość
-radość
-bezsenność
-cierpliwość
-elektryczność
-głębokość
-kość
-obojętność
-szerokość
-trudność
-wilgotność
-wysokość
-zazdrość
-nienawiść
-wieś
-krew
-cela
-zmiana
-góra
-uczta
-pole
-drewno
-pragnienie
-port
-obiekt
-rozmiar
-silnik
-otwór
-wynik
-sukces
-biolog
-bokser
-czujnik
-dwór
-filtr
-fizyk
-hangar
-helikopter
-kajak
-kierunkowskaz
-lakier
-łuk
-obieg
-pogrzeb
-przełącznik
-radar
-rygor
-serwer
-szpieg
-wymiar
-zakładnik
-tor
-gniew
-odbiornik
-Pacyfik
-podręcznik
-średnik
-zbieg
-bóg
-rodzaj
-gracz
-geniusz
-odkurzacz
-mecz
-kucharz
-żołnierz
-badacz
-piosenkarz
-posiadacz
-pryszcz
-smarkacz
-śmierdziel
-tłumacz
-pojedynek
-pyłek
-skutek
-środek
-wynalazek
-wysiłek
-występek
-zarodek
-idiota
-książę
-krasnoludek
-parobek
-przodek
-świadek
-uczeń
-jaskiniowiec
-naukowiec
-samiec
-szaleniec
-anarchia
-ciecz
-prędkość
-wartość
-objętość
-płatność
-słabość
-ciemność
-dokładność
-życie
-centrum
-przechylenie
-siemię
-dinozaur
-dyktator
-renifer
-wampir
-niewolnik
-jajnik
-tłumik
-grzesznik
-rak
-król
-haszysz
-rogacz
-skurwiel
-wybielacz
-wykrywacz
-wzmacniacz
-cycek
-grobowiec
-dupek
-głupek
-diabeł
-złącze
+Word	Priority
+stopa	1
+ręka	1
+ziemia	1
+matka	1
+świat	1
+ojciec	1
+widelec	1
+nóż	1
+pomarańcz	1
+talerz	1
+praca	1
+mężczyzna	1
+rok	1
+pomoc	1
+chłopiec	1
+dzień	1
+liczba	1
+woda	1
+długopis	1
+doktor	1
+koszmar	1
+metr	1
+obiad	1
+ser	1
+but	1
+czerwiec	1
+lipiec	1
+babcia	1
+ciocia	1
+droga	1
+herbata	1
+kawa	1
+mama	1
+ryba	1
+zupa	1
+mysz	1
+głowa	1
+szkoła	1
+jedzenie	1
+słońce	1
+oko	1
+miasto	1
+morze	1
+noc	1
+książka	1
+pokój	1
+przyjaciel	1
+koń	1
+kolor	1
+muzyka	1
+list	1
+samochód	1
+brat	1
+syn	1
+kot	1
+palec	1
+owoc	1
+buziak	1
+kelner	1
+pomidor	1
+ptak	1
+dziadek	1
+piątek	1
+poniedziałek	1
+ranek	1
+wujek	1
+córka	1
+kanapka	1
+łyżka	1
+biurko	1
+szkło	1
+warzywo	1
+niedziela	1
+lato	1
+zima	1
+mleko	1
+marzec	1
+wtorek	1
+dziewczyna	1
+pies	1
+rodzina	1
+drzwi	1
+pytanie	1
+problem	1
+ulica	1
+kwiat	1
+klucz	1
+tydzień	1
+stół	1
+rano	1
+deszcz	1
+koniec	1
+kubek	1
+lampa	1
+patelnia	1
+koszula	1
+lodówka	1
+spodnie	1
+zwierzę	1
+śniadanie	1
+kobieta	1
+tata	1
+chleb	1
+burak	1
+pająk	1
+wieczór	1
+słoń	1
+lew	1
+kuchnia	1
+pomarańcza	1
+łazienka	1
+łóżko	1
+jajko	1
+ramię	1
+pociąg	1
+miesiąc	1
+dziecko	1
+sukienka	1
+mięso	1
+kaczka	1
+siostra	1
+jabłko	1
+kapelusz	1
+słowo	500
+czas	500
+obraz	500
+mocz	500
+rzecz	500
+grupa	500
+zdanie	500
+ogień	500
+gra	500
+rysunek	500
+pieniądze	500
+rzeka	500
+wiatr	500
+łódź	500
+śnieg	500
+telefon	500
+fryzjer	500
+kilometr	500
+komputer	500
+piekarnik	500
+polak	500
+pożar	500
+rower	500
+stanik	500
+strażak	500
+szalik	500
+urok	500
+zegar	500
+telewizor	500
+fiołek	500
+napiwek	500
+zegarek	500
+włamywacz	500
+prysznic	500
+Francja	500
+kolacja	500
+kulka	500
+policja	500
+Wenezuela	500
+gazeta	500
+sypialnia	500
+szklanka	500
+imię	500
+roślina	500
+tygrys	500
+histeryk	500
+śrubokręt	500
+ziemniak	500
+młotek	500
+noworodek	500
+worek	500
+wąż	500
+fuksja	500
+restauracja	500
+świnia	500
+kciuk	500
+lód	500
+fala	500
+wyścig	500
+sklep	500
+ściana	500
+krowa	500
+pogoda	500
+usta	500
+wiek	500
+chmura	500
+włosy	500
+piasek	500
+krzesło	500
+strumień	500
+tłuszcz	500
+bar	500
+pisklę	500
+cukier	500
+żona	500
+sól	500
+historia	1000
+pole	1000
+przyczyna	1000
+moc	1000
+wieś	1000
+sznur	1000
+planeta	1000
+pustynia	1000
+dom	1000
+kraj	1000
+nauka	1000
+piosenka	1000
+kominek	1000
+miłość	1000
+jarmark	1000
+parking	1000
+pomocnik	1000
+ręcznik	1000
+toster	1000
+czosnek	1000
+ołówek	1000
+pocałunek	1000
+wypadek	1000
+miecz	1000
+opona	1000
+drewno	1000
+waga	1000
+para	1000
+radość	1000
+ogród	1000
+bank	1000
+kamień	1000
+sąsiad	1000
+wyciąg	1000
+wróg	1000
+dolar	1000
+przewodnik	1000
+ciężarówka	1000
+papier	1000
+taniec	1000
+dystans	1000
+kran	1000
+makaron	1000
+akumulator	1000
+archeolog	1000
+autokar	1000
+bagażnik	1000
+befsztyk	1000
+bilet	1000
+blog	1000
+bukiet	1000
+byk	1000
+chomik	1000
+ciężar	1000
+cydr	1000
+czołg	1000
+dialog	1000
+dług	1000
+drapieżnik	1000
+dziwak	1000
+dźwięk	1000
+haker	1000
+hamburger	1000
+homar	1000
+honor	1000
+humor	1000
+hydraulik	1000
+imbir	1000
+inżynier	1000
+kalmar	1000
+kawaler	1000
+kontener	1000
+królik	1000
+labirynt	1000
+lider	1000
+litr	1000
+marketing	1000
+mechanik	1000
+menadżer	1000
+monitoring	1000
+motor	1000
+mózg	1000
+nawyk	1000
+okrąg	1000
+pakiet	1000
+park	1000
+partner	1000
+pasażer	1000
+pieg	1000
+pisuar	1000
+posąg	1000
+potwór	1000
+prawnik	1000
+projektor	1000
+radiator	1000
+recykling	1000
+robak	1000
+róg	1000
+rybak	1000
+seler	1000
+słonecznik	1000
+smar	1000
+smok	1000
+smoking	1000
+stomatolog	1000
+trener	1000
+wentylator	1000
+wilk	1000
+wojownik	1000
+żar	1000
+hamulec	1000
+rudzielec	1000
+siostrzeniec	1000
+boczek	1000
+budynek	1000
+cukierek	1000
+garnek	1000
+kochanek	1000
+listek	1000
+ogonek	1000
+pączek	1000
+pasek	1000
+pęczek	1000
+pępek	1000
+przypadek	1000
+smutek	1000
+trunek	1000
+wnuczek	1000
+zamek	1000
+zaułek	1000
+stek	1000
+węgiel	1000
+bunkier	1000
+autostopowicz	1000
+bagaż	1000
+bicz	1000
+ból	1000
+dreszcz	1000
+kamuflaż	1000
+kurcz	1000
+palacz	1000
+płacz	1000
+podgrzewacz	1000
+ryż	1000
+szpital	1000
+gość	1000
+mięsień	1000
+cień	1000
+płomień	1000
+śmieć	1000
+kolega	1000
+armia	1000
+awaria	1000
+bakteria	1000
+biologia	1000
+cebula	1000
+eksplozja	1000
+hipokryzja	1000
+komedia	1000
+kula	1000
+makrela	1000
+morela	1000
+niania	1000
+paranoja	1000
+pasja	1000
+prawda	1000
+sala	1000
+szyja	1000
+teoria	1000
+wina	1000
+winda	1000
+czapka	1000
+wanna	1000
+kąpiel	1000
+myśl	1000
+rozpacz	1000
+bezsenność	1000
+cierpliwość	1000
+elektryczność	1000
+głębokość	1000
+kość	1000
+obojętność	1000
+szerokość	1000
+trudność	1000
+wilgotność	1000
+wysokość	1000
+zazdrość	1000
+nienawiść	1000
+pragnienie	1000
+rynek	1000
+krew	1000
+zmiana	2000
+życie	2000
+obiekt	2000
+port	2000
+gracz	2000
+kucharz	2000
+odkurzacz	2000
+mecz	2000
+kierunkowskaz	2000
+pogrzeb	2000
+biolog	2000
+bokser	2000
+czujnik	2000
+dwór	2000
+filtr	2000
+fizyk	2000
+hangar	2000
+helikopter	2000
+kajak	2000
+lakier	2000
+łuk	2000
+obieg	2000
+przełącznik	2000
+radar	2000
+serwer	2000
+naukowiec	2000
+krasnoludek	2000
+parobek	2000
+pyłek	2000
+środek	2000
+bóg	2000
+badacz	2000
+piosenkarz	2000
+cela	2000
+inwazja	2000
+magia	2000
+zbrodnia	2000
+objętość	2000
+przechylenie	2000
+próba	2000
+gwiazda	2000
+centrum	2000
+książę	2000
+geniusz	2000
+rozmiar	2000
+silnik	2000
+prędkość	2000
+otwór	2000
+wynik	2000
+wartość	2000
+żołnierz	2000
+uczeń	2000
+ciecz	2000
+sukces	2000
+rygor	2000
+szpieg	2000
+wymiar	2000
+zakładnik	2000
+jaskiniowiec	2000
+samiec	2000
+szaleniec	2000
+pojedynek	2000
+skutek	2000
+wynalazek	2000
+wysiłek	2000
+idiota	2000
+agresja	2000
+strategia	2000
+płatność	2000
+słabość	2000
+rodzaj	2000
+tor	2000
+gniew	2000
+odbiornik	2000
+Pacyfik	2000
+podręcznik	2000
+średnik	2000
+zbieg	2000
+przodek	2000
+świadek	2000
+występek	2000
+zarodek	2000
+posiadacz	2000
+pryszcz	2000
+smarkacz	2000
+śmierdziel	2000
+tłumacz	2000
+anarchia	2000
+anomalia	2000
+aplikacja	2000
+fobia	2000
+populacja	2000
+uczta	2000
+ciemność	2000
+dokładność	2000
+siemię	2000
+góra	3000
+król	3000
+dinozaur	3000
+dyktator	3000
+diabeł	3000
+haszysz	3000
+renifer	3000
+wampir	3000
+złącze	3000
+niewolnik	3000
+jajnik	3000
+tłumik	3000
+rogacz	3000
+skurwiel	3000
+grzesznik	3000
+rak	3000
+grobowiec	3000
+cycek	3000
+dupek	3000
+głupek	3000
+wybielacz	3000
+wykrywacz	3000
+wzmacniacz	3000

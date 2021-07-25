@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Sample;
 
-interface SampleRepositoryInterface
-{
-    /**
-     * @param string[] $values
-     */
-    public function saveFromRawData(array $values): void;
+use App\Localingo\Domain\LocalData\LocalDataRawInterface;
 
+interface SampleRepositoryInterface extends LocalDataRawInterface
+{
     /**
      * @param array<int, string> $words
      */
