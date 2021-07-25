@@ -4,23 +4,27 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Experience\ValueObject;
 
+use DateTimeImmutable;
+
 class ExperienceItem
 {
-    private const FACTOR_BAD = 0.7;
-    private const FACTOR_GOOD = 0.8;
-    private const FACTOR_GOOD_DAYS = 7;
+    private const DECREASE_BAD = 0.7;
+    private const DECREASE_GOOD = 0.8;
+    private const DECREASE_GOOD_DAYS = 7;
+    public const INCREASE_BAD = 2;
+    private const INCREASE_GOOD = 1;
 
     private string $key;
-    private float $bad;
-    private float $good;
-    private \DateTimeImmutable $updated;
+    private int $bad;
+    private int $good;
+    private DateTimeImmutable $updated;
 
     public function __construct(string $key)
     {
         $this->key = $key;
         $this->bad = 0;
         $this->good = 0;
-        $this->updated = new \DateTimeImmutable();
+        $this->updated = new DateTimeImmutable();
     }
 
     public function getKey(): string
@@ -28,11 +32,11 @@ class ExperienceItem
         return $this->key;
     }
 
-    public function addGood(float $score = 1): void
+    public function addGood(): void
     {
         $this->update();
-        $this->good += $score;
-        $this->bad *= self::FACTOR_BAD;
+        $this->good += self::INCREASE_GOOD;
+        $this->bad = (int)($this->bad* self::DECREASE_BAD);
     }
 
     public function getGood(): float
@@ -40,10 +44,10 @@ class ExperienceItem
         return $this->good;
     }
 
-    public function addBad(float $score = 1): void
+    public function addBad(int $factor): void
     {
         $this->update();
-        $this->bad += $score;
+        $this->bad = (int) ($this->bad * $factor + 1);
     }
 
     public function getBad(): float
@@ -65,7 +69,7 @@ class ExperienceItem
             return;
         }
 
-        $this->good *= self::FACTOR_GOOD ** ($days / self::FACTOR_GOOD_DAYS);
+        $this->good = (int)($this->good * self::DECREASE_GOOD ** ($days / self::DECREASE_GOOD_DAYS));
         $this->updated = $currentDate;
     }
 
@@ -75,8 +79,8 @@ class ExperienceItem
     public function serialize(): array
     {
         return [
-            'good' => (int) ceil($this->good),
-            'bad' => (int) ceil($this->bad),
+            'good' => $this->good,
+            'bad' => $this->bad,
             'updated' => $this->updated->format('Y-m-d'),
         ];
     }
@@ -86,16 +90,16 @@ class ExperienceItem
      */
     public function unserialize(array $values): self
     {
-        $this->good = (float) $values['good'];
-        $this->bad = (float) $values['bad'];
+        $this->good = (int) $values['good'];
+        $this->bad = (int) $values['bad'];
         $updated = (string) $values['updated'];
-        $this->updated = \DateTimeImmutable::createFromFormat('Y-m-d', $updated) ?: $this->getCurrentDate();
+        $this->updated = DateTimeImmutable::createFromFormat('Y-m-d', $updated) ?: $this->getCurrentDate();
 
         return $this;
     }
 
-    private function getCurrentDate(): \DateTimeImmutable
+    private function getCurrentDate(): DateTimeImmutable
     {
-        return new \DateTimeImmutable('today midnight');
+        return new DateTimeImmutable('today midnight');
     }
 }

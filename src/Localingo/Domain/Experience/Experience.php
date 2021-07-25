@@ -74,11 +74,11 @@ class Experience
         $this->caseItem($sample)->addGood();
     }
 
-    public function addBad(Sample $sample, float $score = 1): void
+    public function addBad(Sample $sample, int $factor = ExperienceItem::INCREASE_BAD): void
     {
-        $this->declinationItem($sample)->addBad($score);
-        $this->wordItem($sample)->addBad($score);
-        $this->caseItem($sample)->addBad($score);
+        $this->declinationItem($sample)->addBad($factor);
+        $this->wordItem($sample)->addBad($factor);
+        $this->caseItem($sample)->addBad($factor);
     }
 
     public function declinationItem(Sample $sample): ExperienceItem

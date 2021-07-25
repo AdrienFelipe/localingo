@@ -14,7 +14,7 @@ use App\Localingo\Domain\User\User;
 
 class Episode
 {
-    private const VERSION = 7;
+    private const VERSION = 8;
 
     private int $version;
     private string $id;
