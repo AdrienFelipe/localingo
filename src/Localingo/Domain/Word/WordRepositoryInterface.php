@@ -9,7 +9,9 @@ use App\Localingo\Domain\LocalData\LocalDataRawInterface;
 interface WordRepositoryInterface extends LocalDataRawInterface
 {
     /**
-     * @return array<int, string>
+     * @param string[] $exclude
+     *
+     * @return string[]
      */
-    public function getRandomAsList(int $count): array;
+    public function getByPriority(int $limit, array $exclude = []): array;
 }

@@ -13,7 +13,10 @@ use Exception;
 
 class EpisodeCreate
 {
-    private const WORDS_BY_EPISODE = 1;
+    private const DECLINATIONS_BY_EPISODE = 1;
+    private const WORDS_BY_EPISODE = 10;
+    private const SAMPLES_BY_EPISODE = 20;
+
     private UserGetCurrent $userGetCurrent;
     private UserCreate $userCreate;
     private ExperienceGet $experienceGet;
@@ -44,7 +47,12 @@ class EpisodeCreate
         $user = ($this->userGetCurrent)() ?: ($this->userCreate)();
         $experience = $this->experienceGet->current($user);
         // Choose word selection.
-        $samples = $this->buildSamples->build($experience, self::WORDS_BY_EPISODE);
+        $samples = $this->buildSamples->build(
+            $experience,
+            self::DECLINATIONS_BY_EPISODE,
+            self::WORDS_BY_EPISODE,
+            self::SAMPLES_BY_EPISODE
+        );
 
         return new Episode($id, $user, $samples);
     }

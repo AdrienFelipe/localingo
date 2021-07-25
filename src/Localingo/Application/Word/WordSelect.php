@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Application\Declination;
+namespace App\Localingo\Application\Word;
 
-use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
 use App\Localingo\Domain\Experience\Experience;
+use App\Localingo\Domain\Word\WordRepositoryInterface;
 
-class DeclinationSelect
+class WordSelect
 {
-    private DeclinationRepositoryInterface $declinationRepository;
+    private WordRepositoryInterface $wordRepository;
 
-    public function __construct(DeclinationRepositoryInterface $declinationRepository)
+    public function __construct(WordRepositoryInterface $wordRepository)
     {
-        $this->declinationRepository = $declinationRepository;
+        $this->wordRepository = $wordRepository;
     }
 
     /**
@@ -21,7 +21,7 @@ class DeclinationSelect
      */
     public function mostRelevant(Experience $experience, int $count): array
     {
-        $experiences = $experience->getDeclinationExperiences();
+        $experiences = $experience->getWordExperiences();
         // First update all items based on current date.
         $experiences->update();
 
@@ -34,7 +34,7 @@ class DeclinationSelect
             $exclude = $experiences->getCurrentlyKnown();
             // Exclude also selection from new items.
             array_push($exclude, ...$selection);
-            array_push($selection, ...$this->declinationRepository->getByPriority($limit, $exclude));
+            array_push($selection, ...$this->wordRepository->getByPriority($limit, $exclude));
         }
 
         return $selection;

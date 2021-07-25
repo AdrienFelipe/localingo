@@ -24,11 +24,8 @@ class WordRedisRepository implements WordRepositoryInterface
         $this->redis->zadd(self::WORD_INDEX, $values);
     }
 
-    public function getRandomAsList(int $count): array
+    public function getByPriority(int $limit, array $exclude = []): array
     {
-        // Force int keys, and string values.
-        $values = array_values((array) $this->redis->zrange(self::WORD_INDEX, 0, $count - 1));
-
-        return array_filter($values, static function ($value) {return is_string($value); });
+        return RedisTools::sortedScan($this->redis, self::WORD_INDEX, $limit, $exclude);
     }
 }

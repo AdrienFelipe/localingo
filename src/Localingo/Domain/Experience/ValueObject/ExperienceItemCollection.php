@@ -70,4 +70,41 @@ class ExperienceItemCollection extends \ArrayObject
             $item->update();
         }
     }
+
+    /**
+     * Get all values which bad/good ratio if greater than zero.
+     * Sorted from 'worst' to 'best'.
+     *
+     * @psalm-suppress MixedReturnTypeCoercion
+     *
+     * @return string[]
+     */
+    public function getRevisionNeeded(int $limit): array
+    {
+        /** @var string[] $support */
+        $support = [];
+        foreach ($this->getIterator() as $key => $item) {
+            $value = round($item->getBad() / ($item->getGood() + 1));
+            $value <= 0 or $support[$key] = $value;
+        }
+        arsort($support);
+
+        return array_slice(array_keys($support), 0, $limit);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCurrentlyKnown(): array
+    {
+        /** @var string[] $support */
+        $support = [];
+        foreach ($this->getIterator() as $key => $item) {
+            if (!$item->getBad() && $item->getGood()) {
+                $support[] = $key;
+            }
+        }
+
+        return $support;
+    }
 }

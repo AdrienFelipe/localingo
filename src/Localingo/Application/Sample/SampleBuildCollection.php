@@ -5,33 +5,49 @@ declare(strict_types=1);
 namespace App\Localingo\Application\Sample;
 
 use App\Localingo\Application\Declination\DeclinationSelect;
-use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
+use App\Localingo\Application\Word\WordSelect;
 use App\Localingo\Domain\Experience\Experience;
 use App\Localingo\Domain\Sample\SampleCollection;
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
-use App\Localingo\Domain\Word\WordRepositoryInterface;
 
 class SampleBuildCollection
 {
-    private WordRepositoryInterface $wordRepository;
-    private DeclinationRepositoryInterface $declinationRepository;
-    private SampleRepositoryInterface $sampleRepository;
     private DeclinationSelect $declinationSelect;
+    private WordSelect $wordSelect;
+    private SampleSelect $sampleSelect;
+    private SampleRepositoryInterface $sampleRepository;
 
-    public function __construct(WordRepositoryInterface $wordRepository, DeclinationRepositoryInterface $declinationRepository, SampleRepositoryInterface $sampleRepository, DeclinationSelect $declinationSelect)
+    public function __construct(DeclinationSelect $declinationSelect, WordSelect $wordSelect, SampleSelect $sampleSelect, SampleRepositoryInterface $sampleRepository)
     {
-        $this->wordRepository = $wordRepository;
-        $this->declinationRepository = $declinationRepository;
-        $this->sampleRepository = $sampleRepository;
         $this->declinationSelect = $declinationSelect;
+        $this->wordSelect = $wordSelect;
+        $this->sampleSelect = $sampleSelect;
+        $this->sampleRepository = $sampleRepository;
     }
 
-    public function build(Experience $experience, int $count): SampleCollection
+    public function build(Experience $experience, int $declinationsCount, int $wordsCount, int $samplesCount): SampleCollection
     {
-        $count = 5;
-        $declinations = $this->declinationSelect->mostRelevant($experience);
-        $words = $this->wordRepository->getRandomAsList($count);
+        // Get most relevant words to train.
+        $words = $this->wordSelect->mostRelevant($experience, $wordsCount);
+        // Sample most relevant cases from selected declinations and words.
+        $samples = $this->sampleSelect->getRevisionNeeded($experience, $samplesCount, $words);
 
-        return $this->sampleRepository->fromDeclinationAndWords($declinations, $words);
+        // If not enough yet, add more selected cases without words filtering.
+        if ($remaining = $samplesCount - count($samples)) {
+            foreach ($this->sampleSelect->getRevisionNeeded($experience, $remaining) as $sample) {
+                $samples->append($sample);
+            }
+        }
+
+        // If not enough yet, add any case from selected declinations and words.
+        if ($remaining = $samplesCount - count($samples)) {
+            // Selection most relevant declinations to train on.
+            $declinations = $this->declinationSelect->mostRelevant($experience, $declinationsCount);
+            foreach ($this->sampleRepository->fromDeclinationAndWords($declinations, $words, $remaining) as $sample) {
+                $samples->append($sample);
+            }
+        }
+
+        return $samples;
     }
 }

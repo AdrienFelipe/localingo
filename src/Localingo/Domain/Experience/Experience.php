@@ -139,6 +139,9 @@ class Experience
         return $this;
     }
 
+    /**
+     * @Warning: update caseToSample() method also on change.
+     */
     private function caseKeyPattern(?string $declination, ?string $gender, ?string $number, ?string $case): string
     {
         $emptyPattern = '[^:]*';
@@ -149,5 +152,25 @@ class Experience
             $number ?? $emptyPattern,
             $case ?? $emptyPattern,
         ]);
+    }
+
+    /**
+     * @Warning: depends on caseKeyPattern() method format.
+     */
+    public static function caseToSample(string $case): Sample
+    {
+        $labels = ['declination', 'gender', 'number', 'case'];
+        $values = array_combine($labels, explode(':', $case));
+
+        return new Sample(
+            '',
+            $values['declination'],
+            $values['number'],
+            $values['gender'],
+            '',
+            '',
+            '',
+            $values['case']
+        );
     }
 }
