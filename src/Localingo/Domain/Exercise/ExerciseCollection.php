@@ -7,7 +7,7 @@ namespace App\Localingo\Domain\Exercise;
 use ArrayObject;
 
 /**
- * @extends \ArrayObject<int, Exercise>
+ * @extends \ArrayObject<string, Exercise>
  *
  * @psalm-suppress ImplementedReturnTypeMismatch
  *
@@ -16,14 +16,24 @@ use ArrayObject;
 class ExerciseCollection extends ArrayObject
 {
     /**
-     * @param array<int, Exercise> $exercises
+     * @param array<string, Exercise> $exercises
      */
     public function __construct(array $exercises = [])
     {
         parent::__construct($exercises);
     }
 
-    public function randomKeyFromAvailable(): ?int
+    /**
+     * Instead of appending to the end of the list, force the use of a non unique id,
+     * so that similar items are overridden.
+     */
+    public function add(Exercise $exercise): void
+    {
+        $key = $exercise->getKey();
+        $this->offsetSet($key, $exercise);
+    }
+
+    public function randomKeyFromAvailable(): ?string
     {
         // Keep only 'not done' exercises.
         $exercises = array_filter($this->getArrayCopy(), static function (Exercise $exercise) {

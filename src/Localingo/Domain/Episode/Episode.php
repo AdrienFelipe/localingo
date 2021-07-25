@@ -14,14 +14,13 @@ use App\Localingo\Domain\User\User;
 
 class Episode
 {
-    private const VERSION = 5;
+    private const VERSION = 7;
 
     private int $version;
     private string $id;
     private User $user;
-    private SampleCollection $samples;
     private ExerciseCollection $exercises;
-    private ?int $currentExerciseKey;
+    private ?string $currentExerciseKey;
     private EpisodeState $state;
 
     public function __construct(string $id, User $user, SampleCollection $samples)
@@ -29,7 +28,6 @@ class Episode
         $this->version = self::VERSION;
         $this->id = $id;
         $this->user = $user;
-        $this->samples = $samples;
         $this->exercises = $this->buildExercises($samples);
         $this->currentExerciseKey = $this->exercises->randomKeyFromAvailable();
         $this->state = EpisodeState::question();
@@ -57,11 +55,6 @@ class Episode
         return $this->user;
     }
 
-    public function getSamples(): SampleCollection
-    {
-        return $this->samples;
-    }
-
     public function getExercises(): ExerciseCollection
     {
         return $this->exercises;
@@ -71,7 +64,7 @@ class Episode
     {
         $key = $this->exercises->randomKeyFromAvailable();
         $this->currentExerciseKey = $key;
-        if (!is_int($key)) {
+        if (!is_string($key)) {
             return null;
         }
 
@@ -83,7 +76,7 @@ class Episode
         $exercises = new ExerciseCollection();
         foreach ($samples as $sample) {
             foreach (ExerciseType::getAll() as $type) {
-                $exercises->append(new Exercise($this, $type, $sample));
+                $exercises->add(new Exercise($this, $type, $sample));
             }
         }
 
@@ -92,7 +85,7 @@ class Episode
 
     public function getCurrentExercise(): ?Exercise
     {
-        if (!is_int($this->currentExerciseKey)) {
+        if (!is_string($this->currentExerciseKey)) {
             return null;
         }
 

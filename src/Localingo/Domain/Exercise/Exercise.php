@@ -65,6 +65,24 @@ class Exercise
         return $this->state->isNew() ? [] : $this->questions;
     }
 
+    /**
+     * Build a key that is not unique for similar cases to be merged.
+     */
+    public function getKey(): string
+    {
+        // Simplify readability.
+        $type = $this->type;
+        $sample = $this->sample;
+        $key = "$type:{$sample->getWord()}";
+
+        // Merge similar cases to avoid repetition.
+        if ($type->isTranslation() || $type->isWord()) {
+            return $key;
+        }
+
+        return "$key:{$sample->getDeclination()}:{$sample->getNumber()}";
+    }
+
     public function getDTO(bool $asExercise = false): ExerciseDTO
     {
         $dto = ExerciseDTO::fromSample($this->sample);
