@@ -18,14 +18,12 @@ class Experience
     private const KEY_VERSION = 'version';
     private const KEY_DECLINATIONS = 'declinations';
     private const KEY_WORDS = 'words';
-    private const KEY_SAMPLES = 'samples';
     private const KEY_CASES = 'cases';
 
     private int $version;
     private User $user;
     private ExperienceItemCollection $declinationExperiences;
     private ExperienceItemCollection $wordExperiences;
-    private ExperienceItemCollection $sampleExperiences;
     private ExperienceItemCollection $caseExperiences;
 
     public function __construct(User $user)
@@ -34,7 +32,6 @@ class Experience
         $this->user = $user;
         $this->declinationExperiences = new ExperienceItemCollection();
         $this->wordExperiences = new ExperienceItemCollection();
-        $this->sampleExperiences = new ExperienceItemCollection();
         $this->caseExperiences = new ExperienceItemCollection();
     }
 
@@ -59,7 +56,6 @@ class Experience
     {
         $this->getDeclinationExperience($sample)->addGood();
         $this->getWordExperience($sample)->addGood();
-        $this->getSampleExperience($sample)->addGood();
         $this->getCaseExperience($sample)->addGood();
     }
 
@@ -67,7 +63,6 @@ class Experience
     {
         $this->getDeclinationExperience($sample)->addBad($score);
         $this->getWordExperience($sample)->addBad($score);
-        $this->getSampleExperience($sample)->addBad($score);
         $this->getCaseExperience($sample)->addBad($score);
     }
 
@@ -81,16 +76,16 @@ class Experience
         return $this->wordExperiences->getOrAdd($sample->getWord());
     }
 
-    private function getSampleExperience(Sample $sample): ExperienceItem
-    {
-        $key = "{$sample->getWord()}:{$sample->getDeclination()}:{$sample->getNumber()}";
-
-        return $this->sampleExperiences->getOrAdd($key);
-    }
-
     private function getCaseExperience(Sample $sample): ExperienceItem
     {
-        return $this->caseExperiences->getOrAdd($sample->getCase());
+        $key = $this->caseKeyPattern(
+            $sample->getDeclination(),
+            $sample->getGender(),
+            $sample->getNumber(),
+            $sample->getCase()
+        );
+
+        return $this->caseExperiences->getOrAdd($key);
     }
 
     /**
@@ -103,7 +98,6 @@ class Experience
             self::KEY_VERSION => $this->version,
             self::KEY_DECLINATIONS => $this->declinationExperiences->serializeArray(),
             self::KEY_WORDS => $this->wordExperiences->serializeArray(),
-            self::KEY_SAMPLES => $this->sampleExperiences->serializeArray(),
             self::KEY_CASES => $this->caseExperiences->serializeArray(),
         ];
     }
@@ -124,13 +118,21 @@ class Experience
         $this->wordExperiences = (new ExperienceItemCollection())->unserializeArray($items);
 
         /** @var array<string, array> $items */
-        $items = (array) ($data[self::KEY_SAMPLES] ?? []);
-        $this->sampleExperiences = (new ExperienceItemCollection())->unserializeArray($items);
-
-        /** @var array<string, array> $items */
         $items = (array) ($data[self::KEY_CASES] ?? []);
         $this->caseExperiences = (new ExperienceItemCollection())->unserializeArray($items);
 
         return $this;
+    }
+
+    private function caseKeyPattern(?string $declination, ?string $gender, ?string $number, ?string $case): string
+    {
+        $emptyPattern = '[^:]*';
+
+        return implode(':', [
+            $declination ?? $emptyPattern,
+            $gender ?? $emptyPattern,
+            $number ?? $emptyPattern,
+            $case ?? $emptyPattern,
+        ]);
     }
 }
