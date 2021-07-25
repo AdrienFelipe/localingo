@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Localingo\Application\Episode;
 
+use App\Localingo\Application\Experience\ExperienceGet;
 use App\Localingo\Application\Sample\SampleBuildCollection;
 use App\Localingo\Application\User\UserCreate;
 use App\Localingo\Application\User\UserGetCurrent;
@@ -15,15 +16,18 @@ class EpisodeCreate
     private const WORDS_BY_EPISODE = 1;
     private UserGetCurrent $userGetCurrent;
     private UserCreate $userCreate;
+    private ExperienceGet $experienceGet;
     private SampleBuildCollection $buildSamples;
 
     public function __construct(
         UserGetCurrent $userGetCurrent,
         UserCreate $userCreate,
+        ExperienceGet $experienceGet,
         SampleBuildCollection $buildSamples,
     ) {
         $this->userGetCurrent = $userGetCurrent;
         $this->userCreate = $userCreate;
+        $this->experienceGet = $experienceGet;
         $this->buildSamples = $buildSamples;
     }
 
@@ -36,10 +40,11 @@ class EpisodeCreate
             $id = '0';
         }
 
-        // Choose word selection.
-        $samples = ($this->buildSamples)(self::WORDS_BY_EPISODE);
         // Load or create user.
         $user = ($this->userGetCurrent)() ?: ($this->userCreate)();
+        $experience = $this->experienceGet->current($user);
+        // Choose word selection.
+        $samples = $this->buildSamples->build($experience, self::WORDS_BY_EPISODE);
 
         return new Episode($id, $user, $samples);
     }

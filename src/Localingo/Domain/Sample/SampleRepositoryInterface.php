@@ -9,7 +9,8 @@ use App\Localingo\Domain\LocalData\LocalDataRawInterface;
 interface SampleRepositoryInterface extends LocalDataRawInterface
 {
     /**
-     * @param array<int, string> $words
+     * @param string[] $declinations
+     * @param string[] $words
      */
-    public function fromDeclinationAndWords(string $declination, array $words): SampleCollection;
+    public function fromDeclinationAndWords(array $declinations, array $words): SampleCollection;
 }

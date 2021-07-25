@@ -52,31 +52,46 @@ class Experience
         return $this->user;
     }
 
+    public function getDeclinationExperiences(): ExperienceItemCollection
+    {
+        return $this->declinationExperiences;
+    }
+
+    public function getWordExperiences(): ExperienceItemCollection
+    {
+        return $this->wordExperiences;
+    }
+
+    public function getCaseExperiences(): ExperienceItemCollection
+    {
+        return $this->caseExperiences;
+    }
+
     public function addGood(Sample $sample): void
     {
-        $this->getDeclinationExperience($sample)->addGood();
-        $this->getWordExperience($sample)->addGood();
-        $this->getCaseExperience($sample)->addGood();
+        $this->declinationItem($sample)->addGood();
+        $this->wordItem($sample)->addGood();
+        $this->caseItem($sample)->addGood();
     }
 
     public function addBad(Sample $sample, float $score = 1): void
     {
-        $this->getDeclinationExperience($sample)->addBad($score);
-        $this->getWordExperience($sample)->addBad($score);
-        $this->getCaseExperience($sample)->addBad($score);
+        $this->declinationItem($sample)->addBad($score);
+        $this->wordItem($sample)->addBad($score);
+        $this->caseItem($sample)->addBad($score);
     }
 
-    private function getDeclinationExperience(Sample $sample): ExperienceItem
+    private function declinationItem(Sample $sample): ExperienceItem
     {
         return $this->declinationExperiences->getOrAdd($sample->getDeclination());
     }
 
-    private function getWordExperience(Sample $sample): ExperienceItem
+    private function wordItem(Sample $sample): ExperienceItem
     {
         return $this->wordExperiences->getOrAdd($sample->getWord());
     }
 
-    private function getCaseExperience(Sample $sample): ExperienceItem
+    private function caseItem(Sample $sample): ExperienceItem
     {
         $key = $this->caseKeyPattern(
             $sample->getDeclination(),
@@ -111,15 +126,15 @@ class Experience
 
         /** @var array<string, array> $items */
         $items = (array) ($data[self::KEY_DECLINATIONS] ?? []);
-        $this->declinationExperiences = (new ExperienceItemCollection())->unserializeArray($items);
+        $this->declinationExperiences->unserializeArray($items);
 
         /** @var array<string, array> $items */
         $items = (array) ($data[self::KEY_WORDS] ?? []);
-        $this->wordExperiences = (new ExperienceItemCollection())->unserializeArray($items);
+        $this->wordExperiences->unserializeArray($items);
 
         /** @var array<string, array> $items */
         $items = (array) ($data[self::KEY_CASES] ?? []);
-        $this->caseExperiences = (new ExperienceItemCollection())->unserializeArray($items);
+        $this->caseExperiences->unserializeArray($items);
 
         return $this;
     }

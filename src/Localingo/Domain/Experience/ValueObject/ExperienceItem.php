@@ -35,17 +35,33 @@ class ExperienceItem
         $this->bad *= self::FACTOR_BAD;
     }
 
+    public function getGood(): float
+    {
+        return $this->good;
+    }
+
     public function addBad(float $score = 1): void
     {
         $this->update();
         $this->bad += $score;
     }
 
+    public function getBad(): float
+    {
+        return $this->bad;
+    }
+
     public function update(): void
     {
-        $days = (new \DateTimeImmutable())->diff($this->updated)->days;
+        $currentDate = $this->getCurrentDate();
+        $days = $currentDate->diff($this->updated)->days;
+        // No need to update anything if were still on the same day.
+        if ($days === 0) {
+            return;
+        }
+
         $this->good *= self::FACTOR_GOOD ** ($days / self::FACTOR_GOOD_DAYS);
-        $this->updated = new \DateTimeImmutable();
+        $this->updated = $currentDate;
     }
 
     /**
@@ -68,8 +84,13 @@ class ExperienceItem
         $this->good = (float) $values['good'];
         $this->bad = (float) $values['bad'];
         $updated = (string) $values['updated'];
-        $this->updated = \DateTimeImmutable::createFromFormat('Y-m-d', $updated) ?: new \DateTimeImmutable();
+        $this->updated = \DateTimeImmutable::createFromFormat('Y-m-d', $updated) ?: $this->getCurrentDate();
 
         return $this;
+    }
+
+    private function getCurrentDate(): \DateTimeImmutable
+    {
+        return new \DateTimeImmutable('today midnight');
     }
 }

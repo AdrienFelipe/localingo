@@ -22,7 +22,7 @@ class SampleRedisRepository implements SampleRepositoryInterface
 
     public function saveFromRawData(array $data): void
     {
-        $key = self::key_pattern(
+        $key = self::keyPattern(
             $data[self::FILE_WORD],
             $data[self::FILE_DECLINATION],
             $data[self::FILE_NUMBER]
@@ -62,21 +62,20 @@ class SampleRedisRepository implements SampleRepositoryInterface
         );
     }
 
-    public function fromDeclinationAndWords(string $declination, array $words): SampleCollection
+    public function fromDeclinationAndWords(array $declinations, array $words): SampleCollection
     {
-        $key_pattern = self::key_pattern(null, $declination);
-        $pattern = '/:('.implode('|', $words).'):/';
+        $key_pattern = self::keyPattern($words, $declinations);
 
         $cursor = '0';
         $keys = [];
         do {
-            $result = (array) $this->redis->scan($cursor, ['match' => $key_pattern]);
+            $result = (array) $this->redis->scan($cursor);
             $cursor = (string) ($result[0] ?? '0');
             $values = (array) ($result[1] ?? []);
             $values = array_filter($values, static function ($value) {
                 return is_string($value);
             });
-            $values = preg_grep($pattern, $values) ?: [];
+            $values = preg_grep("/$key_pattern/", $values) ?: [];
             array_push($keys, ...$values);
         } while ($cursor !== '0');
 
@@ -88,17 +87,26 @@ class SampleRedisRepository implements SampleRepositoryInterface
         return new SampleCollection($samples);
     }
 
-    public static function key_pattern(?string $word, ?string $declination, ?string $number = null): string
+    public static function keyPattern(mixed $words, mixed $declinations, mixed $numbers = null): string
     {
-        $word !== null or $word = '*';
-        $declination !== null or $declination = '*';
-        $number !== null or $number = '*';
-
         return implode(':', [
             self::SAMPLE_INDEX,
-            $word,
-            $declination,
-            $number,
+            self::keyPatternItem($words),
+            self::keyPatternItem($declinations),
+            self::keyPatternItem($numbers),
         ]);
+    }
+
+    private static function keyPatternItem(mixed $item): string
+    {
+        if (is_null($item)) {
+            return '[^:]*';
+        }
+
+        if (is_array($item)) {
+            return '('.implode('|', $item).')';
+        }
+
+        return (string) $item;
     }
 }

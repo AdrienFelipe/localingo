@@ -60,4 +60,14 @@ class ExperienceItemCollection extends \ArrayObject
 
         return $this;
     }
+
+    /**
+     * Update all items to match current date.
+     */
+    public function update(): void
+    {
+        foreach ($this->getIterator() as $item) {
+            $item->update();
+        }
+    }
 }
