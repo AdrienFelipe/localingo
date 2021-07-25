@@ -51,6 +51,11 @@ class ExperienceItem
         return $this->bad;
     }
 
+    public function getScore(): int
+    {
+        return (int) ($this->bad / ($this->good + 1));
+    }
+
     public function update(): void
     {
         $currentDate = $this->getCurrentDate();

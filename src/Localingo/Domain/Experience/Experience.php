@@ -81,12 +81,12 @@ class Experience
         $this->caseItem($sample)->addBad($score);
     }
 
-    private function declinationItem(Sample $sample): ExperienceItem
+    public function declinationItem(Sample $sample): ExperienceItem
     {
         return $this->declinationExperiences->getOrAdd($sample->getDeclination());
     }
 
-    private function wordItem(Sample $sample): ExperienceItem
+    public function wordItem(Sample $sample): ExperienceItem
     {
         return $this->wordExperiences->getOrAdd($sample->getWord());
     }

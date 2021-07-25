@@ -12,6 +12,7 @@ use ArrayObject;
  * @psalm-suppress ImplementedReturnTypeMismatch
  *
  * @method false|Exercise offsetGet($key)
+ * @method Exercise[]     getIterator()
  */
 class ExerciseCollection extends ArrayObject
 {

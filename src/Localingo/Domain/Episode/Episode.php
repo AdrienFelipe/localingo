@@ -28,7 +28,7 @@ class Episode
         $this->version = self::VERSION;
         $this->id = $id;
         $this->user = $user;
-        $this->exercises = $this->buildExercises($samples);
+        $this->exercises = $this->generateExercises($samples);
         $this->currentExerciseKey = $this->exercises->randomKeyFromAvailable();
         $this->state = EpisodeState::question();
     }
@@ -71,7 +71,7 @@ class Episode
         return $this->exercises->offsetGet($key) ?: null;
     }
 
-    private function buildExercises(SampleCollection $samples): ExerciseCollection
+    private function generateExercises(SampleCollection $samples): ExerciseCollection
     {
         $exercises = new ExerciseCollection();
         foreach ($samples as $sample) {
@@ -100,5 +100,19 @@ class Episode
     public function getState(): EpisodeState
     {
         return $this->state;
+    }
+
+    /**
+     * @param array<string, bool> $filter
+     */
+    public function applyFilter(array $filter): void
+    {
+        foreach ($filter as $key => $keep) {
+            if (!$keep) {
+                $this->exercises->offsetUnset($key);
+            }
+        }
+        // Update current key as it might have been removed.
+        $this->currentExerciseKey = $this->exercises->randomKeyFromAvailable();
     }
 }

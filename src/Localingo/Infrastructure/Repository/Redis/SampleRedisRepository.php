@@ -105,6 +105,8 @@ class SampleRedisRepository implements SampleRepositoryInterface
 
     public function fromSampleFilters(SampleCollection $sampleFilters, int $count, array $words): SampleCollection
     {
+        // Keep track of the total without counting on each iteration.
+        $totalSamples = 0;
         $samples = new SampleCollection();
         foreach ($sampleFilters as $sampleFilter) {
             $key_pattern = self::keyPattern(
@@ -117,6 +119,10 @@ class SampleRedisRepository implements SampleRepositoryInterface
 
             foreach (RedisTools::findKeys($this->redis, $key_pattern, $count) as $key) {
                 $samples->append($this->load($key));
+                // Early exit if all items were found.
+                if (++$totalSamples === $count) {
+                    break 2;
+                }
             }
         }
 
