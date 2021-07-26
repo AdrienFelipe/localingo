@@ -19,7 +19,7 @@ class UserCreate
         $this->userStore = $userStore;
     }
 
-    public function __invoke(string $name = self::DEFAULT_USER_NAME): User
+    public function new(string $name = self::DEFAULT_USER_NAME): User
     {
         $user = new User($name);
         // Persist user.

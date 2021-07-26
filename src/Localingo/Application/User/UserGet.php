@@ -7,7 +7,7 @@ namespace App\Localingo\Application\User;
 use App\Localingo\Domain\User\User;
 use App\Localingo\Domain\User\UserRepositoryInterface;
 
-class UserGetCurrent
+class UserGet
 {
     private UserSession $session;
     private UserRepositoryInterface $userStore;
@@ -18,7 +18,7 @@ class UserGetCurrent
         $this->userStore = $userStore;
     }
 
-    public function __invoke(): ?User
+    public function current(): ?User
     {
         $user_id = $this->session->loadUserId();
         if ($user_id === null) {
