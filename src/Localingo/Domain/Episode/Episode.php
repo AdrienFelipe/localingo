@@ -8,13 +8,11 @@ use App\Localingo\Domain\Episode\Exception\EpisodeVersionException;
 use App\Localingo\Domain\Episode\ValueObject\EpisodeState;
 use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Exercise\ExerciseCollection;
-use App\Localingo\Domain\Exercise\ValueObject\ExerciseType;
-use App\Localingo\Domain\Sample\SampleCollection;
 use App\Localingo\Domain\User\User;
 
 class Episode
 {
-    private const VERSION = 8;
+    private const VERSION = 9;
 
     private int $version;
     private string $id;
@@ -23,13 +21,13 @@ class Episode
     private ?string $currentExerciseKey;
     private EpisodeState $state;
 
-    public function __construct(string $id, User $user, SampleCollection $samples)
+    public function __construct(string $id, User $user)
     {
         $this->version = self::VERSION;
         $this->id = $id;
         $this->user = $user;
-        $this->exercises = $this->generateExercises($samples);
-        $this->currentExerciseKey = $this->exercises->randomKeyFromAvailable();
+        $this->exercises = new ExerciseCollection();
+        $this->currentExerciseKey = null;
         $this->state = EpisodeState::question();
     }
 
@@ -55,9 +53,18 @@ class Episode
         return $this->user;
     }
 
+    public function setExercises(ExerciseCollection $exercises): void
+    {
+        $this->exercises = clone $exercises;
+        // Reset collection key.
+        $this->currentExerciseKey = $this->exercises->randomKeyFromAvailable();
+    }
+
     public function getExercises(): ExerciseCollection
     {
-        return $this->exercises;
+        // Clone to prevent collection from being modified publicly.
+        // But contained exercises should still be passed as original references.
+        return clone $this->exercises;
     }
 
     public function nextExercise(): ?Exercise
@@ -69,18 +76,6 @@ class Episode
         }
 
         return $this->exercises->offsetGet($key) ?: null;
-    }
-
-    private function generateExercises(SampleCollection $samples): ExerciseCollection
-    {
-        $exercises = new ExerciseCollection();
-        foreach ($samples as $sample) {
-            foreach (ExerciseType::getAll() as $type) {
-                $exercises->add(new Exercise($this, $type, $sample));
-            }
-        }
-
-        return $exercises;
     }
 
     public function getCurrentExercise(): ?Exercise

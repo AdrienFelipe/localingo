@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Localingo\Application\Episode;
 
-use App\Localingo\Application\Exercise\ExerciseSelect;
+use App\Localingo\Application\Exercise\ExerciseCreate;
 use App\Localingo\Application\Experience\ExperienceGet;
 use App\Localingo\Application\Sample\SampleSelect;
 use App\Localingo\Application\User\UserCreate;
@@ -23,20 +23,20 @@ class EpisodeCreate
     private UserCreate $userCreate;
     private ExperienceGet $experienceGet;
     private SampleSelect $sampleSelect;
-    private ExerciseSelect $exerciseSelect;
+    private ExerciseCreate $exerciseCreate;
 
     public function __construct(
         UserGetCurrent $userGetCurrent,
         UserCreate $userCreate,
         ExperienceGet $experienceGet,
         SampleSelect $buildSamples,
-        ExerciseSelect $exerciseSelect
+        ExerciseCreate $exerciseCreate,
     ) {
         $this->userGetCurrent = $userGetCurrent;
         $this->userCreate = $userCreate;
         $this->experienceGet = $experienceGet;
         $this->sampleSelect = $buildSamples;
-        $this->exerciseSelect = $exerciseSelect;
+        $this->exerciseCreate = $exerciseCreate;
     }
 
     public function new(): Episode
@@ -50,22 +50,18 @@ class EpisodeCreate
 
         // Load or create user.
         $user = ($this->userGetCurrent)() ?: ($this->userCreate)();
+        $episode = new Episode($id, $user);
         $experience = $this->experienceGet->current($user);
-        // Choose word selection.
-        $samples = $this->sampleSelect->forEpisode(
-            $experience,
+
+        // Build samples from current experience.
+        $samples = $this->sampleSelect->forEpisode($experience,
             self::DECLINATIONS_BY_EPISODE,
             self::WORDS_BY_EPISODE,
             self::SAMPLES_BY_EPISODE
         );
-
-        $episode = new Episode($id, $user, $samples);
-        // Select exercises based on current experience.
-        $filter = $this->exerciseSelect->experienceFilter($episode, $experience);
-        $episode->applyFilter($filter);
-        // Keep only the desired amount of exercises.
-        $filter = $this->exerciseSelect->maxFilter($episode, self::EXERCISES_BY_EPISODE);
-        $episode->applyFilter($filter);
+        // Generate exercises from the selected samples.
+        $exercises = $this->exerciseCreate->forEpisode($episode, $experience, $samples, self::EXERCISES_BY_EPISODE);
+        $episode->setExercises($exercises);
 
         return $episode;
     }
