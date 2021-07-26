@@ -23,13 +23,13 @@ class ExerciseExecute
      */
     public function applyAnswer(Exercise $exercise, bool $isCorrect): void
     {
+        // Update experience (before the exercise).
+        $this->experienceExecute->applyAnswer($exercise, $isCorrect);
+
         // Update exercise.
         $isCorrect ? $exercise->nextState() : $exercise->previousState();
         // Remove the state 'new' from all other same word exercises.
         $this->updateExercises($exercise->getEpisode(), $exercise->getSample()->getWord());
-
-        // Update experience.
-        $this->experienceExecute->applyAnswer($exercise, $isCorrect);
     }
 
     /**
@@ -39,7 +39,10 @@ class ExerciseExecute
     {
         // Remove the state 'new' from all other same word exercises.
         foreach ($episode->getExercises() as $exercise) {
-            if ($exercise->getSample()->getWord() === $word && $exercise->getState()->isNew()) {
+            $hasSameWord = $exercise->getSample()->getWord() === $word;
+            $isNew = $exercise->getState()->isNew();
+            $isNotDeclined = !$exercise->getType()->isDeclined();
+            if ($hasSameWord && $isNew && $isNotDeclined) {
                 $exercise->nextState();
             }
         }

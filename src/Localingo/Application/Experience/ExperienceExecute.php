@@ -22,10 +22,12 @@ class ExperienceExecute
 
     public function applyAnswer(Exercise $exercise, bool $isCorrect): void
     {
-        $experience = $this->getExperience($exercise->getEpisode()->getUser());
-        $sample = $exercise->getSample();
-        $isCorrect ? $experience->addGood($sample) : $experience->addBad($sample);
-        $this->experienceSave->toRepository($experience);
+        // Makes no sense to add experience from the initial visualization.
+        if (!$exercise->getState()->isNew()) {
+            $experience = $this->getExperience($exercise->getEpisode()->getUser());
+            $isCorrect ? $experience->addGood($exercise) : $experience->addBad($exercise);
+            $this->experienceSave->toRepository($experience);
+        }
     }
 
     public function applyFinished(Episode $episode): void

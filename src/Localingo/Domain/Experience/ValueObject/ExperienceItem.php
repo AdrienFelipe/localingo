@@ -8,11 +8,12 @@ use DateTimeImmutable;
 
 class ExperienceItem
 {
-    private const DECREASE_BAD = 0.7;
+    private const DECREASE_BAD = 0.9;
     private const DECREASE_GOOD = 0.8;
     private const DECREASE_GOOD_DAYS = 7;
     public const INCREASE_BAD = 2;
     private const INCREASE_GOOD = 1;
+    private const KNOWN_RATIO = 4;
 
     private string $key;
     private int $bad;
@@ -36,7 +37,7 @@ class ExperienceItem
     {
         $this->update();
         $this->good += self::INCREASE_GOOD;
-        $this->bad = (int)($this->bad* self::DECREASE_BAD);
+        $this->bad = (int) ($this->bad * self::DECREASE_BAD);
     }
 
     public function getGood(): float
@@ -44,10 +45,15 @@ class ExperienceItem
         return $this->good;
     }
 
+    public function getGoodRatio(): int
+    {
+        return (int) ($this->good / ($this->bad + 1));
+    }
+
     public function addBad(int $factor): void
     {
         $this->update();
-        $this->bad = (int) ($this->bad * $factor + 1);
+        $this->bad = (int) ($this->bad * $factor + 3);
     }
 
     public function getBad(): float
@@ -55,9 +61,17 @@ class ExperienceItem
         return $this->bad;
     }
 
-    public function getScore(): int
+    public function getBadRatio(): int
     {
         return (int) ($this->bad / ($this->good + 1));
+    }
+
+    /**
+     * Whether an experience item can be considered as know as therefore be ignored.
+     */
+    public function isKnow(): bool
+    {
+        return $this->getGoodRatio() > self::KNOWN_RATIO;
     }
 
     public function update(): void
@@ -69,7 +83,7 @@ class ExperienceItem
             return;
         }
 
-        $this->good = (int)($this->good * self::DECREASE_GOOD ** ($days / self::DECREASE_GOOD_DAYS));
+        $this->good = (int) ($this->good * self::DECREASE_GOOD ** ($days / self::DECREASE_GOOD_DAYS));
         $this->updated = $currentDate;
     }
 

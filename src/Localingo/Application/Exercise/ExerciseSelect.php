@@ -9,9 +9,9 @@ use App\Localingo\Domain\Experience\Experience;
 
 class ExerciseSelect
 {
-    private const SCORE_TRANSLATION_MAX = 5;
-    private const SCORE_WORD_MAX = 5;
-    private const SCORE_DECLINED_MIN = 3;
+    private const SCORE_TRANSLATION_MAX = 4;
+    private const SCORE_WORD_MAX = 4;
+    private const SCORE_DECLINED_MIN = 2;
 
     /**
      * @return array<string, bool>
@@ -21,7 +21,7 @@ class ExerciseSelect
         $filter = [];
         foreach ($episode->getExercises() as $key => $exercise) {
             $keep = false;
-            $score = $experience->wordItem($exercise->getSample())->getScore();
+            $score = $experience->wordItem($exercise->getSample())->getGoodRatio();
             if ($exercise->getType()->isTranslation()) {
                 $keep = $score <= self::SCORE_TRANSLATION_MAX;
             } elseif ($exercise->getType()->isWord()) {

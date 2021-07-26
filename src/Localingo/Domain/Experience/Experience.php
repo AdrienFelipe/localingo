@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Experience;
 
+use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Experience\Exception\ExperienceVersionException;
 use App\Localingo\Domain\Experience\ValueObject\ExperienceItem;
 use App\Localingo\Domain\Experience\ValueObject\ExperienceItemCollection;
@@ -67,18 +68,26 @@ class Experience
         return $this->caseExperiences;
     }
 
-    public function addGood(Sample $sample): void
+    public function addGood(Exercise $exercise): void
     {
-        $this->declinationItem($sample)->addGood();
+        $sample = $exercise->getSample();
         $this->wordItem($sample)->addGood();
-        $this->caseItem($sample)->addGood();
+        // Restrict tracked score.
+        if ($exercise->getType()->isDeclined()) {
+            $this->declinationItem($sample)->addGood();
+            $this->caseItem($sample)->addGood();
+        }
     }
 
-    public function addBad(Sample $sample, int $factor = ExperienceItem::INCREASE_BAD): void
+    public function addBad(Exercise $exercise, int $factor = ExperienceItem::INCREASE_BAD): void
     {
-        $this->declinationItem($sample)->addBad($factor);
+        $sample = $exercise->getSample();
         $this->wordItem($sample)->addBad($factor);
-        $this->caseItem($sample)->addBad($factor);
+        // Restrict tracked score.
+        if ($exercise->getType()->isDeclined()) {
+            $this->declinationItem($sample)->addBad($factor);
+            $this->caseItem($sample)->addBad($factor);
+        }
     }
 
     public function declinationItem(Sample $sample): ExperienceItem

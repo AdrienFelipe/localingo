@@ -16,7 +16,7 @@ class EpisodeCreate
 {
     private const DECLINATIONS_BY_EPISODE = 1;
     private const WORDS_BY_EPISODE = 4;
-    private const SAMPLES_BY_EPISODE = 10;
+    private const SAMPLES_BY_EPISODE = 15;
     private const EXERCISES_BY_EPISODE = 10;
 
     private UserGetCurrent $userGetCurrent;

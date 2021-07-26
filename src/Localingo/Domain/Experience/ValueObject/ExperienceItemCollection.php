@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Experience\ValueObject;
 
+use ArrayObject;
+
 /**
  * @extends \ArrayObject<string, ExperienceItem>
  * @psalm-suppress ImplementedReturnTypeMismatch
  *
  * @method ExperienceItem[] getIterator()
  */
-class ExperienceItemCollection extends \ArrayObject
+class ExperienceItemCollection extends ArrayObject
 {
     /**
      * @param array<string, ExperienceItem> $array
@@ -22,11 +24,12 @@ class ExperienceItemCollection extends \ArrayObject
 
     public function getOrAdd(string $key): ExperienceItem
     {
+        // Get existing item.
         if ($this->offsetExists($key)) {
             return $this->offsetGet($key);
         }
 
-        // Add a new item as it does not exist.
+        // Or add a new item as it does not exist.
         $item = new ExperienceItem($key);
         $this->offsetSet($key, $item);
 
@@ -84,8 +87,7 @@ class ExperienceItemCollection extends \ArrayObject
         /** @var string[] $support */
         $support = [];
         foreach ($this->getIterator() as $key => $item) {
-            $value = round($item->getBad() / ($item->getGood() + 1));
-            $value <= 0 or $support[$key] = $value;
+            !$item->getBadRatio() or $support[$key] = $item->getBadRatio();
         }
         arsort($support);
 
@@ -100,9 +102,7 @@ class ExperienceItemCollection extends \ArrayObject
         /** @var string[] $support */
         $support = [];
         foreach ($this->getIterator() as $key => $item) {
-            if (!$item->getBad() && $item->getGood()) {
-                $support[] = $key;
-            }
+            !$item->isKnow() or $support[] = $key;
         }
 
         return $support;
