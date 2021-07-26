@@ -13,8 +13,8 @@ use App\Localingo\Domain\Sample\SampleCollection;
 
 class ExerciseCreate
 {
-    private const SCORE_TRANSLATION_MAX = 4;
-    private const SCORE_WORD_MAX = 4;
+    private const SCORE_TRANSLATION_MAX = 3;
+    private const SCORE_WORD_MAX = 6;
     private const SCORE_DECLINED_MIN = 2;
 
     public function forEpisode(Episode $episode, Experience $experience, SampleCollection $samples, int $limit): ExerciseCollection
@@ -26,6 +26,7 @@ class ExerciseCreate
             foreach (ExerciseType::getAll() as $type) {
                 $exercise = new Exercise($episode, $type, $sample);
                 if ($this->selectExercise($exercise, $experience)) {
+                    $this->skipNew($exercise, $experience);
                     $exercises->add($exercise);
 
                     // Exit when size limit is reached.
@@ -44,18 +45,26 @@ class ExerciseCreate
         // Keep any exercise by default except told otherwise.
         $keep = true;
 
-        $score = $experience->wordItem($exercise->getSample())->getGoodRatio();
+        $wordItem = $experience->wordItem($exercise->getSample());
         // Translation kind.
         if ($exercise->getType()->isTranslation()) {
-            $keep = $score <= self::SCORE_TRANSLATION_MAX;
+            $keep = $wordItem->getGood() <= self::SCORE_TRANSLATION_MAX;
         } // Translation kind.
         elseif ($exercise->getType()->isWord()) {
-            $keep = $score <= self::SCORE_WORD_MAX;
+            $keep = $wordItem->getGood() <= self::SCORE_WORD_MAX;
         }// Declination kind.
         elseif ($exercise->getType()->isDeclined()) {
-            $keep = $score >= self::SCORE_DECLINED_MIN;
+            $keep = $wordItem->getGood() >= self::SCORE_DECLINED_MIN;
         }
 
         return $keep;
+    }
+
+    private function skipNew(Exercise $exercise, Experience $experience):void
+    {
+        $wordItem = $experience->wordItem($exercise->getSample());
+        if ($wordItem->getGood() && $exercise->getState()->isNew()) {
+            $exercise->getState()->next();
+        }
     }
 }
