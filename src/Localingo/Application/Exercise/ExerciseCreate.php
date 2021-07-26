@@ -13,9 +13,10 @@ use App\Localingo\Domain\Sample\SampleCollection;
 
 class ExerciseCreate
 {
-    private const SCORE_TRANSLATION_MAX = 3;
-    private const SCORE_WORD_MAX = 6;
-    private const SCORE_DECLINED_MIN = 2;
+    private const SELECT_TRANSLATION_MAX = 3;
+    private const SELECT_WORD_MAX = 6;
+    private const SELECT_DECLINED_MIN = 2;
+    private const SKIP_NEW_BAD_RATIO_MAX = 2;
 
     public function forEpisode(Episode $episode, Experience $experience, SampleCollection $samples, int $limit): ExerciseCollection
     {
@@ -48,23 +49,35 @@ class ExerciseCreate
         $wordItem = $experience->wordItem($exercise->getSample());
         // Translation kind.
         if ($exercise->getType()->isTranslation()) {
-            $keep = $wordItem->getGood() <= self::SCORE_TRANSLATION_MAX;
+            $keep = $wordItem->getGood() <= self::SELECT_TRANSLATION_MAX;
         } // Translation kind.
         elseif ($exercise->getType()->isWord()) {
-            $keep = $wordItem->getGood() <= self::SCORE_WORD_MAX;
+            $keep = $wordItem->getGood() <= self::SELECT_WORD_MAX;
         }// Declination kind.
         elseif ($exercise->getType()->isDeclined()) {
-            $keep = $wordItem->getGood() >= self::SCORE_DECLINED_MIN;
+            $keep = $wordItem->getGood() >= self::SELECT_DECLINED_MIN;
         }
 
         return $keep;
     }
 
-    private function skipNew(Exercise $exercise, Experience $experience):void
+    private function skipNew(Exercise $exercise, Experience $experience): void
     {
-        $wordItem = $experience->wordItem($exercise->getSample());
-        if ($wordItem->getGood() && $exercise->getState()->isNew()) {
-            $exercise->getState()->next();
+        // Declination are supposed to appear only after a few words try, hence just checking the case experience.
+        if ($exercise->getType()->isDeclined()) {
+            $experienceItem = $experience->declinationItem($exercise->getSample());
+        }
+        // Translation and word exercises.
+        else {
+            $experienceItem = $experience->wordItem($exercise->getSample());
+        }
+
+        $hasAGoodAnswer = $experienceItem->getGood();
+        $hasFewBadAnswers = $experienceItem->getBadRatio() <= self::SKIP_NEW_BAD_RATIO_MAX;
+        $exerciseIsNew = $exercise->getState()->isNew();
+        // Skip state 'new' state as soon as item has one good answer, but not too much bad answers.
+        if ($hasAGoodAnswer && $hasFewBadAnswers && $exerciseIsNew) {
+            $exercise->nextState();
         }
     }
 }
