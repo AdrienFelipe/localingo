@@ -9,9 +9,15 @@ use App\Shared\Domain\Templating\Template;
 
 interface EpisodeTemplateInterface
 {
-    public function declinationCard(Sample $sample, mixed $form): Template;
+    /**
+     * @param string[] $chars
+     */
+    public function declinationCard(Sample $sample, mixed $form, array $chars = []): Template;
 
-    public function simpleCard(Sample $sample, mixed $form): Template;
+    /**
+     * @param string[] $chars
+     */
+    public function simpleCard(Sample $sample, mixed $form, array $chars = []): Template;
 
     public function episodeFinished(): Template;
 }

@@ -11,6 +11,7 @@ use App\Localingo\Domain\Episode\ValueObject\EpisodeState;
 use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
 use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Exercise\ExerciseFormInterface;
+use App\Localingo\Domain\Sample\SampleCharRepositoryInterface;
 use App\Shared\Domain\Templating\Template;
 
 class EpisodeRender
@@ -21,15 +22,24 @@ class EpisodeRender
     private ExerciseFormInterface $exerciseForm;
     private EpisodeTemplateInterface $episodeTemplate;
     private EpisodeExecute $episodeExecute;
+    private SampleCharRepositoryInterface $charRepository;
 
-    public function __construct(LocalDataInitialize $dataInitialize, EpisodeGet $episodeGet, EpisodeCreate $episodeCreate, EpisodeExecute $episodeExecute, ExerciseFormInterface $exerciseForm, EpisodeTemplateInterface $episodeTemplate)
-    {
+    public function __construct(
+        LocalDataInitialize $dataInitialize,
+        EpisodeGet $episodeGet,
+        EpisodeCreate $episodeCreate,
+        EpisodeExecute $episodeExecute,
+        ExerciseFormInterface $exerciseForm,
+        EpisodeTemplateInterface $episodeTemplate,
+        SampleCharRepositoryInterface $charRepository,
+    ) {
         $this->dataInitialize = $dataInitialize;
         $this->episodeGet = $episodeGet;
         $this->episodeCreate = $episodeCreate;
         $this->exerciseForm = $exerciseForm;
         $this->episodeTemplate = $episodeTemplate;
         $this->episodeExecute = $episodeExecute;
+        $this->charRepository = $charRepository;
     }
 
     /**
@@ -90,8 +100,9 @@ class EpisodeRender
         /** @psalm-suppress MixedAssignment */
         $form = $this->exerciseForm->buildExerciseForm($exercise);
         $this->episodeExecute->applyQuestion($exercise->getEpisode());
+        $chars = $this->charRepository->loadList();
 
-        return $this->selectCard($exercise, $form);
+        return $this->selectCard($exercise, $form, $chars);
     }
 
     /**
@@ -115,12 +126,15 @@ class EpisodeRender
         return $this->episodeTemplate->episodeFinished();
     }
 
-    private function selectCard(Exercise $exercise, mixed $form): Template
+    /**
+     * @param string[] $chars
+     */
+    private function selectCard(Exercise $exercise, mixed $form, array $chars = []): Template
     {
         if ($exercise->getType()->isDeclined()) {
-            return $this->episodeTemplate->declinationCard($exercise->getSample(), $form);
+            return $this->episodeTemplate->declinationCard($exercise->getSample(), $form, $chars);
         }
 
-        return $this->episodeTemplate->simpleCard($exercise->getSample(), $form);
+        return $this->episodeTemplate->simpleCard($exercise->getSample(), $form, $chars);
     }
 }

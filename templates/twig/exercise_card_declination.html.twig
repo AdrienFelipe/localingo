@@ -34,11 +34,18 @@
                     {{ form_row(form.state) }}
                     {{ form_row(form.case) }}
                     {{ form_row(form.next) }}
+                    {{ form_end(form) }}
+
+                    {% if chars is not empty %}
+                        <div class="p-2">
+                            {% include '_exercise_card_chars.html.twig' with {'chars': chars}  %}
+                        </div>
+                    {% endif %}
+
                     <div class="card-footer">
                         <a href="#" class="card-link">Card link</a>
                         <a href="#" class="card-link">Another link</a>
                     </div>
-                    {{ form_end(form) }}
                 </div>
             </div>
         </div>

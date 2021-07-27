@@ -9,6 +9,7 @@ use App\Localingo\Domain\LocalData\LocalDataRawInterface;
 use App\Localingo\Domain\LocalData\LocalDataRepositoryInterface;
 use App\Localingo\Domain\LocalData\ValueObject\LocalDataHeader;
 use App\Localingo\Domain\Sample\SampleCaseRepositoryInterface;
+use App\Localingo\Domain\Sample\SampleCharRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
 use App\Localingo\Domain\Word\WordRepositoryInterface;
 
@@ -27,14 +28,22 @@ class LocalDataInitialize
     private WordRepositoryInterface $wordRepository;
     private SampleRepositoryInterface $sampleRepository;
     private SampleCaseRepositoryInterface $caseRepository;
+    private SampleCharRepositoryInterface $charRepository;
 
-    public function __construct(LocalDataRepositoryInterface $dataRepository, DeclinationRepositoryInterface $declinationRepository, WordRepositoryInterface $wordRepository, SampleRepositoryInterface $sampleRepository, SampleCaseRepositoryInterface $caseRepository)
-    {
+    public function __construct(
+        LocalDataRepositoryInterface $dataRepository,
+        DeclinationRepositoryInterface $declinationRepository,
+        WordRepositoryInterface $wordRepository,
+        SampleRepositoryInterface $sampleRepository,
+        SampleCaseRepositoryInterface $caseRepository,
+        SampleCharRepositoryInterface $charRepository,
+    ) {
         $this->dataRepository = $dataRepository;
         $this->declinationRepository = $declinationRepository;
         $this->wordRepository = $wordRepository;
         $this->sampleRepository = $sampleRepository;
         $this->caseRepository = $caseRepository;
+        $this->charRepository = $charRepository;
     }
 
     /**
@@ -67,7 +76,11 @@ class LocalDataInitialize
         $files = [
             self::FILES_CHECK['declinations'] => [$this->declinationRepository],
             self::FILES_CHECK['words'] => [$this->wordRepository],
-            self::FILES_CHECK['samples'] => [$this->sampleRepository, $this->caseRepository],
+            self::FILES_CHECK['samples'] => [
+                $this->sampleRepository,
+                $this->caseRepository,
+                $this->charRepository,
+            ],
         ];
         foreach ($files as $filename => $repositories) {
             $this->readFile($filename, $repositories);
