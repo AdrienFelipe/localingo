@@ -94,12 +94,15 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
         $builder = $this->createFormBuilder($exerciseDTO);
 
         $type = $exercise->getType();
+        // Differentiate between declination or translation exercises (simple or declination card).
         if ($type->isWord() || $type->isTranslation()) {
             $declinedStyle = self::STYLE_ROW_HIDDEN;
             $wordStyle = self::STYLE_ROW_BIG;
+            $caseStyle = self::STYLE_ROW_HIDDEN;
         } else {
             $declinedStyle = self::STYLE_ROW_BIG;
             $wordStyle = self::STYLE_ROW_NORMAL;
+            $caseStyle = self::STYLE_ROW_NORMAL;
         }
 
         // Exercise values.
@@ -109,7 +112,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
         $this->addTextRow($builder, (string) $properties->word, $wordStyle, $isExercise, $questions, $corrections);
         $this->addTextRow($builder, (string) $properties->gender, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
         $this->addTextRow($builder, (string) $properties->state, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
-        $this->addTextRow($builder, (string) $properties->case, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
+        $this->addTextRow($builder, (string) $properties->case, $caseStyle, $isExercise, $questions, $corrections);
 
         // Submit button.
         $this->addSubmitRow($builder, $isExercise);

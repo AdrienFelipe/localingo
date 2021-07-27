@@ -49,7 +49,8 @@ class EpisodeCreate
         $episode = new Episode($id, $user);
 
         // Build samples from current experience.
-        $samples = $this->sampleSelect->forEpisode($experience,
+        $samples = $this->sampleSelect->forEpisode(
+            $experience,
             self::DECLINATIONS_PER_EPISODE,
             self::WORDS_PER_EPISODE,
             self::SAMPLES_PER_EPISODE
