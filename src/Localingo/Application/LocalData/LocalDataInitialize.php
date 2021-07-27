@@ -8,6 +8,7 @@ use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
 use App\Localingo\Domain\LocalData\LocalDataRawInterface;
 use App\Localingo\Domain\LocalData\LocalDataRepositoryInterface;
 use App\Localingo\Domain\LocalData\ValueObject\LocalDataHeader;
+use App\Localingo\Domain\Sample\SampleCaseRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
 use App\Localingo\Domain\Word\WordRepositoryInterface;
 
@@ -19,18 +20,21 @@ class LocalDataInitialize
         'words' => 'words.tsv',
         'samples' => 'samples.tsv',
     ];
+    private const FILES_SEPARATOR = "\t";
 
     private LocalDataRepositoryInterface $dataRepository;
-    private SampleRepositoryInterface $sampleRepository;
     private DeclinationRepositoryInterface $declinationRepository;
     private WordRepositoryInterface $wordRepository;
+    private SampleRepositoryInterface $sampleRepository;
+    private SampleCaseRepositoryInterface $caseRepository;
 
-    public function __construct(LocalDataRepositoryInterface $dataRepository, SampleRepositoryInterface $sampleRepository, DeclinationRepositoryInterface $declinationRepository, WordRepositoryInterface $wordRepository)
+    public function __construct(LocalDataRepositoryInterface $dataRepository, DeclinationRepositoryInterface $declinationRepository, WordRepositoryInterface $wordRepository, SampleRepositoryInterface $sampleRepository, SampleCaseRepositoryInterface $caseRepository)
     {
         $this->dataRepository = $dataRepository;
-        $this->sampleRepository = $sampleRepository;
         $this->declinationRepository = $declinationRepository;
         $this->wordRepository = $wordRepository;
+        $this->sampleRepository = $sampleRepository;
+        $this->caseRepository = $caseRepository;
     }
 
     /**
@@ -58,13 +62,15 @@ class LocalDataInitialize
         // Empty all to start over.
         $this->dataRepository->clearAllData();
 
+        // Multiple repositories can be used on a single file.
+        /** @var array<string, LocalDataRawInterface[]> $files */
         $files = [
-            self::FILES_CHECK['declinations'] => $this->declinationRepository,
-            self::FILES_CHECK['words'] => $this->wordRepository,
-            self::FILES_CHECK['samples'] => $this->sampleRepository,
+            self::FILES_CHECK['declinations'] => [$this->declinationRepository],
+            self::FILES_CHECK['words'] => [$this->wordRepository],
+            self::FILES_CHECK['samples'] => [$this->sampleRepository, $this->caseRepository],
         ];
-        foreach ($files as $filename => $repository) {
-            $this->readFile($filename, $repository);
+        foreach ($files as $filename => $repositories) {
+            $this->readFile($filename, $repositories);
         }
 
         // Save hashes.
@@ -78,7 +84,7 @@ class LocalDataInitialize
         // Remove (trailing) line breaks.
         $line = preg_replace('/[\r\n]/', '', $line);
         // Extract headers.
-        $labels = explode("\t", $line);
+        $labels = explode(self::FILES_SEPARATOR, $line);
         $headerSize = count($labels);
         $padArray = array_fill(0, $headerSize, '');
 
@@ -90,19 +96,33 @@ class LocalDataInitialize
      */
     private function getValues(string $line, LocalDataHeader $header): array
     {
-        // Remove (trailing) line breaks.
-        $line = preg_replace('/[\r\n]$/', '', strtolower($line));
+        // Remove (trailing) line breaks at the end of the line.
+        $line = preg_replace('/[\r\n]$/', '', $line);
 
-        $values = explode("\t", $line);
+        $values = explode(self::FILES_SEPARATOR, $line);
         // Make sure all rows have the same size.
         if (count($values) !== $header->size) {
             $values += $header->padArray;
         }
 
-        return array_combine($header->labels, $values);
+        // Add label keys to values.
+        $values = array_combine($header->labels, $values);
+        array_walk($values, static function (string &$value, string $key) {
+            // Remove outer spaces. Could be done while cleaning line breaks with / +((?=\t)|$)|(^|(?<=\t)) +/
+            // But lets keep it simple with a trim, as this loop is necessary anyway.
+            $value = trim($value);
+            // Force all values as lowercase except for the 'Case' column.
+            $key === LocalDataRawInterface::FILE_CASE or $value = strtolower($value);
+        });
+
+        /** @var array<string, string> $values */
+        return $values;
     }
 
-    private function readFile(string $filename, LocalDataRawInterface $repository): void
+    /**
+     * @param LocalDataRawInterface[] $repositories
+     */
+    private function readFile(string $filename, array $repositories): void
     {
         $handle = fopen(self::FILES_DIR.'/'.$filename, 'rb');
         if ($handle && $line = fgets($handle)) {
@@ -112,7 +132,10 @@ class LocalDataInitialize
             // Extract remaining lines.
             while (($line = fgets($handle)) !== false) {
                 $values = $this->getValues($line, $header);
-                $repository->saveFromRawData($values);
+                // Reuse same file line on multiple repositories.
+                foreach ($repositories as $repository) {
+                    $repository->saveFromRawData($values);
+                }
             }
             fclose($handle);
         } else {
