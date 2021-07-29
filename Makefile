@@ -9,6 +9,10 @@ EXEC=$(COMPOSE) $(MODE) $(CONTAINER)
 # Execute container as current user
 EXEC_U=$(COMPOSE) $(MODE) $(CONTAINER) su app -c
 
+# Application commands.
+YARN=yarn --cwd=$(FRAMEWORK)
+COMPOSER=COMPOSER_MEMORY_LIMIT=-1 composer --working-dir=$(FRAMEWORK)
+
 
 .PHONY: start
 start: erase build up setup ## clean current environment, recreate dependencies and spin up again
@@ -40,16 +44,17 @@ setup: ## spin up environment.
 		$(EXEC) chown app:www-data /app/files
 		$(EXEC) chmod g+wr /app/files
 # Install project dependencies
-		$(EXEC_U) "composer --working-dir=$(FRAMEWORK) install"
-		$(EXEC_U) "yarn --cwd=$(FRAMEWORK) install"
+		$(EXEC_U) "$(COMPOSER) install"
+		$(EXEC_U) "$(YARN) install"
+		$(EXEC_U) "$(YARN) encore dev"
 
 .PHONY: composer
 composer: ## Execute composer
-		$(EXEC_U) "COMPOSER_MEMORY_LIMIT=-1 composer --working-dir=$(FRAMEWORK) $(filter-out $@,$(MAKECMDGOALS))"
+		$(EXEC_U) "$(COMPOSER) $(filter-out $@,$(MAKECMDGOALS))"
 
 .PHONY: yarn
 yarn: ## Execute yarn
-		$(EXEC_U) "yarn --cwd=$(FRAMEWORK) $(filter-out $@,$(MAKECMDGOALS))"
+		$(EXEC_U) "$(YARN) $(filter-out $@,$(MAKECMDGOALS))"
 
 .PHONY: db
 db: ## recreate database
