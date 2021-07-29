@@ -65,10 +65,10 @@ class SampleRedisRepository implements SampleRepositoryInterface
         );
     }
 
-    public function fromDeclinationAndWords(array $declinations, array $words, int $count): SampleCollection
+    public function loadMultiple(int $limit, mixed $words, mixed $declinations, mixed $genders = null, mixed $numbers = null, mixed $cases = null): SampleCollection
     {
         $key_pattern = self::keyPattern($words, $declinations);
-        $keys = RedisTools::findKeys($this->redis, $key_pattern, $count);
+        $keys = RedisTools::findKeys($this->redis, $key_pattern, $limit);
 
         $samples = [];
         foreach ($keys as $key) {
@@ -78,13 +78,13 @@ class SampleRedisRepository implements SampleRepositoryInterface
         return new SampleCollection($samples);
     }
 
-    public static function keyPattern(mixed $words, mixed $declinations, mixed $gender = null, mixed $numbers = null, mixed $cases = null): string
+    public static function keyPattern(mixed $words, mixed $declinations, mixed $genders = null, mixed $numbers = null, mixed $cases = null): string
     {
         return implode(':', [
             self::SAMPLE_INDEX,
             self::keyPatternItem($words),
             self::keyPatternItem($declinations),
-            self::keyPatternItem($gender),
+            self::keyPatternItem($genders),
             self::keyPatternItem($numbers),
             self::keyPatternItem($cases),
         ]);
@@ -103,7 +103,7 @@ class SampleRedisRepository implements SampleRepositoryInterface
         return (string) $item;
     }
 
-    public function fromSampleFilters(SampleCollection $sampleFilters, int $count, array $words): SampleCollection
+    public function fromSampleFilters(SampleCollection $sampleFilters, int $count, array $words = []): SampleCollection
     {
         // Keep track of the total without counting on each iteration.
         $totalSamples = 0;

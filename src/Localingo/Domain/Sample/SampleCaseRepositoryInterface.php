@@ -8,4 +8,8 @@ use App\Localingo\Domain\LocalData\LocalDataRawInterface;
 
 interface SampleCaseRepositoryInterface extends LocalDataRawInterface
 {
+    /**
+     * @param string[] $declinations
+     */
+    public function getCases(array $declinations): SampleCollection;
 }

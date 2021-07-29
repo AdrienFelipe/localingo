@@ -78,20 +78,24 @@ class ExperienceItemCollection extends ArrayObject
      * Get all values which bad/good ratio if greater than zero.
      * Sorted from 'worst' to 'best'.
      *
+     * @param ?int $limit 0 or null wil return all elements
+     *
      * @psalm-suppress MixedReturnTypeCoercion
      *
      * @return string[]
      */
-    public function getRevisionNeeded(int $limit): array
+    public function getRevisionNeeded(int $limit = null): array
     {
         /** @var string[] $support */
         $support = [];
         foreach ($this->getIterator() as $key => $item) {
-            !$item->getBadRatio() or $support[$key] = $item->getBadRatio();
+            $item->isKnow() or $support[$key] = $item->getBadRatio();
         }
+        // Sort by 'bad ratio' and keep only the keys.
         arsort($support);
+        $support = array_keys($support);
 
-        return array_slice(array_keys($support), 0, $limit);
+        return $limit ? array_slice($support, 0, $limit) : $support;
     }
 
     /**

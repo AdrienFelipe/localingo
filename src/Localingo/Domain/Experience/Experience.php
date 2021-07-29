@@ -20,6 +20,8 @@ class Experience
     private const KEY_DECLINATIONS = 'declinations';
     private const KEY_WORDS = 'words';
     private const KEY_CASES = 'cases';
+    private const SEPARATOR = ':';
+    private const ESCAPER = ';;';
 
     private int $version;
     private User $user;
@@ -100,7 +102,7 @@ class Experience
         return $this->wordExperiences->getOrAdd($sample->getWord());
     }
 
-    private function caseItem(Sample $sample): ExperienceItem
+    public function caseItem(Sample $sample): ExperienceItem
     {
         $key = $this->caseKeyPattern(
             $sample->getDeclination(),
@@ -153,14 +155,20 @@ class Experience
      */
     private function caseKeyPattern(?string $declination, ?string $gender, ?string $number, ?string $case): string
     {
-        $emptyPattern = '[^:]*';
-
-        return implode(':', [
+        // Regex to match empty pattern.
+        $emptyPattern = '[^'.self::SEPARATOR.']*';
+        $values = [
             $declination ?? $emptyPattern,
             $gender ?? $emptyPattern,
             $number ?? $emptyPattern,
             $case ?? $emptyPattern,
-        ]);
+        ];
+        // Escape separator.
+        array_walk($values, static function (string &$value) {
+            $value = str_replace(self::SEPARATOR, self::ESCAPER, $value);
+        });
+
+        return implode(self::SEPARATOR, $values);
     }
 
     /**
@@ -169,8 +177,14 @@ class Experience
     public static function caseToSample(string $case): Sample
     {
         $labels = ['declination', 'gender', 'number', 'case'];
-        $values = array_combine($labels, explode(':', $case));
 
+        $values = array_combine($labels, explode(self::SEPARATOR, $case));
+        // Put escaped separator back.
+        array_walk($values, static function (string &$value) {
+            $value = str_replace(self::ESCAPER, self::SEPARATOR, $value);
+        });
+
+        /** @var string[] $values */
         return new Sample(
             '',
             $values['declination'],
