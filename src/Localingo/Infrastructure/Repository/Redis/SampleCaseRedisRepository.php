@@ -47,10 +47,11 @@ class SampleCaseRedisRepository implements SampleCaseRepositoryInterface
         $labels = ['declination', 'gender', 'number', 'case'];
         $values = array_combine($labels, explode(self::SEPARATOR, $case));
         // Put escaped separator back.
-        array_walk($values, static function (&$value) {
+        array_walk($values, static function (string &$value) {
             $value = str_replace(self::ESCAPER, self::SEPARATOR, $value);
         });
 
+        /** @var string[] $values */
         return new Sample(
             '',
             $values['declination'],

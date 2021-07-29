@@ -11,7 +11,7 @@ class ExperienceItem
     private const DECREASE_BAD = 0.9;
     private const DECREASE_GOOD = 0.8;
     private const DECREASE_GOOD_DAYS = 7;
-    public const INCREASE_BAD = 2;
+    public const INCREASE_BAD = 5;
     private const INCREASE_GOOD = 1;
     private const KNOWN_RATIO = 4;
 
@@ -50,10 +50,10 @@ class ExperienceItem
         return (int) ($this->good / ($this->bad + 1));
     }
 
-    public function addBad(int $factor): void
+    public function addBad(int $score): void
     {
         $this->update();
-        $this->bad = (int) ($this->bad * $factor + 3);
+        $this->bad += $score;
     }
 
     public function getBad(): float

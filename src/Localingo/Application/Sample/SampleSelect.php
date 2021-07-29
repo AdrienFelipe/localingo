@@ -62,7 +62,6 @@ class SampleSelect
         // First update all items based on current date.
         $experiences->update();
 
-        $sampleFilters = new SampleCollection();
         $cases = [];
         $filters = [];
         // Select most relevant items first.
@@ -96,16 +95,6 @@ class SampleSelect
         }
 
         return new SampleCollection(array_slice($samples, 0, $count));
-    }
-
-    private function fromDeclinationCases(Experience $experience, int $declinationsCount, int $remaining): SampleCollection
-    {
-        // Select most relevant declinations to train on.
-        $declinations = $this->declinationSelect->mostRelevant($experience, $declinationsCount);
-        // Find all declination's cases.
-        $sampleFilters = $this->caseRepository->getCases($declinations);
-
-        return $this->sampleRepository->fromSampleFilters($sampleFilters, $remaining);
     }
 
     /**

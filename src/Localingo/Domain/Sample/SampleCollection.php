@@ -7,7 +7,7 @@ namespace App\Localingo\Domain\Sample;
 use ArrayObject;
 
 /**
- * @extends \ArrayObject<array-key, Sample>
+ * @extends \ArrayObject<int, Sample>
  * @psalm-suppress ImplementedReturnTypeMismatch
  *
  * @method Sample[] getIterator()
