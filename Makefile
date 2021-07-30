@@ -64,7 +64,7 @@ db: ## recreate database
 
 .PHONY: test
 test: ## execute project tests
-		$(EXEC_U) "php $(FRAMEWORK)/bin/phpunit $(conf)"
+		$(EXEC_U) "php $(FRAMEWORK)/vendor/bin/phpunit"
 
 .PHONY: cs
 cs: ## Code Style (quality)

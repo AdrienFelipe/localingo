@@ -1,46 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- https://phpunit.de/manual/current/en/appendixes.configuration.html -->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/8.2/phpunit.xsd"
-         colors="true"
-         bootstrap="config/bootstrap.php"
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+        colors="true"
+        bootstrap="active-framework/tests/bootstrap.php"
 >
-    <php>
-        <ini name="error_reporting" value="-1"/>
-        <env name="SYMFONY_PHPUNIT_VERSION" value="8.2" />
-        <env name="APP_ENV" value="test"/>
-        <env name="KERNEL_CLASS" value="App\Shared\Infrastructure\Kernel"/>
-        <env name="SHELL_VERBOSITY" value="-1"/>
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="7"/>
-        <env name="USE_AWS_ES" value="false"/>
-    </php>
-
-    <testsuites>
-        <testsuite name="localingo Test Suite">
-            <directory>tests/</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory>./src/</directory>
-            <exclude>
-                <directory>./src/Shared/Infrastructure/Migrations/</directory>
-                <file>./src/Shared/Infrastructure/Kernel.php</file>
-            </exclude>
-        </whitelist>
-    </filter>
-
-    <!--<logging>
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory>./src/</directory>
+    </include>
+    <exclude>
+      <directory>./src/Shared/Infrastructure/Migrations/</directory>
+      <file>./src/Shared/Infrastructure/Kernel.php</file>
+    </exclude>
+  </coverage>
+  <php>
+    <ini name="error_reporting" value="-1"/>
+    <env name="SYMFONY_PHPUNIT_VERSION" value="8.2"/>
+    <env name="APP_ENV" value="test"/>
+    <env name="KERNEL_CLASS" value="App\Shared\Infrastructure\Kernel"/>
+    <env name="SHELL_VERBOSITY" value="-1"/>
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="7"/>
+    <env name="USE_AWS_ES" value="false"/>
+  </php>
+  <testsuites>
+    <testsuite name="localingo Test Suite">
+      <directory>tests/</directory>
+    </testsuite>
+  </testsuites>
+  <!--<logging>
         <log type="coverage-html" target="report/html"/>
     </logging>-->
-
-    <!--<extensions>
+  <!--<extensions>
         <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
     </extensions>-->
-
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
-    </listeners>
+  <listeners>
+    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
+  </listeners>
 </phpunit>
