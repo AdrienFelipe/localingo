@@ -10,16 +10,11 @@
     <include>
       <directory>./src/</directory>
     </include>
-    <exclude>
-      <directory>./src/Shared/Infrastructure/Migrations/</directory>
-      <file>./src/Shared/Infrastructure/Kernel.php</file>
-    </exclude>
   </coverage>
   <php>
     <ini name="error_reporting" value="-1"/>
     <env name="SYMFONY_PHPUNIT_VERSION" value="8.2"/>
     <env name="APP_ENV" value="test"/>
-    <env name="KERNEL_CLASS" value="App\Shared\Infrastructure\Kernel"/>
     <env name="SHELL_VERBOSITY" value="-1"/>
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="7"/>
     <env name="USE_AWS_ES" value="false"/>

@@ -1,6 +1,7 @@
 paths:
   - ./src
-exclude_files:
+  - ./tests
+
 layers:
   - name: Domain
     collectors:
@@ -22,6 +23,10 @@ layers:
     collectors:
       - type: classNameRegex
         regex: '/^(?!App\\).*\\.*/'
+  - name: Test
+    collectors:
+      - type: directory
+        regex: tests/.*
 
 ruleset:
   Domain:
@@ -34,3 +39,6 @@ ruleset:
     - Domain
     - Framework
   Framework:
+  Test:
+    - Application
+    - Domain

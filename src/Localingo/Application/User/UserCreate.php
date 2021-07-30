@@ -25,7 +25,7 @@ class UserCreate
         // Persist user.
         $this->userStore->save($user);
         // Keep track of the user within its session.
-        $this->session->saveEpisodeId($user);
+        $this->session->saveUserId($user);
 
         return $user;
     }

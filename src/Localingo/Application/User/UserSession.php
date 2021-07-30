@@ -25,7 +25,7 @@ class UserSession
         return is_string($userId) ? $userId : null;
     }
 
-    public function saveEpisodeId(User $user): void
+    public function saveUserId(User $user): void
     {
         $this->session->set(self::KEY_USER_ID, $user->getId());
     }
