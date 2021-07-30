@@ -13,7 +13,7 @@ class ExperienceItem
     private const DECREASE_GOOD_DAYS = 7;
     public const INCREASE_BAD = 5;
     private const INCREASE_GOOD = 1;
-    private const KNOWN_RATIO = 4;
+    private const KNOWN_RATIO = 3;
 
     private string $key;
     private int $bad;

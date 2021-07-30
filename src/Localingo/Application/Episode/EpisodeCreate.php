@@ -13,9 +13,9 @@ use App\Localingo\Domain\Episode\Episode;
 
 class EpisodeCreate
 {
-    private const WORDS_PER_EPISODE = 4;
-    private const SAMPLES_PER_EPISODE = 15;
-    private const EXERCISES_PER_EPISODE = 10;
+    private const MAX_WORDS = 20;
+    private const MAX_SAMPLES = 15;
+    private const MAX_EXERCISES = 10;
 
     private UserGet $userGet;
     private UserCreate $userCreate;
@@ -50,11 +50,11 @@ class EpisodeCreate
         // Build samples from current experience.
         $samples = $this->sampleSelect->forEpisode(
             $experience,
-            self::WORDS_PER_EPISODE,
-            self::SAMPLES_PER_EPISODE
+            self::MAX_WORDS,
+            self::MAX_SAMPLES
         );
         // Generate exercises from selected samples.
-        $exercises = $this->exerciseCreate->forEpisode($episode, $experience, $samples, self::EXERCISES_PER_EPISODE);
+        $exercises = $this->exerciseCreate->forEpisode($episode, $experience, $samples, self::MAX_EXERCISES);
         $episode->setExercises($exercises);
 
         return $episode;
