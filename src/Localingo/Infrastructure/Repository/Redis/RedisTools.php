@@ -40,6 +40,7 @@ class RedisTools
     /**
      * This requires the objects to be redis sorted sets.
      *
+     * @param int      $limit   if 0, returns all
      * @param string[] $exclude
      *
      * @return string[]
@@ -54,13 +55,13 @@ class RedisTools
                 return is_string($value) && !in_array($value, $exclude, true);
             });
             array_push($values, ...$results);
-            if (count($values) >= $limit) {
+            if ($limit && count($values) >= $limit) {
                 break;
             }
             $cursor += self::ITEMS_PER_ITERATION;
             $range += self::ITEMS_PER_ITERATION;
         }
 
-        return array_slice($values, 0, $limit);
+        return $limit ? array_slice($values, 0, $limit) : $values;
     }
 }

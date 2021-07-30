@@ -13,7 +13,6 @@ use App\Localingo\Domain\Episode\Episode;
 
 class EpisodeCreate
 {
-    private const DECLINATIONS_PER_EPISODE = 1;
     private const WORDS_PER_EPISODE = 4;
     private const SAMPLES_PER_EPISODE = 15;
     private const EXERCISES_PER_EPISODE = 10;
@@ -51,7 +50,6 @@ class EpisodeCreate
         // Build samples from current experience.
         $samples = $this->sampleSelect->forEpisode(
             $experience,
-            self::DECLINATIONS_PER_EPISODE,
             self::WORDS_PER_EPISODE,
             self::SAMPLES_PER_EPISODE
         );

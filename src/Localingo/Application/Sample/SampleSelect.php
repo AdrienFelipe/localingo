@@ -4,49 +4,47 @@ declare(strict_types=1);
 
 namespace App\Localingo\Application\Sample;
 
-use App\Localingo\Application\Declination\DeclinationSelect;
 use App\Localingo\Application\Word\WordSelect;
+use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
 use App\Localingo\Domain\Experience\Experience;
 use App\Localingo\Domain\Sample\SampleCaseRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleCollection;
-use App\Localingo\Domain\Sample\SampleRepositoryInterface;
 
 class SampleSelect
 {
-    private SampleRepositoryInterface $sampleRepository;
     private SampleCaseRepositoryInterface $caseRepository;
-    private DeclinationSelect $declinationSelect;
     private WordSelect $wordSelect;
+    private DeclinationRepositoryInterface $declinationRepository;
+    private SampleCaseSelect $sampleCaseSelect;
 
     public function __construct(
-        SampleRepositoryInterface $sampleRepository,
         SampleCaseRepositoryInterface $caseRepository,
-        DeclinationSelect $declinationSelect,
-        WordSelect $wordSelect
+        WordSelect $wordSelect,
+        DeclinationRepositoryInterface $declinationRepository,
+        SampleCaseSelect $sampleCaseSelect
     ) {
-        $this->sampleRepository = $sampleRepository;
         $this->caseRepository = $caseRepository;
-        $this->declinationSelect = $declinationSelect;
         $this->wordSelect = $wordSelect;
+        $this->declinationRepository = $declinationRepository;
+        $this->sampleCaseSelect = $sampleCaseSelect;
     }
 
-    public function forEpisode(Experience $experience, int $declinationsCount, int $wordsCount, int $samplesCount): SampleCollection
+    public function forEpisode(Experience $experience, int $maxWords, int $maxSamples): SampleCollection
     {
-        // Select most relevant declinations to train on.
-        $declinations = $this->declinationSelect->mostRelevant($experience, $declinationsCount);
-        // Add to experience all cases of selected declinations.
-        $this->addCasesToExperience($experience, $declinations);
-
+        $samples = new SampleCollection();
         // Get most relevant words to train.
-        $words = $this->wordSelect->mostRelevant($experience, $wordsCount);
-        // Sample from experience the most relevant cases, limited to chosen words.
-        $samples = $this->getRevisionNeededCases($experience, $samplesCount, $words);
+        $words = $this->wordSelect->mostRelevant($experience, $maxWords);
+        // Add samples that need review, and early exit if max is met.
+        if (!$remaining = $this->addSamplesFromExperience($samples, $maxSamples, $experience, $words)) {
+            return $samples;
+        }
 
-        // If not enough yet, add more selected cases without filtering words.
-        if ($remaining = $samplesCount - count($samples)) {
-            // TODO: handle possible duplicates from previous selection.
-            foreach ($this->getRevisionNeededCases($experience, $remaining) as $sample) {
-                $samples->append($sample);
+        // Fetch from non trained samples.
+        foreach ($this->declinationRepository->getByPriority() as $declination) {
+            // Add to experience all cases of selected declination.
+            $this->addCasesToExperience($experience, [$declination]);
+            if (!$remaining = $this->addSamplesFromExperience($samples, $remaining, $experience, $words)) {
+                break;
             }
         }
 
@@ -55,46 +53,26 @@ class SampleSelect
 
     /**
      * @param string[] $words
+     *
+     * @return int the number of remaining samples to meet the limit
      */
-    private function getRevisionNeededCases(Experience $experience, int $count, array $words = []): SampleCollection
+    public function addSamplesFromExperience(SampleCollection $samples, int $limit, Experience $experience, array $words): int
     {
-        $experiences = $experience->getCaseExperiences();
-        // First update all items based on current date.
-        $experiences->update();
+        // Sample from experience the most relevant cases, limited to chosen words first.
+        foreach ($this->sampleCaseSelect->samplesFromExperience($experience, $limit, $samples, $words) as $sample) {
+            $samples->append($sample);
+        }
 
-        $cases = [];
-        $filters = [];
-        // Select most relevant items first.
-        foreach ($experiences->getRevisionNeeded() as $case) {
-            $sampleFilter = Experience::caseToSample($case);
-            $key = implode(':', [
-                $sampleFilter->getDeclination(),
-                $sampleFilter->getGender(),
-                $sampleFilter->getNumber(),
-            ]);
-            if (!isset($cases[$key])) {
-                $cases[$key] = [];
-                $filters[$key] = $sampleFilter;
+        // If not enough, add more selected cases without filtering words.
+        if ($remaining = $limit - count($samples)) {
+            // TODO: handle possible duplicates from previous selection.
+            foreach ($this->sampleCaseSelect->samplesFromExperience($experience, $remaining, $samples) as $sample) {
+                $samples->append($sample);
+                --$remaining;
             }
-            $cases[$key][] = $sampleFilter->getCase();
         }
 
-        $samples = [];
-        foreach ($cases as $key => $case) {
-            $limit = $count - count($samples);
-            $filter = $filters[$key];
-            $results = $this->sampleRepository->loadMultiple(
-                $limit,
-                $words,
-                $filter->getDeclination(),
-                $filter->getGender(),
-                $filter->getNumber(),
-                array_unique($case),
-            );
-            array_push($samples, ...$results->getArrayCopy());
-        }
-
-        return new SampleCollection(array_slice($samples, 0, $count));
+        return $remaining;
     }
 
     /**

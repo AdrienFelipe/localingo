@@ -9,9 +9,10 @@ use App\Localingo\Domain\LocalData\LocalDataRawInterface;
 interface DeclinationRepositoryInterface extends LocalDataRawInterface
 {
     /**
+     * @param int      $limit   if 0, returns all
      * @param string[] $exclude
      *
      * @return string[]
      */
-    public function getByPriority(int $limit, array $exclude = []): array;
+    public function getByPriority(int $limit = 0, array $exclude = []): array;
 }

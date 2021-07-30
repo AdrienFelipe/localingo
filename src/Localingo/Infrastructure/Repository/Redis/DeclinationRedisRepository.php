@@ -24,7 +24,7 @@ class DeclinationRedisRepository implements DeclinationRepositoryInterface
         $this->redis->zadd(self::DECLINATION_INDEX, $values);
     }
 
-    public function getByPriority(int $limit, array $exclude = []): array
+    public function getByPriority(int $limit = 0, array $exclude = []): array
     {
         return RedisTools::sortedScan($this->redis, self::DECLINATION_INDEX, $limit, $exclude);
     }

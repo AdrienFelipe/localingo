@@ -71,7 +71,7 @@ class ExperienceItem
      */
     public function isKnow(): bool
     {
-        return $this->getGoodRatio() > self::KNOWN_RATIO;
+        return $this->getGoodRatio() >= self::KNOWN_RATIO;
     }
 
     public function update(): void
