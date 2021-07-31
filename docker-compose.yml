@@ -3,9 +3,9 @@ version: '3.4'
 services:
 
   redis:
-    image: redis:6-alpine
-    volumes:
-      - ./files:/files
+    build:
+      context: etc/dev/redis
+      dockerfile: Dockerfile
 
   nginx:
     image: nginx:1.15-alpine
