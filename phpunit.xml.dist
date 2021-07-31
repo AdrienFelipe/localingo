@@ -13,7 +13,7 @@
   </coverage>
   <php>
     <ini name="error_reporting" value="-1"/>
-    <env name="SYMFONY_PHPUNIT_VERSION" value="8.2"/>
+    <env name="SYMFONY_PHPUNIT_VERSION" value="9"/>
     <env name="APP_ENV" value="test"/>
     <env name="SHELL_VERBOSITY" value="-1"/>
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="7"/>
@@ -27,10 +27,8 @@
   <!--<logging>
         <log type="coverage-html" target="report/html"/>
     </logging>-->
-  <!--<extensions>
-        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
-    </extensions>-->
-  <listeners>
-    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
-  </listeners>
+  <extensions>
+    <extension class="App\Shared\Infrastructure\Framework\Symfony5\Symfony5SessionTestHook"/>
+    <extension class="App\Localingo\Infrastructure\Repository\Redis\RedisRepositoryTestHook"/>
+  </extensions>
 </phpunit>

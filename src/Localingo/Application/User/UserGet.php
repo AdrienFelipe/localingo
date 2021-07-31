@@ -10,12 +10,12 @@ use App\Localingo\Domain\User\UserRepositoryInterface;
 class UserGet
 {
     private UserSession $session;
-    private UserRepositoryInterface $userStore;
+    private UserRepositoryInterface $repository;
 
     public function __construct(UserSession $session, UserRepositoryInterface $userStore)
     {
         $this->session = $session;
-        $this->userStore = $userStore;
+        $this->repository = $userStore;
     }
 
     public function current(): ?User
@@ -25,6 +25,6 @@ class UserGet
             return null;
         }
 
-        return $this->userStore->load($user_id);
+        return $this->repository->load($user_id);
     }
 }

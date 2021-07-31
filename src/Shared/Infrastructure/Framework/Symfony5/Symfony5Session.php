@@ -31,4 +31,9 @@ class Symfony5Session implements SessionInterface
     {
         return $this->session->get($name, $default);
     }
+
+    public function clear(): void
+    {
+        $this->session->clear();
+    }
 }

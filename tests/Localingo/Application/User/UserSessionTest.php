@@ -17,7 +17,7 @@ class UserSessionTest extends ApplicationTestCase
         $this->userSession = self::service(UserSession::class);
     }
 
-    public function testUserId(): void
+    public function testUserSessionUserId(): void
     {
         // First, user session id should be null.
         $userId = $this->userSession->loadUserId();

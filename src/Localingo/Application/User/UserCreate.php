@@ -19,6 +19,10 @@ class UserCreate
         $this->repository = $repository;
     }
 
+    /**
+     * Creates and persists a new user, and makes it the session's current user.
+     * TODO: review this implementation when multi-user is considered.
+     */
     public function new(string $name = self::DEFAULT_USER_NAME): User
     {
         $user = new User($name);

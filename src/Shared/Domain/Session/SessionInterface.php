@@ -9,4 +9,6 @@ interface SessionInterface
     public function set(string $name, mixed $value): void;
 
     public function get(string $name, mixed $default = null): mixed;
+
+    public function clear(): void;
 }
