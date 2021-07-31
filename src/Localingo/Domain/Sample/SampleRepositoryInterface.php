@@ -16,9 +16,4 @@ interface SampleRepositoryInterface extends LocalDataRawInterface
      * @param string|string[]|null $cases
      */
     public function loadMultiple(int $limit, mixed $words, mixed $declinations, mixed $genders = null, mixed $numbers = null, mixed $cases = null): SampleCollection;
-
-    /**
-     * @param string[] $words
-     */
-    public function fromSampleFilters(SampleCollection $sampleFilters, int $count, array $words = []): SampleCollection;
 }

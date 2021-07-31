@@ -75,7 +75,7 @@ class SampleRepositoryTest extends ApplicationTestCase
      * @param array<int, mixed>                $values
      * @param array<int, array<string, mixed>> $expectations
      */
-    public function testRepository(array $values, array $expectations): void
+    public function testLoadMultiple(array $values, array $expectations): void
     {
         foreach ($values as $line) {
             $data = $this->buildData($line);

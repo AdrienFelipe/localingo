@@ -112,31 +112,4 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
 
         return $regex ? preg_quote($value, '/') : $value;
     }
-
-    public function fromSampleFilters(SampleCollection $sampleFilters, int $count, array $words = []): SampleCollection
-    {
-        // Keep track of the total without counting on each iteration.
-        $totalSamples = 0;
-        $samples = new SampleCollection();
-        foreach ($sampleFilters as $sampleFilter) {
-            $key_pattern = self::keyPattern(
-                true,
-                $words ?: $sampleFilter->getWord(),
-                $sampleFilter->getDeclination(),
-                $sampleFilter->getGender(),
-                $sampleFilter->getNumber(),
-                $sampleFilter->getCase()
-            );
-
-            foreach (self::findKeys($this->redis, $key_pattern, $count) as $key) {
-                $samples->append($this->load($key));
-                // Early exit if all items were found.
-                if (++$totalSamples === $count) {
-                    break 2;
-                }
-            }
-        }
-
-        return $samples;
-    }
 }
