@@ -2,6 +2,7 @@
 
 namespace App\Shared\Application\Test;
 
+use App\Shared\Domain\Test\TestKernelInterface;
 use PHPUnit\Framework\TestCase;
 
 abstract class ApplicationTestCase extends TestCase

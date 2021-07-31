@@ -11,19 +11,19 @@ class UserCreate
 {
     private const DEFAULT_USER_NAME = 'anonymous';
     private UserSession $session;
-    private UserRepositoryInterface $userStore;
+    private UserRepositoryInterface $repository;
 
-    public function __construct(UserSession $session, UserRepositoryInterface $userStore)
+    public function __construct(UserSession $session, UserRepositoryInterface $repository)
     {
         $this->session = $session;
-        $this->userStore = $userStore;
+        $this->repository = $repository;
     }
 
     public function new(string $name = self::DEFAULT_USER_NAME): User
     {
         $user = new User($name);
         // Persist user.
-        $this->userStore->save($user);
+        $this->repository->save($user);
         // Keep track of the user within its session.
         $this->session->saveUserId($user);
 

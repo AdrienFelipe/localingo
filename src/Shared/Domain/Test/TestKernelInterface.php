@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shared\Application\Test;
+namespace App\Shared\Domain\Test;
 
 interface TestKernelInterface
 {

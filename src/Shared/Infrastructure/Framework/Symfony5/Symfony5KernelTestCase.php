@@ -2,7 +2,7 @@
 
 namespace App\Shared\Infrastructure\Framework\Symfony5;
 
-use App\Shared\Application\Test\TestKernelInterface;
+use App\Shared\Domain\Test\TestKernelInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
