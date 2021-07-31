@@ -11,8 +11,6 @@ use App\Localingo\Domain\Sample\SampleCollection;
 class SampleCaseRedisRepository extends RedisRepository implements SampleCaseRepositoryInterface
 {
     private const CASE_INDEX = 'cases';
-    private const SEPARATOR = ':';
-    private const ESCAPER = ';;';
 
     /**
      * @Warning: affects caseToSample() method.
@@ -21,6 +19,7 @@ class SampleCaseRedisRepository extends RedisRepository implements SampleCaseRep
     {
         // TODO: add proper checks.
         $value = $this::valuePattern(
+            false,
              $data[self::FILE_DECLINATION],
              $data[self::FILE_GENDER],
              $data[self::FILE_NUMBER],
@@ -34,14 +33,13 @@ class SampleCaseRedisRepository extends RedisRepository implements SampleCaseRep
      * While this might seem duplicated with Experience:caseToSample, it is not.
      * Redis and Yaml are two separate storages.
      */
-    public static function caseToSample(string $case): Sample
+    private static function caseToSample(string $case): Sample
     {
         $labels = ['declination', 'gender', 'number', 'case'];
+        /** @var string[] $values */
         $values = array_combine($labels, explode(self::SEPARATOR, $case));
         // Put escaped separator back.
-        array_walk($values, static function (string &$value) {
-            $value = str_replace(self::ESCAPER, self::SEPARATOR, $value);
-        });
+        $values = self::unescapeSeparator($values);
 
         /** @var string[] $values */
         return new Sample(
@@ -56,34 +54,20 @@ class SampleCaseRedisRepository extends RedisRepository implements SampleCaseRep
         );
     }
 
-    private static function valuePattern(mixed $declinations, mixed $genders = null, mixed $numbers = null, mixed $cases = null): string
+    private static function valuePattern(bool $regex, mixed $declinations, mixed $genders = null, mixed $numbers = null, mixed $cases = null): string
     {
         return implode(self::SEPARATOR, [
-            self::valuePatternItem($declinations),
-            self::valuePatternItem($genders),
-            self::valuePatternItem($numbers),
-            self::valuePatternItem($cases),
+            self::keyPatternItem($regex, $declinations),
+            self::keyPatternItem($regex, $genders),
+            self::keyPatternItem($regex, $numbers),
+            self::keyPatternItem($regex, $cases),
         ]);
-    }
-
-    private static function valuePatternItem(mixed $item): string
-    {
-        if ($item !== '' && !$item) {
-            return '[^'.self::SEPARATOR.']*';
-        }
-
-        if (is_array($item)) {
-            return '('.implode('|', $item).')';
-        }
-
-        // Escape separator.
-        return str_replace(self::SEPARATOR, self::ESCAPER, (string) $item);
     }
 
     public function getCases(array $declinations): SampleCollection
     {
         $samples = new SampleCollection();
-        $pattern = self::valuePattern($declinations);
+        $pattern = self::valuePattern(true, $declinations);
         $results = (array) $this->redis->smembers(self::CASE_INDEX);
         $results = array_filter($results, static function ($result) {return is_string($result); });
         $results = preg_grep("/$pattern/", $results) ?: [];

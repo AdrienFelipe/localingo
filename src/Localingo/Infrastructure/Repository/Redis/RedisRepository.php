@@ -10,6 +10,8 @@ use Predis\Client;
 class RedisRepository implements RepositoryInterface
 {
     private const ITEMS_PER_ITERATION = 10;
+    protected const SEPARATOR = ':';
+    protected const ESCAPER = ';;';
 
     protected Client $redis;
 
@@ -76,5 +78,49 @@ class RedisRepository implements RepositoryInterface
         }
 
         return $limit ? array_slice($values, 0, $limit) : $values;
+    }
+
+    /**
+     * @param string[]|null[] $data
+     *
+     * @return string[]
+     */
+    protected static function unescapeSeparator(array $data): array
+    {
+        return array_map(static function (?string $value) {
+            // Put escaped separator back. Redis empty strings are returned as null values.
+            return str_replace(self::ESCAPER, self::SEPARATOR, $value ?? '');
+        }, $data);
+    }
+
+    /**
+     * Generates an escaped key ready to use in redis, or an escaped regex to filter from.
+     */
+    protected static function keyPatternItem(bool $regex, mixed $item): string
+    {
+        if (!$item) {
+            return $regex ? '[^'.self::SEPARATOR.']*' : '';
+        }
+
+        if (is_array($item)) {
+            $item = array_map(static function (mixed $value) use ($regex) {
+                return self::escapeKeyItem($regex, $value);
+            }, $item);
+
+            return '('.implode('|', $item).')';
+        }
+
+        return self::escapeKeyItem($regex, $item);
+    }
+
+    /**
+     * Escape values separator to avoid collisions with internal content.
+     * Escape regex special characters for them not to be applied when used in regex mode.
+     */
+    protected static function escapeKeyItem(bool $regex, mixed $value): string
+    {
+        $value = str_replace(self::SEPARATOR, self::ESCAPER, (string) $value);
+
+        return $regex ? preg_quote($value, '/') : $value;
     }
 }

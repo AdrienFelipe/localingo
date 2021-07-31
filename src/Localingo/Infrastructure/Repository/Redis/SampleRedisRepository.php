@@ -11,8 +11,6 @@ use App\Localingo\Domain\Sample\SampleRepositoryInterface;
 class SampleRedisRepository extends RedisRepository implements SampleRepositoryInterface
 {
     private const SAMPLE_INDEX = 'sample';
-    private const SEPARATOR = ':';
-    private const ESCAPER = ';;';
 
     public function saveFromRawData(array $data): void
     {
@@ -40,11 +38,9 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
             self::FILE_STATE,
             self::FILE_CASE,
         ];
+        /** @var string[]|null[] $data */
         $data = (array) $this->redis->hmget($key, $fields);
-        $data = array_map(static function (?string $value) {
-            // Put escaped separator back. Redis empty strings are returned as null values.
-            return str_replace(self::ESCAPER, self::SEPARATOR, $value ?? '');
-        }, $data);
+        $data = self::unescapeSeparator($data);
         // Apply fields names.
         $data = array_combine($fields, $data);
 
@@ -83,33 +79,5 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
             self::keyPatternItem($regex, $numbers),
             self::keyPatternItem($regex, $cases),
         ]);
-    }
-
-    private static function keyPatternItem(bool $regex, mixed $item): string
-    {
-        if (!$item) {
-            return $regex ? '[^'.self::SEPARATOR.']*' : '';
-        }
-
-        if (is_array($item)) {
-            $item = array_map(static function (mixed $value) use ($regex) {
-                return self::escapeKeyItem($regex, $value);
-            }, $item);
-
-            return '('.implode('|', $item).')';
-        }
-
-        return self::escapeKeyItem($regex, $item);
-    }
-
-    /**
-     * Escape values separator to avoid collisions with internal content.
-     * Escape regex special characters for them not to be applied when used in regex mode.
-     */
-    private static function escapeKeyItem(bool $regex, mixed $value): string
-    {
-        $value = str_replace(self::SEPARATOR, self::ESCAPER, (string) $value);
-
-        return $regex ? preg_quote($value, '/') : $value;
     }
 }
