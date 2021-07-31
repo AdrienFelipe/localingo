@@ -7,19 +7,11 @@ namespace App\Localingo\Infrastructure\Repository\Redis;
 use App\Localingo\Domain\User\User;
 use App\Localingo\Domain\User\UserRepositoryInterface;
 use ErrorException;
-use Predis\Client;
 use TypeError;
 
-class UserRedisRepository implements UserRepositoryInterface
+class UserRedisRepository extends RedisRepository implements UserRepositoryInterface
 {
     private const KEY_USER_ID = 'user_id';
-
-    private Client $redis;
-
-    public function __construct(Client $redis)
-    {
-        $this->redis = $redis;
-    }
 
     public function load(string $user_id): ?User
     {

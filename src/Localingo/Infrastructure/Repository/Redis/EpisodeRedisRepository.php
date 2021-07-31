@@ -9,18 +9,10 @@ use App\Localingo\Domain\Episode\EpisodeRepositoryInterface;
 use App\Localingo\Domain\Episode\Exception\EpisodeVersionException;
 use App\Localingo\Domain\User\User;
 use ErrorException;
-use Predis\Client;
 use TypeError;
 
-class EpisodeRedisRepository implements EpisodeRepositoryInterface
+class EpisodeRedisRepository extends RedisRepository implements EpisodeRepositoryInterface
 {
-    private Client $redis;
-
-    public function __construct(Client $redis)
-    {
-        $this->redis = $redis;
-    }
-
     public function load(User $user, string $episode_id): ?Episode
     {
         $data = (string) $this->redis->get(self::key($user, $episode_id));

@@ -28,7 +28,7 @@
         <log type="coverage-html" target="report/html"/>
     </logging>-->
   <extensions>
-    <extension class="App\Shared\Infrastructure\Framework\Symfony5\Symfony5SessionTestHook"/>
-    <extension class="App\Localingo\Infrastructure\Repository\Redis\RedisRepositoryTestHook"/>
+    <extension class="App\Shared\Application\Test\SessionTestHook"/>
+    <extension class="App\Shared\Application\Test\RepositoryTestHook"/>
   </extensions>
 </phpunit>

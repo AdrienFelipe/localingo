@@ -9,18 +9,10 @@ use App\Localingo\Domain\Experience\Experience;
 use App\Localingo\Domain\Experience\ExperienceRepositoryInterface;
 use App\Localingo\Domain\User\User;
 use ErrorException;
-use Predis\Client;
 use TypeError;
 
-class ExperienceRedisRepository implements ExperienceRepositoryInterface
+class ExperienceRedisRepository extends RedisRepository implements ExperienceRepositoryInterface
 {
-    private Client $redis;
-
-    public function __construct(Client $redis)
-    {
-        $this->redis = $redis;
-    }
-
     public function load(User $user): ?Experience
     {
         $data = (string) $this->redis->get($this->key($user));

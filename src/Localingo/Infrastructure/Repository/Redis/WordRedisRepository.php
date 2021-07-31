@@ -5,18 +5,10 @@ declare(strict_types=1);
 namespace App\Localingo\Infrastructure\Repository\Redis;
 
 use App\Localingo\Domain\Word\WordRepositoryInterface;
-use Predis\Client;
 
-class WordRedisRepository implements WordRepositoryInterface
+class WordRedisRepository extends RedisRepository implements WordRepositoryInterface
 {
     private const WORD_INDEX = 'words';
-
-    private Client $redis;
-
-    public function __construct(Client $redis)
-    {
-        $this->redis = $redis;
-    }
 
     public function saveFromRawData(array $data): void
     {
@@ -26,6 +18,6 @@ class WordRedisRepository implements WordRepositoryInterface
 
     public function getByPriority(int $limit, array $exclude = []): array
     {
-        return RedisTools::sortedScan($this->redis, self::WORD_INDEX, $limit, $exclude);
+        return self::sortedScan($this->redis, self::WORD_INDEX, $limit, $exclude);
     }
 }

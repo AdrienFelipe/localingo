@@ -5,18 +5,10 @@ declare(strict_types=1);
 namespace App\Localingo\Infrastructure\Repository\Redis;
 
 use App\Localingo\Domain\Sample\SampleCharRepositoryInterface;
-use Predis\Client;
 
-class SampleCharRedisRepository implements SampleCharRepositoryInterface
+class SampleCharRedisRepository extends RedisRepository implements SampleCharRepositoryInterface
 {
     private const SAMPLE_INDEX = 'chars';
-
-    private Client $redis;
-
-    public function __construct(Client $redis)
-    {
-        $this->redis = $redis;
-    }
 
     public function saveFromRawData(array $data): void
     {

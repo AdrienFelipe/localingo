@@ -4,11 +4,24 @@ declare(strict_types=1);
 
 namespace App\Localingo\Infrastructure\Repository\Redis;
 
+use App\Shared\Domain\Repository\RepositoryInterface;
 use Predis\Client;
 
-class RedisTools
+class RedisRepository implements RepositoryInterface
 {
     private const ITEMS_PER_ITERATION = 10;
+
+    protected Client $redis;
+
+    public function __construct(Client $redis)
+    {
+        $this->redis = $redis;
+    }
+
+    public function clear(): void
+    {
+        $this->redis->flushall();
+    }
 
     /**
      * While this iterates correctly through all values, it does it in a non-sorted manner.

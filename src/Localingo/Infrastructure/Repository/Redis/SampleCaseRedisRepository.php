@@ -7,20 +7,12 @@ namespace App\Localingo\Infrastructure\Repository\Redis;
 use App\Localingo\Domain\Sample\Sample;
 use App\Localingo\Domain\Sample\SampleCaseRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleCollection;
-use Predis\Client;
 
-class SampleCaseRedisRepository implements SampleCaseRepositoryInterface
+class SampleCaseRedisRepository extends RedisRepository implements SampleCaseRepositoryInterface
 {
     private const CASE_INDEX = 'cases';
     private const SEPARATOR = ':';
     private const ESCAPER = ';;';
-
-    private Client $redis;
-
-    public function __construct(Client $redis)
-    {
-        $this->redis = $redis;
-    }
 
     /**
      * @Warning: affects caseToSample() method.

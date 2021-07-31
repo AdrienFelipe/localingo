@@ -7,18 +7,10 @@ namespace App\Localingo\Infrastructure\Repository\Redis;
 use App\Localingo\Domain\Sample\Sample;
 use App\Localingo\Domain\Sample\SampleCollection;
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
-use Predis\Client;
 
-class SampleRedisRepository implements SampleRepositoryInterface
+class SampleRedisRepository extends RedisRepository implements SampleRepositoryInterface
 {
     private const SAMPLE_INDEX = 'sample';
-
-    private Client $redis;
-
-    public function __construct(Client $redis)
-    {
-        $this->redis = $redis;
-    }
 
     public function saveFromRawData(array $data): void
     {
@@ -68,7 +60,7 @@ class SampleRedisRepository implements SampleRepositoryInterface
     public function loadMultiple(int $limit, mixed $words, mixed $declinations, mixed $genders = null, mixed $numbers = null, mixed $cases = null): SampleCollection
     {
         $key_pattern = self::keyPattern($words, $declinations);
-        $keys = RedisTools::findKeys($this->redis, $key_pattern, $limit);
+        $keys = self::findKeys($this->redis, $key_pattern, $limit);
 
         $samples = [];
         foreach ($keys as $key) {
@@ -117,7 +109,7 @@ class SampleRedisRepository implements SampleRepositoryInterface
                 $sampleFilter->getCase()
             );
 
-            foreach (RedisTools::findKeys($this->redis, $key_pattern, $count) as $key) {
+            foreach (self::findKeys($this->redis, $key_pattern, $count) as $key) {
                 $samples->append($this->load($key));
                 // Early exit if all items were found.
                 if (++$totalSamples === $count) {

@@ -5,17 +5,9 @@ declare(strict_types=1);
 namespace App\Localingo\Infrastructure\Repository\Redis;
 
 use App\Localingo\Domain\LocalData\LocalDataRepositoryInterface;
-use Predis\Client;
 
-class LocalDataRedisRepository implements LocalDataRepositoryInterface
+class LocalDataRedisRepository extends RedisRepository implements LocalDataRepositoryInterface
 {
-    private Client $redis;
-
-    public function __construct(Client $redis)
-    {
-        $this->redis = $redis;
-    }
-
     public function clearAllData(): void
     {
         $this->redis->flushall();
