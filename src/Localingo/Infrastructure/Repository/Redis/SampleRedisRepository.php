@@ -11,11 +11,14 @@ use App\Localingo\Domain\Sample\SampleRepositoryInterface;
 class SampleRedisRepository extends RedisRepository implements SampleRepositoryInterface
 {
     private const SAMPLE_INDEX = 'sample';
+    private const SEPARATOR = ':';
+    private const ESCAPER = ';;';
 
     public function saveFromRawData(array $data): void
     {
         // TODO: add proper checks.
         $key = self::keyPattern(
+            false,
             $data[self::FILE_WORD],
             $data[self::FILE_DECLINATION],
             $data[self::FILE_GENDER],
@@ -25,7 +28,7 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
         $this->redis->hmset($key, $data);
     }
 
-    public function load(string $key): Sample
+    private function load(string $key): Sample
     {
         $fields = [
             self::FILE_DECLINED,
@@ -38,9 +41,9 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
             self::FILE_CASE,
         ];
         $data = (array) $this->redis->hmget($key, $fields);
-        // Redis empty strings are returned as null values.
-        $data = array_map(static function (?string $field) {
-            return $field ?? '';
+        $data = array_map(static function (?string $value) {
+            // Put escaped separator back. Redis empty strings are returned as null values.
+            return str_replace(self::ESCAPER, self::SEPARATOR, $value ?? '');
         }, $data);
         // Apply fields names.
         $data = array_combine($fields, $data);
@@ -59,8 +62,8 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
 
     public function loadMultiple(int $limit, mixed $words, mixed $declinations, mixed $genders = null, mixed $numbers = null, mixed $cases = null): SampleCollection
     {
-        $key_pattern = self::keyPattern($words, $declinations);
-        $keys = self::findKeys($this->redis, $key_pattern, $limit);
+        $keyPattern = self::keyPattern(true, $words, $declinations, $genders, $numbers, $cases);
+        $keys = self::findKeys($this->redis, $keyPattern, $limit);
 
         $samples = [];
         foreach ($keys as $key) {
@@ -70,29 +73,44 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
         return new SampleCollection($samples);
     }
 
-    public static function keyPattern(mixed $words, mixed $declinations, mixed $genders = null, mixed $numbers = null, mixed $cases = null): string
+    private static function keyPattern(bool $regex, mixed $words, mixed $declinations, mixed $genders = null, mixed $numbers = null, mixed $cases = null): string
     {
-        return implode(':', [
+        return implode(self::SEPARATOR, [
             self::SAMPLE_INDEX,
-            self::keyPatternItem($words),
-            self::keyPatternItem($declinations),
-            self::keyPatternItem($genders),
-            self::keyPatternItem($numbers),
-            self::keyPatternItem($cases),
+            self::keyPatternItem($regex, $words),
+            self::keyPatternItem($regex, $declinations),
+            self::keyPatternItem($regex, $genders),
+            self::keyPatternItem($regex, $numbers),
+            self::keyPatternItem($regex, $cases),
         ]);
     }
 
-    private static function keyPatternItem(mixed $item): string
+    private static function keyPatternItem(bool $regex, mixed $item): string
     {
         if (!$item) {
-            return '[^:]*';
+            return $regex ? '[^'.self::SEPARATOR.']*' : '';
         }
 
         if (is_array($item)) {
+            $item = array_map(static function (mixed $value) use ($regex) {
+                return self::escapeKeyItem($regex, $value);
+            }, $item);
+
             return '('.implode('|', $item).')';
         }
 
-        return (string) $item;
+        return self::escapeKeyItem($regex, $item);
+    }
+
+    /**
+     * Escape values separator to avoid collisions with internal content.
+     * Escape regex special characters for them not to be applied when used in regex mode.
+     */
+    private static function escapeKeyItem(bool $regex, mixed $value): string
+    {
+        $value = str_replace(self::SEPARATOR, self::ESCAPER, (string) $value);
+
+        return $regex ? preg_quote($value, '/') : $value;
     }
 
     public function fromSampleFilters(SampleCollection $sampleFilters, int $count, array $words = []): SampleCollection
@@ -102,6 +120,7 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
         $samples = new SampleCollection();
         foreach ($sampleFilters as $sampleFilter) {
             $key_pattern = self::keyPattern(
+                true,
                 $words ?: $sampleFilter->getWord(),
                 $sampleFilter->getDeclination(),
                 $sampleFilter->getGender(),
