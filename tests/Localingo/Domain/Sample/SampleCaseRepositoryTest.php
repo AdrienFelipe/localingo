@@ -74,21 +74,42 @@ class SampleCaseRepositoryTest extends ApplicationTestCase
         }
     }
 
+    public function testValues(): void
+    {
+        $declination = 'declination';
+        $number = 'number';
+        $gender = 'gender';
+        $case = 'case';
+        $line = "declined	$declination	$number	$gender	word	translation	state	end	$case";
+
+        $data = $this->buildData($line);
+        $this->repository->saveFromRawData($data);
+
+        $sampleCases = $this->repository->getCases([]);
+        foreach ($sampleCases as $sampleCase) {
+            self::assertSame($declination, $sampleCase->getDeclination());
+            self::assertSame($number, $sampleCase->getNumber());
+            self::assertSame($gender, $sampleCase->getGender());
+            self::assertSame($case, $sampleCase->getCase());
+            self::assertEmpty($sampleCase->getDeclined());
+            self::assertEmpty($sampleCase->getWord());
+            self::assertEmpty($sampleCase->getTranslation());
+            self::assertEmpty($sampleCase->getState());
+            // TODO: test "end" value when handled.
+        }
+    }
+
     /**
      * @return array<string, string>
      */
-    public function buildData(string $line): array
+    private function buildData(string $line): array
     {
         $values = explode("\t", $line);
 
         return [
-            $this->repository::FILE_DECLINED => $values[0],
             $this->repository::FILE_DECLINATION => $values[1],
             $this->repository::FILE_NUMBER => $values[2],
             $this->repository::FILE_GENDER => $values[3],
-            $this->repository::FILE_WORD => $values[4],
-            $this->repository::FILE_TRANSLATION => $values[5],
-            $this->repository::FILE_STATE => $values[6],
             $this->repository::FILE_CASE => $values[8],
         ];
     }

@@ -95,10 +95,40 @@ class SampleRepositoryTest extends ApplicationTestCase
         }
     }
 
+    public function testValues(): void
+    {
+        $declined = 'declined';
+        $declination = 'declination';
+        $number = 'number';
+        $gender = 'gender';
+        $word = 'word';
+        $translation = 'translation';
+        $state = 'state';
+        $end = 'end';
+        $case = 'case';
+        $line = "$declined	$declination	$number	$gender	$word	$translation	$state	$end	$case";
+
+        $data = $this->buildData($line);
+        $this->repository->saveFromRawData($data);
+
+        $sampleCases = $this->repository->loadMultiple(1, $word, $declination);
+        foreach ($sampleCases as $sampleCase) {
+            self::assertSame($declined, $sampleCase->getDeclined());
+            self::assertSame($declination, $sampleCase->getDeclination());
+            self::assertSame($number, $sampleCase->getNumber());
+            self::assertSame($gender, $sampleCase->getGender());
+            self::assertSame($word, $sampleCase->getWord());
+            self::assertSame($translation, $sampleCase->getTranslation());
+            self::assertSame($state, $sampleCase->getState());
+            // TODO: test "end" value when handled.
+            self::assertSame($case, $sampleCase->getCase());
+        }
+    }
+
     /**
      * @return array<string, string>
      */
-    public function buildData(string $line): array
+    private function buildData(string $line): array
     {
         $values = explode("\t", $line);
 

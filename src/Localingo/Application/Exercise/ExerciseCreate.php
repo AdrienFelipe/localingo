@@ -63,7 +63,7 @@ class ExerciseCreate
 
     private function skipNew(Exercise $exercise, Experience $experience): void
     {
-        // Declination are supposed to appear only after a few words try, hence just checking the case experience.
+        // Declination is supposed to appear only after a few words try, hence just checking the case experience.
         if ($exercise->getType()->isDeclined()) {
             $experienceItem = $experience->declinationItem($exercise->getSample());
         }
@@ -75,7 +75,7 @@ class ExerciseCreate
         $hasAGoodAnswer = $experienceItem->getGood();
         $hasFewBadAnswers = $experienceItem->getBadRatio() <= self::SKIP_NEW_BAD_RATIO_MAX;
         $exerciseIsNew = $exercise->getState()->isNew();
-        // Skip state 'new' state as soon as item has one good answer, but not too much bad answers.
+        // Skip state 'new' state as soon as item has one good answer, but not too many bad answers.
         if ($hasAGoodAnswer && $hasFewBadAnswers && $exerciseIsNew) {
             $exercise->nextState();
         }

@@ -52,7 +52,7 @@ class EpisodeRender
         // Load data from local files.
         $this->dataInitialize->load();
 
-        // Load current episode or create a new one.
+        // Load current episode and exercise, or create new ones.
         $episode = $this->getEpisode();
         $exercise = $this->getExercise($episode);
 
