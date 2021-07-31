@@ -22,7 +22,7 @@ abstract class ApplicationTestCase extends TestCase
     public static function createKernel(): TestKernelInterface
     {
         if (!isset($_SERVER[self::TEST_CLASS]) && !isset($_ENV[self::TEST_CLASS])) {
-            throw new \LogicException(sprintf('"%s" variable must be defined in your .env.test file', self::TEST_CLASS));
+            throw new \LogicException(sprintf('"%s" variable must be defined in $_SERVER or $_ENV', self::TEST_CLASS));
         }
 
         if (!class_exists($classname = (string) ($_ENV[self::TEST_CLASS] ?? $_SERVER[self::TEST_CLASS]))) {
