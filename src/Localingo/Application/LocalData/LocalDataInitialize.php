@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Localingo\Application\LocalData;
 
 use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
+use App\Localingo\Domain\LocalData\Exception\LocalDataDirectoryException;
 use App\Localingo\Domain\LocalData\LocalDataRawInterface;
 use App\Localingo\Domain\LocalData\LocalDataRepositoryInterface;
 use App\Localingo\Domain\LocalData\ValueObject\LocalDataHeader;
@@ -15,8 +16,8 @@ use App\Localingo\Domain\Word\WordRepositoryInterface;
 
 class LocalDataInitialize
 {
-    private const FILES_DIR = '/app/files';
-    private const FILES_CHECK = [
+    private const KEY_FILES_DIR = 'LOCAL_FILES_DIR';
+    private const FILES_LIST = [
         'declinations' => 'declinations.tsv',
         'words' => 'words.tsv',
         'samples' => 'samples.tsv',
@@ -48,23 +49,30 @@ class LocalDataInitialize
 
     /**
      * Load data to memory.
+     *
+     * @throws LocalDataDirectoryException
      */
-    public function __invoke(): void
+    public function load(string $filesDirectory = null): void
     {
-        // File hashes to update.
-        $update_hashes = [];
+        // Check files directory. Should not have a trailing slash.
+        $filesDirectory !== null or $filesDirectory = (string) ($_ENV[self::KEY_FILES_DIR] ?? '');
+        if (!is_dir($filesDirectory)) {
+            throw new LocalDataDirectoryException(sprintf('A valid files directory must be set in $_ENV or passed as argument: %s="%s"', self::KEY_FILES_DIR, $filesDirectory));
+        }
 
-        // Check for files changes, and if so update hashes.
-        foreach (self::FILES_CHECK as $filename) {
-            $new_hash = hash_file('md5', self::FILES_DIR."/$filename");
+        $updated_hashes = [];
+        foreach (self::FILES_LIST as $filename) {
+            // Hash files to check for changes.
+            $new_hash = hash_file('md5', "$filesDirectory/$filename");
             $previous_hash = $this->dataRepository->loadFileHash($filename);
+            // Check for files changes, and if so update hashes.
             if ($new_hash && $new_hash !== $previous_hash) {
-                $update_hashes[$filename] = $new_hash;
+                $updated_hashes[$filename] = $new_hash;
             }
         }
 
         // Exit as no changes were detected.
-        if (empty($update_hashes)) {
+        if (empty($updated_hashes)) {
             return;
         }
 
@@ -74,20 +82,21 @@ class LocalDataInitialize
         // Multiple repositories can be used on a single file.
         /** @var array<string, LocalDataRawInterface[]> $files */
         $files = [
-            self::FILES_CHECK['declinations'] => [$this->declinationRepository],
-            self::FILES_CHECK['words'] => [$this->wordRepository],
-            self::FILES_CHECK['samples'] => [
+            self::FILES_LIST['declinations'] => [$this->declinationRepository],
+            self::FILES_LIST['words'] => [$this->wordRepository],
+            self::FILES_LIST['samples'] => [
                 $this->sampleRepository,
                 $this->caseRepository,
                 $this->charRepository,
             ],
         ];
         foreach ($files as $filename => $repositories) {
-            $this->readFile($filename, $repositories);
+            $filepath = "$filesDirectory/$filename";
+            $this->readFile($filepath, $repositories);
         }
 
         // Save hashes.
-        foreach ($update_hashes as $filename => $hash) {
+        foreach ($updated_hashes as $filename => $hash) {
             $this->dataRepository->saveFileHash($filename, $hash);
         }
     }
@@ -135,9 +144,9 @@ class LocalDataInitialize
     /**
      * @param LocalDataRawInterface[] $repositories
      */
-    private function readFile(string $filename, array $repositories): void
+    private function readFile(string $filepath, array $repositories): void
     {
-        $handle = fopen(self::FILES_DIR.'/'.$filename, 'rb');
+        $handle = fopen($filepath, 'rb');
         if ($handle && $line = fgets($handle)) {
             // Pre-calculate header properties.
             $header = $this->getHeader($line);

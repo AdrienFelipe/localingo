@@ -11,6 +11,7 @@ use App\Localingo\Domain\Episode\ValueObject\EpisodeState;
 use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
 use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Exercise\ExerciseFormInterface;
+use App\Localingo\Domain\LocalData\Exception\LocalDataDirectoryException;
 use App\Localingo\Domain\Sample\SampleCharRepositoryInterface;
 use App\Shared\Domain\Templating\Template;
 
@@ -44,11 +45,12 @@ class EpisodeRender
 
     /**
      * @throws ExerciseMissingStateOrder
+     * @throws LocalDataDirectoryException
      */
     public function getTemplate(): Template
     {
         // Load data from local files.
-        ($this->dataInitialize)();
+        $this->dataInitialize->load();
 
         // Load current episode or create a new one.
         $episode = $this->getEpisode();

@@ -30,10 +30,10 @@ abstract class ApplicationTestCase extends TestCase
         }
 
         /** @psalm-suppress MixedMethodCall */
-        if (!is_a($class = new $classname(), TestKernelInterface::class)) {
+        if (!is_a($kernel = new $classname(), TestKernelInterface::class)) {
             throw new \LogicException(sprintf('Class "%s" must implement "%s"', $classname, TestKernelInterface::class));
         }
 
-        return $class;
+        return $kernel;
     }
 }
