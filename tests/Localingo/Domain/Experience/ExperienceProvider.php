@@ -9,10 +9,13 @@ use App\Tests\Localingo\Domain\User\UserProvider;
 class ExperienceProvider
 {
     public const KEY_DECLINATION_GOOD = 'key-declination-good';
+    public const KEY_DECLINATION_NONE = 'key-declination-none';
     public const KEY_DECLINATION_BAD = 'key-declination-bad';
     public const KEY_WORD_GOOD = 'key-word-good';
+    public const KEY_WORD_NONE = 'key-word-none';
     public const KEY_WORD_BAD = 'key-word-bad';
     public const KEY_CASE_GOOD = 'key-case-good';
+    public const KEY_CASE_NONE = 'key-case-none';
     public const KEY_CASE_BAD = 'key-case-bad';
 
     public static function empty(): Experience
@@ -29,14 +32,17 @@ class ExperienceProvider
 
         // Declinations.
         $experience->getDeclinationExperiences()->getOrAdd(self::KEY_DECLINATION_GOOD)->addGood();
+        $experience->getDeclinationExperiences()->getOrAdd(self::KEY_DECLINATION_NONE);
         $experience->getDeclinationExperiences()->getOrAdd(self::KEY_DECLINATION_BAD)->addBad();
 
         // Words.
         $experience->getWordExperiences()->getOrAdd(self::KEY_WORD_GOOD)->addGood();
+        $experience->getWordExperiences()->getOrAdd(self::KEY_WORD_NONE);
         $experience->getWordExperiences()->getOrAdd(self::KEY_WORD_BAD)->addBad();
 
         // Cases.
         $experience->getCaseExperiences()->getOrAdd(self::KEY_CASE_GOOD)->addGood();
+        $experience->getCaseExperiences()->getOrAdd(self::KEY_CASE_NONE);
         $experience->getCaseExperiences()->getOrAdd(self::KEY_CASE_BAD)->addBad();
 
         return $experience;

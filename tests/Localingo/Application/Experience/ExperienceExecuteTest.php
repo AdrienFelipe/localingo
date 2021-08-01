@@ -63,6 +63,7 @@ class ExperienceExecuteTest extends ApplicationTestCase
 
     /**
      * @dataProvider answerProvider
+     *
      * @param array<string, string> $expectedExperiences
      */
     public function testApplyAnswer(Exercise $exercise, bool $isCorrect, array $expectedExperiences): void
