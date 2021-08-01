@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Domain\LocalData;
+namespace App\Localingo\Domain\Dataset;
 
-interface LocalDataRepositoryInterface
+interface DatasetRepositoryInterface
 {
     public function clearAllData(): void;
 

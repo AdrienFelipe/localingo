@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Domain\LocalData;
+namespace App\Localingo\Domain\Dataset;
 
-interface LocalDataRawInterface
+interface DatasetRawInterface
 {
     public const FILE_DECLINATION = 'Declination';
     public const FILE_PRIORITY = 'Priority';

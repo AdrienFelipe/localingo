@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Localingo\Infrastructure\Repository\Redis;
 
-use App\Localingo\Domain\LocalData\LocalDataRepositoryInterface;
+use App\Localingo\Domain\Dataset\DatasetRepositoryInterface;
 
-class LocalDataRedisRepository extends RedisRepository implements LocalDataRepositoryInterface
+class DatasetRedisRepository extends RedisRepository implements DatasetRepositoryInterface
 {
     public function clearAllData(): void
     {

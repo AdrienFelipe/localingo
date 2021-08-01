@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Domain\LocalData\ValueObject;
+namespace App\Localingo\Domain\Dataset\DTO;
 
-class LocalDataHeader
+class DatasetHeader
 {
     /** @var string[] */
     public array $labels;

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Application\LocalData;
+namespace App\Localingo\Application\Dataset;
 
+use App\Localingo\Domain\Dataset\DatasetRawInterface;
+use App\Localingo\Domain\Dataset\DatasetRepositoryInterface;
+use App\Localingo\Domain\Dataset\DTO\DatasetHeader;
+use App\Localingo\Domain\Dataset\Exception\DatasetDirectoryException;
 use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
-use App\Localingo\Domain\LocalData\Exception\LocalDataDirectoryException;
-use App\Localingo\Domain\LocalData\LocalDataRawInterface;
-use App\Localingo\Domain\LocalData\LocalDataRepositoryInterface;
-use App\Localingo\Domain\LocalData\ValueObject\LocalDataHeader;
 use App\Localingo\Domain\Sample\SampleCaseRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleCharRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
 use App\Localingo\Domain\Word\WordRepositoryInterface;
 use App\Shared\Domain\File\FileInterface;
 
-class LocalDataInitialize
+class DatasetInitialize
 {
     private const FILES_LIST = [
         'declinations' => 'declinations.tsv',
@@ -24,7 +24,7 @@ class LocalDataInitialize
     ];
     private const FILES_SEPARATOR = "\t";
 
-    private LocalDataRepositoryInterface $dataRepository;
+    private DatasetRepositoryInterface $datasetRepository;
     private DeclinationRepositoryInterface $declinationRepository;
     private WordRepositoryInterface $wordRepository;
     private SampleRepositoryInterface $sampleRepository;
@@ -32,14 +32,14 @@ class LocalDataInitialize
     private SampleCharRepositoryInterface $charRepository;
 
     public function __construct(
-        LocalDataRepositoryInterface $dataRepository,
+        DatasetRepositoryInterface $datasetRepository,
         DeclinationRepositoryInterface $declinationRepository,
         WordRepositoryInterface $wordRepository,
         SampleRepositoryInterface $sampleRepository,
         SampleCaseRepositoryInterface $caseRepository,
         SampleCharRepositoryInterface $charRepository,
     ) {
-        $this->dataRepository = $dataRepository;
+        $this->datasetRepository = $datasetRepository;
         $this->declinationRepository = $declinationRepository;
         $this->wordRepository = $wordRepository;
         $this->sampleRepository = $sampleRepository;
@@ -50,21 +50,21 @@ class LocalDataInitialize
     /**
      * Load data to memory.
      *
-     * @throws LocalDataDirectoryException
+     * @throws DatasetDirectoryException
      */
     public function load(string $filesDirectory = null): void
     {
         // Check files directory. Should not have a trailing slash.
         $filesDirectory !== null or $filesDirectory = (string) ($_ENV[FileInterface::KEY_FILES_DIR] ?? '');
         if (!is_dir($filesDirectory)) {
-            throw new LocalDataDirectoryException(sprintf('A valid files directory must be set in $_ENV or passed as argument: %s="%s"', FileInterface::KEY_FILES_DIR, $filesDirectory));
+            throw new DatasetDirectoryException(sprintf('A valid files directory must be set in $_ENV or passed as argument: %s="%s"', FileInterface::KEY_FILES_DIR, $filesDirectory));
         }
 
         $updated_hashes = [];
         foreach (self::FILES_LIST as $filename) {
             // Hash files to check for changes.
             $new_hash = hash_file('md5', "$filesDirectory/$filename");
-            $previous_hash = $this->dataRepository->loadFileHash($filename);
+            $previous_hash = $this->datasetRepository->loadFileHash($filename);
             // Check for files changes, and if so update hashes.
             if ($new_hash && $new_hash !== $previous_hash) {
                 $updated_hashes[$filename] = $new_hash;
@@ -77,10 +77,10 @@ class LocalDataInitialize
         }
 
         // Empty all to start over.
-        $this->dataRepository->clearAllData();
+        $this->datasetRepository->clearAllData();
 
         // Multiple repositories can be used on a single file.
-        /** @var array<string, LocalDataRawInterface[]> $files */
+        /** @var array<string, DatasetRawInterface[]> $files */
         $files = [
             self::FILES_LIST['declinations'] => [$this->declinationRepository],
             self::FILES_LIST['words'] => [$this->wordRepository],
@@ -97,11 +97,11 @@ class LocalDataInitialize
 
         // Save hashes.
         foreach ($updated_hashes as $filename => $hash) {
-            $this->dataRepository->saveFileHash($filename, $hash);
+            $this->datasetRepository->saveFileHash($filename, $hash);
         }
     }
 
-    private function getHeader(string $line): LocalDataHeader
+    private function buildHeader(string $line): DatasetHeader
     {
         // Remove (trailing) line breaks.
         $line = preg_replace('/[\r\n]/', '', $line);
@@ -110,13 +110,13 @@ class LocalDataInitialize
         $headerSize = count($labels);
         $padArray = array_fill(0, $headerSize, '');
 
-        return new LocalDataHeader($labels, $headerSize, $padArray);
+        return new DatasetHeader($labels, $headerSize, $padArray);
     }
 
     /**
      * @return array<string, string>
      */
-    private function getValues(string $line, LocalDataHeader $header): array
+    private function getValues(string $line, DatasetHeader $header): array
     {
         // Remove (trailing) line breaks at the end of the line.
         $line = preg_replace('/[\r\n]$/', '', $line);
@@ -134,7 +134,7 @@ class LocalDataInitialize
             // But lets keep it simple with a trim, as this loop is necessary anyway.
             $value = trim($value);
             // Force all values as lowercase except for the 'Case' column.
-            $key === LocalDataRawInterface::FILE_CASE or $value = strtolower($value);
+            $key === DatasetRawInterface::FILE_CASE or $value = strtolower($value);
         });
 
         /** @var array<string, string> $values */
@@ -142,14 +142,14 @@ class LocalDataInitialize
     }
 
     /**
-     * @param LocalDataRawInterface[] $repositories
+     * @param DatasetRawInterface[] $repositories
      */
     private function readFile(string $filepath, array $repositories): void
     {
         $handle = fopen($filepath, 'rb');
         if ($handle && $line = fgets($handle)) {
             // Pre-calculate header properties.
-            $header = $this->getHeader($line);
+            $header = $this->buildHeader($line);
 
             // Extract remaining lines.
             while (($line = fgets($handle)) !== false) {

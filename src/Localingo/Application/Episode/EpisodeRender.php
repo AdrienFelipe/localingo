@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Localingo\Application\Episode;
 
-use App\Localingo\Application\LocalData\LocalDataInitialize;
+use App\Localingo\Application\Dataset\DatasetInitialize;
+use App\Localingo\Domain\Dataset\Exception\DatasetDirectoryException;
 use App\Localingo\Domain\Episode\Episode;
 use App\Localingo\Domain\Episode\EpisodeTemplateInterface;
 use App\Localingo\Domain\Episode\ValueObject\EpisodeState;
 use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
 use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Exercise\ExerciseFormInterface;
-use App\Localingo\Domain\LocalData\Exception\LocalDataDirectoryException;
 use App\Localingo\Domain\Sample\SampleCharRepositoryInterface;
 use App\Shared\Domain\Templating\Template;
 
 class EpisodeRender
 {
-    private LocalDataInitialize $dataInitialize;
+    private DatasetInitialize $dataInitialize;
     private EpisodeGet $episodeGet;
     private EpisodeCreate $episodeCreate;
     private ExerciseFormInterface $exerciseForm;
@@ -26,7 +26,7 @@ class EpisodeRender
     private SampleCharRepositoryInterface $charRepository;
 
     public function __construct(
-        LocalDataInitialize $dataInitialize,
+        DatasetInitialize $dataInitialize,
         EpisodeGet $episodeGet,
         EpisodeCreate $episodeCreate,
         EpisodeExecute $episodeExecute,
@@ -45,7 +45,7 @@ class EpisodeRender
 
     /**
      * @throws ExerciseMissingStateOrder
-     * @throws LocalDataDirectoryException
+     * @throws DatasetDirectoryException
      */
     public function getTemplate(): Template
     {

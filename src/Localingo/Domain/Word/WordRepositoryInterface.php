@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Word;
 
-use App\Localingo\Domain\LocalData\LocalDataRawInterface;
+use App\Localingo\Domain\Dataset\DatasetRawInterface;
 
-interface WordRepositoryInterface extends LocalDataRawInterface
+interface WordRepositoryInterface extends DatasetRawInterface
 {
     /**
      * @param string[] $exclude
