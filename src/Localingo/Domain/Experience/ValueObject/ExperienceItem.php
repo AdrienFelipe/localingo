@@ -12,7 +12,7 @@ class ExperienceItem
     private const DECREASE_GOOD = 0.8;
     private const DECREASE_GOOD_DAYS = 7;
     public const INCREASE_BAD = 5;
-    private const INCREASE_GOOD = 1;
+    public const INCREASE_GOOD = 1;
     private const KNOWN_RATIO = 3;
 
     private string $key;
@@ -25,7 +25,7 @@ class ExperienceItem
         $this->key = $key;
         $this->bad = 0;
         $this->good = 0;
-        $this->updated = new DateTimeImmutable();
+        $this->updated = $this->getCurrentDate();
     }
 
     public function getKey(): string
@@ -50,7 +50,7 @@ class ExperienceItem
         return (int) ($this->good / ($this->bad + 1));
     }
 
-    public function addBad(int $score): void
+    public function addBad(int $score = self::INCREASE_BAD): void
     {
         $this->update();
         $this->bad += $score;
@@ -106,8 +106,9 @@ class ExperienceItem
     {
         $this->good = (int) $values['good'];
         $this->bad = (int) $values['bad'];
-        $updated = (string) $values['updated'];
-        $this->updated = DateTimeImmutable::createFromFormat('Y-m-d', $updated) ?: $this->getCurrentDate();
+        // Prevent timezone issues.
+        $updated = "{$values['updated']} 00:00:00";
+        $this->updated = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $updated) ?: $this->getCurrentDate();
 
         return $this;
     }

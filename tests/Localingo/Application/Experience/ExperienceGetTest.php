@@ -7,6 +7,7 @@ use App\Localingo\Domain\Experience\ExperienceFileInterface;
 use App\Localingo\Domain\Experience\ExperienceRepositoryInterface;
 use App\Localingo\Domain\User\User;
 use App\Shared\Application\Test\ApplicationTestCase;
+use App\Tests\Localingo\Domain\User\UserProvider;
 
 class ExperienceGetTest extends ApplicationTestCase
 {
@@ -24,7 +25,7 @@ class ExperienceGetTest extends ApplicationTestCase
     public function testGetCurrent(): void
     {
         // From nonexistent user.
-        $user = new User('test');
+        $user = UserProvider::default();
         $experience = $this->experienceGet->current($user);
         self::assertEmpty($experience->getWordExperiences());
 

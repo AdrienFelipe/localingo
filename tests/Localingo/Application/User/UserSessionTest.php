@@ -7,6 +7,7 @@ namespace App\Tests\Localingo\Application\User;
 use App\Localingo\Application\User\UserSession;
 use App\Localingo\Domain\User\User;
 use App\Shared\Application\Test\ApplicationTestCase;
+use App\Tests\Localingo\Domain\User\UserProvider;
 
 class UserSessionTest extends ApplicationTestCase
 {
@@ -24,7 +25,7 @@ class UserSessionTest extends ApplicationTestCase
         self::assertNull($userId);
 
         // Build a new user and save its id.
-        $user = new User('test-user');
+        $user = UserProvider::default();
         $this->userSession->saveUserId($user);
 
         // Saved id should be the same as the user's.

@@ -50,6 +50,11 @@ class Experience
         }
     }
 
+    public function getVersion(): int
+    {
+        return $this->version;
+    }
+
     public function getUser(): User
     {
         return $this->user;
