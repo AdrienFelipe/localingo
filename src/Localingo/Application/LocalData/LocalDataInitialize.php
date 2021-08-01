@@ -13,10 +13,10 @@ use App\Localingo\Domain\Sample\SampleCaseRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleCharRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
 use App\Localingo\Domain\Word\WordRepositoryInterface;
+use App\Shared\Domain\File\FileInterface;
 
 class LocalDataInitialize
 {
-    private const KEY_FILES_DIR = 'LOCAL_FILES_DIR';
     private const FILES_LIST = [
         'declinations' => 'declinations.tsv',
         'words' => 'words.tsv',
@@ -55,9 +55,9 @@ class LocalDataInitialize
     public function load(string $filesDirectory = null): void
     {
         // Check files directory. Should not have a trailing slash.
-        $filesDirectory !== null or $filesDirectory = (string) ($_ENV[self::KEY_FILES_DIR] ?? '');
+        $filesDirectory !== null or $filesDirectory = (string) ($_ENV[FileInterface::KEY_FILES_DIR] ?? '');
         if (!is_dir($filesDirectory)) {
-            throw new LocalDataDirectoryException(sprintf('A valid files directory must be set in $_ENV or passed as argument: %s="%s"', self::KEY_FILES_DIR, $filesDirectory));
+            throw new LocalDataDirectoryException(sprintf('A valid files directory must be set in $_ENV or passed as argument: %s="%s"', FileInterface::KEY_FILES_DIR, $filesDirectory));
         }
 
         $updated_hashes = [];

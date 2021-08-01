@@ -7,24 +7,19 @@ namespace App\Localingo\Infrastructure\File\Yaml;
 use App\Localingo\Domain\Experience\Experience;
 use App\Localingo\Domain\Experience\ExperienceFileInterface;
 use App\Localingo\Domain\User\User;
-use Symfony\Component\Yaml\Yaml;
 
-class ExperienceYamlFile implements ExperienceFileInterface
+class ExperienceYamlFile extends YamlFile implements ExperienceFileInterface
 {
-    private const FILE_DIR = '/app/files/';
-    private const FILE_NAME = '-experience.local.yaml';
+    private const FILENAME = '-experience'.self::FILE_EXTENSION;
 
     public function read(User $user): ?Experience
     {
-        $filepath = $this->filepath($user);
-        // Cleanly exit if file does not exist.
-        if (!file_exists($filepath)) {
+        if (!$data = self::readYaml($this->filepath($user))) {
             return null;
         }
 
         $experience = new Experience($user);
         /** @var array<string, mixed> $data */
-        $data = (array) Yaml::parseFile($filepath);
         $experience->unserialize($data);
 
         return $experience;
@@ -32,12 +27,11 @@ class ExperienceYamlFile implements ExperienceFileInterface
 
     public function write(Experience $experience): void
     {
-        $yaml = Yaml::dump($experience->serialize());
-        file_put_contents($this->filepath($experience->getUser()), $yaml);
+        self::writeYaml($this->filepath($experience->getUser()), $experience->serialize());
     }
 
     private function filepath(User $user): string
     {
-        return self::FILE_DIR.$user->getId().self::FILE_NAME;
+        return self::directory().$user->getId().self::FILENAME;
     }
 }

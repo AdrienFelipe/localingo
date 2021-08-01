@@ -2,8 +2,12 @@ services:
     _defaults:
         public: true
 
-    # Keep service available in tests as it is not directly used otherwise.
+    # Repository parent service: keep it available in tests as it is not directly used otherwise.
     App\Shared\Domain\Repository\RepositoryInterface:
         class: App\Localingo\Infrastructure\Repository\Redis\RedisRepository
         arguments:
           [ '@Predis\Client' ]
+
+    # File parent service: keep it available in tests as it is not directly used otherwise.
+    App\Shared\Domain\File\FileInterface:
+        class: App\Localingo\Infrastructure\File\Yaml\YamlFile

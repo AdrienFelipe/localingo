@@ -30,5 +30,6 @@
   <extensions>
     <extension class="App\Shared\Application\Test\SessionTestHook"/>
     <extension class="App\Shared\Application\Test\RepositoryTestHook"/>
+    <extension class="App\Shared\Application\Test\FileTestHook"/>
   </extensions>
 </phpunit>
