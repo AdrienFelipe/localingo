@@ -1,15 +1,16 @@
 Declined	Declination	Number	Gender	Word	Translation	State	End	Case
-kobiety	Accusative	Plural	Feminine	kobieta	woman	Impersonal	-a	*
+kobietay	Accusative	Plural	Feminine	kobieta	woman	Impersonal	-a	*
+doktorów	Accusative	Plural	Masculine	doktor	doctor	Personal	-C	Ᵽ:-*ec (tool)
 kobietom	Dative	Plural	Feminine	kobieta	woman		-a	*
-kobiet	Genitive	Plural	Feminine	kobieta	woman		-a	*
+doktorom	Dative	Plural	Masculine	doktor	doctor	Personal	-C	*
+kobietya	Genitive	Plural	Feminine	kobieta	woman		-a	*
+doktorów	Genitive	Plural	Masculine	doktor	doctor	Personal	-C	*
 kobietami	Instrumental	Plural	Feminine	kobieta	woman		-a	*
+rekamach	Instrumental	Plural	Feminine	ręka	hand	Impersonal	-a	*
+doktorami	Instrumental	Plural	Masculine	doktor	doctor	Personal	-C	*
 kobietach	Locative	Plural	Feminine	kobieta	woman		-a	*
-patelnie	Nominative	Plural	Feminine	patelnia	pan	Impersonal	-a	i-
-kaczkom	Dative	Plural	Feminine	kaczka	duck		-a	*
+doktorach	Locative	Plural	Masculine	doktor	doctor	Personal	-C	*
+widelcach	Locative	Plural	Masculine	widelec	fork		-ec	*
+kaczkoma	Dative	Plural	Feminine	kaczka	duck		-a	*
 kaczkami	Instrumental	Plural	Feminine	kaczka	duck		-a	*
 kaczkach	Locative	Plural	Feminine	kaczka	duck		-a	*
-siostry	Accusative	Plural	Feminine	siostra	sister	Impersonal	-a	*
-siostrom	Dative	Plural	Feminine	siostra	sister	Impersonal	-a	*
-sióstr	Genitive	Plural	Feminine	siostra	sister	Impersonal	-a	*
-siostrami	Instrumental	Plural	Feminine	siostra	sister	Impersonal	-a	*: -V
-siostrach	Locative	Plural	Feminine	siostra	sister	Impersonal	-a	*

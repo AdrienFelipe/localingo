@@ -39,10 +39,10 @@ class DatasetInitializeTest extends ApplicationTestCase
     {
         $this->dataset->load();
 
-        self::assertCount(7, $this->wordRepository->getByPriority(0), 'Incorrect words count');
+        self::assertCount(6, $this->wordRepository->getByPriority(0), 'Incorrect words count');
         self::assertCount(6, $this->declinationRepository->getByPriority(), 'Incorrect declinations count');
-        self::assertCount(14, $this->sampleRepository->loadMultiple(), 'Incorrect samples count');
-        self::assertCount(7, $this->sampleCaseRepository->getCases([]), 'Incorrect samplesCases count');
-        self::assertCount(1, $this->sampleCharRepository->loadList(), 'Incorrect samplesChars count');
+        self::assertCount(15, $this->sampleRepository->loadMultiple(), 'Incorrect samples count');
+        self::assertCount(10, $this->sampleCaseRepository->getCases([]), 'Incorrect samplesCases count');
+        self::assertCount(2, $this->sampleCharRepository->loadList(), 'Incorrect samplesChars count');
     }
 }

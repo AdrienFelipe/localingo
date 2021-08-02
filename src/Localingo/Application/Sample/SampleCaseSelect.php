@@ -40,7 +40,7 @@ class SampleCaseSelect
         return new SampleCollection(array_slice($samples, 0, $count));
     }
 
-    public function buildSampleFilters(Experience $experience): SampleCaseFilters
+    private function buildSampleFilters(Experience $experience): SampleCaseFilters
     {
         // Use case experiences.
         $experiences = $experience->getCaseExperiences();

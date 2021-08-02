@@ -7,6 +7,7 @@ namespace App\Localingo\Application\Sample;
 use App\Localingo\Application\Word\WordSelect;
 use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
 use App\Localingo\Domain\Experience\Experience;
+use App\Localingo\Domain\Sample\Sample;
 use App\Localingo\Domain\Sample\SampleCaseRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleCollection;
 
@@ -35,7 +36,7 @@ class SampleSelect
         // Get most relevant words to train.
         $words = $this->wordSelect->mostRelevant($experience, $maxWords);
         // Add samples that need review, and early exit if max is met.
-        if (!$remaining = $this->addSamplesFromExperience($samples, $maxSamples, $experience, $words)) {
+        if ($this->addSamplesFromExperience($samples, $maxSamples, $experience, $words) <= 0) {
             return $samples;
         }
 
@@ -43,7 +44,7 @@ class SampleSelect
         foreach ($this->declinationRepository->getByPriority() as $declination) {
             // Add to experience all cases of selected declination.
             $this->addCasesToExperience($experience, [$declination]);
-            if (!$remaining = $this->addSamplesFromExperience($samples, $remaining, $experience, $words)) {
+            if ($this->addSamplesFromExperience($samples, $maxSamples, $experience, $words) <= 0) {
                 break;
             }
         }
@@ -52,22 +53,29 @@ class SampleSelect
     }
 
     /**
-     * @param string[] $words
+     * Will select samples from chosen words first, but will add samples from any word until the limit count is met.
+     *
+     * @param SampleCollection $samples collection to append to new samples
+     * @param int              $limit   the overall samples size limit
+     * @param string[]         $words   to optionally limit the search from
      *
      * @return int the number of remaining samples to meet the limit
      */
     public function addSamplesFromExperience(SampleCollection $samples, int $limit, Experience $experience, array $words): int
     {
+        if (($remaining = $limit - count($samples)) <= 0) {
+            return $remaining;
+        }
+
         // Sample from experience the most relevant cases, limited to chosen words first.
-        foreach ($this->sampleCaseSelect->samplesFromExperience($experience, $limit, $samples, $words) as $sample) {
-            $samples->append($sample);
+        foreach ($this->sampleCaseSelect->samplesFromExperience($experience, $remaining, $samples, $words) as $sample) {
+            $remaining -= (int) $this->addUniqueSample($sample, $samples);
         }
 
         // If not enough, add more selected cases without filtering words.
-        if ($remaining = $limit - count($samples)) {
+        if ($remaining > 0) {
             foreach ($this->sampleCaseSelect->samplesFromExperience($experience, $remaining, $samples) as $sample) {
-                $samples->append($sample);
-                --$remaining;
+                $remaining -= (int) $this->addUniqueSample($sample, $samples);
             }
         }
 
@@ -86,5 +94,22 @@ class SampleSelect
             // Adds the case sample to the experience if it does not yet exist.
             $experience->caseItem($case);
         }
+    }
+
+    /**
+     * Make sure not to add samples twice.
+     *
+     * @return bool whether Sample was added
+     */
+    private function addUniqueSample(Sample $sample, SampleCollection $samples): bool
+    {
+        // TODO: use a non-unique key instead.
+        if (!in_array($sample, $samples->getArrayCopy(), true)) {
+            $samples->append($sample);
+
+            return true;
+        }
+
+        return false;
     }
 }

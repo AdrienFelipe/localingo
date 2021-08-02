@@ -13,7 +13,7 @@ class ExperienceItem
     private const DECREASE_GOOD_DAYS = 7;
     public const INCREASE_BAD = 5;
     public const INCREASE_GOOD = 1;
-    private const KNOWN_RATIO = 3;
+    public const KNOWN_RATIO = 3;
 
     private string $key;
     private int $bad;
@@ -33,10 +33,10 @@ class ExperienceItem
         return $this->key;
     }
 
-    public function addGood(): void
+    public function addGood(int $score = self::INCREASE_GOOD): void
     {
         $this->update();
-        $this->good += self::INCREASE_GOOD;
+        $this->good += $score;
         $this->bad = (int) ($this->bad * self::DECREASE_BAD);
     }
 

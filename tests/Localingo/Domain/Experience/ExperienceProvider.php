@@ -3,6 +3,7 @@
 namespace App\Tests\Localingo\Domain\Experience;
 
 use App\Localingo\Domain\Experience\Experience;
+use App\Localingo\Domain\Experience\ValueObject\ExperienceItem;
 use App\Localingo\Domain\Sample\SampleCollection;
 use App\Shared\Application\Test\ApplicationTestCase;
 use App\Tests\Localingo\Domain\User\UserProvider;
@@ -63,23 +64,24 @@ class ExperienceProvider
         $test::assertEquals($expectedExperience->getCaseExperiences(), $experience->getCaseExperiences(), "$message cases");
     }
 
-    /**
-     * Samples in even position will have 'good' experience.
-     * While odd positions will have 'bad' experience.
-     */
-    public static function fromSamples(SampleCollection $samples): Experience
+    public static function fromSamples(?SampleCollection $good, ?SampleCollection $bad = null, int $score = null): Experience
     {
         $experience = self::empty();
-        $count = 0;
-        foreach ($samples as $sample) {
-            if ($count++ % 2) {
-                $experience->wordItem($sample)->addGood();
-                $experience->declinationItem($sample)->addGood();
-                $experience->caseItem($sample)->addGood();
-            } else {
-                $experience->wordItem($sample)->addBad();
-                $experience->declinationItem($sample)->addBad();
-                $experience->caseItem($sample)->addBad();
+
+        if ($good !== null) {
+            foreach ($good as $sample) {
+                $score !== null or $score = ExperienceItem::INCREASE_GOOD;
+                $experience->wordItem($sample)->addGood($score);
+                $experience->declinationItem($sample)->addGood($score);
+                $experience->caseItem($sample)->addGood($score);
+            }
+        }
+        if ($bad !== null) {
+            foreach ($bad as $sample) {
+                $score !== null or $score = ExperienceItem::INCREASE_BAD;
+                $experience->wordItem($sample)->addBad($score);
+                $experience->declinationItem($sample)->addBad($score);
+                $experience->caseItem($sample)->addBad($score);
             }
         }
 

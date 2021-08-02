@@ -5,7 +5,6 @@ namespace App\Tests\Localingo\Application\Experience;
 use App\Localingo\Application\Experience\ExperienceGet;
 use App\Localingo\Domain\Experience\ExperienceFileInterface;
 use App\Localingo\Domain\Experience\ExperienceRepositoryInterface;
-use App\Localingo\Domain\User\User;
 use App\Shared\Application\Test\ApplicationTestCase;
 use App\Tests\Localingo\Domain\User\UserProvider;
 
