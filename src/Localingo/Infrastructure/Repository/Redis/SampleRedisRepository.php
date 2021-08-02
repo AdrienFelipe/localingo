@@ -56,10 +56,16 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
         );
     }
 
-    public function loadMultiple(int $limit, mixed $words, mixed $declinations, mixed $genders = null, mixed $numbers = null, mixed $cases = null): SampleCollection
+    public function loadMultiple(int $limit = 0, ?SampleCollection $exclude = null, mixed $words = null, mixed $declinations = null, mixed $genders = null, mixed $numbers = null, mixed $cases = null): SampleCollection
     {
+        // Transform excluded samples into a list of strings.
+        !$exclude or $exclude = array_map(static function (Sample $sample) {
+            return self::keyPattern(false, $sample->getWord(), $sample->getDeclination(), $sample->getGender(), $sample->getNumber(), $sample->getCase());
+        }, $exclude->getArrayCopy());
+
         $keyPattern = self::keyPattern(true, $words, $declinations, $genders, $numbers, $cases);
-        $keys = self::findKeys($this->redis, $keyPattern, $limit);
+        /** @var ?string[] $exclude */
+        $keys = self::findKeys($this->redis, $keyPattern, $limit, $exclude ?? []);
 
         $samples = [];
         foreach ($keys as $key) {

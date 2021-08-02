@@ -3,6 +3,7 @@
 namespace App\Tests\Localingo\Domain\Experience;
 
 use App\Localingo\Domain\Experience\Experience;
+use App\Localingo\Domain\Sample\SampleCollection;
 use App\Shared\Application\Test\ApplicationTestCase;
 use App\Tests\Localingo\Domain\User\UserProvider;
 
@@ -60,5 +61,28 @@ class ExperienceProvider
         $test::assertEquals($expectedExperience->getWordExperiences(), $experience->getWordExperiences(), "$message words");
         // Assert cases.
         $test::assertEquals($expectedExperience->getCaseExperiences(), $experience->getCaseExperiences(), "$message cases");
+    }
+
+    /**
+     * Samples in even position will have 'good' experience.
+     * While odd positions will have 'bad' experience.
+     */
+    public static function fromSamples(SampleCollection $samples): Experience
+    {
+        $experience = self::empty();
+        $count = 0;
+        foreach ($samples as $sample) {
+            if ($count++ % 2) {
+                $experience->wordItem($sample)->addGood();
+                $experience->declinationItem($sample)->addGood();
+                $experience->caseItem($sample)->addGood();
+            } else {
+                $experience->wordItem($sample)->addBad();
+                $experience->declinationItem($sample)->addBad();
+                $experience->caseItem($sample)->addBad();
+            }
+        }
+
+        return $experience;
     }
 }

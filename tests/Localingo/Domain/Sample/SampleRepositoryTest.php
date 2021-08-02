@@ -88,7 +88,7 @@ class SampleRepositoryTest extends ApplicationTestCase
             $numbers = $expected['numbers'] ?? null;
             $genders = $expected['genders'] ?? null;
             $cases = $expected['cases'] ?? null;
-            $results = $this->repository->loadMultiple($expected['limit'], $words, $declinations, $genders, $numbers, $cases);
+            $results = $this->repository->loadMultiple($expected['limit'], null, $words, $declinations, $genders, $numbers, $cases);
 
             $message = "Error on key $key";
             self::assertCount($expected['count'], $results, $message);
@@ -111,7 +111,7 @@ class SampleRepositoryTest extends ApplicationTestCase
         $data = $this->buildData($line);
         $this->repository->saveFromRawData($data);
 
-        $sampleCases = $this->repository->loadMultiple(1, $word, $declination);
+        $sampleCases = $this->repository->loadMultiple(1, null, $word, $declination);
         foreach ($sampleCases as $sampleCase) {
             self::assertSame($declined, $sampleCase->getDeclined());
             self::assertSame($declination, $sampleCase->getDeclination());

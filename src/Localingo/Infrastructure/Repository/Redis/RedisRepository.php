@@ -29,9 +29,12 @@ class RedisRepository implements RepositoryInterface
      * While this iterates correctly through all values, it does it in a non-sorted manner.
      * See the 'sortedScan' method for a sorted scan.
      *
+     * @param int      $limit   if 0, returns all
+     * @param string[] $exclude
+     *
      * @return string[]
      */
-    public static function findKeys(Client $redis, string $key_pattern, int $limit): array
+    public static function findKeys(Client $redis, string $key_pattern, int $limit, array $exclude = []): array
     {
         $cursor = '0';
         $keys = [];
@@ -39,17 +42,17 @@ class RedisRepository implements RepositoryInterface
             $result = (array) $redis->scan($cursor);
             $cursor = (string) ($result[0] ?? '0');
             $values = (array) ($result[1] ?? []);
-            $values = array_filter($values, static function ($value) {
-                return is_string($value);
+            $values = array_filter($values, static function ($value) use ($exclude) {
+                return is_string($value) && !in_array($value, $exclude, true);
             });
             $values = preg_grep("/$key_pattern/", $values) ?: [];
             array_push($keys, ...$values);
-            if (count($keys) >= $limit) {
+            if ($limit && count($keys) >= $limit) {
                 break;
             }
         } while ($cursor !== '0');
 
-        return array_splice($keys, 0, $limit);
+        return $limit ? array_slice($keys, 0, $limit) : $keys;
     }
 
     /**

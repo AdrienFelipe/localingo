@@ -65,7 +65,6 @@ class SampleSelect
 
         // If not enough, add more selected cases without filtering words.
         if ($remaining = $limit - count($samples)) {
-            // TODO: handle possible duplicates from previous selection.
             foreach ($this->sampleCaseSelect->samplesFromExperience($experience, $remaining, $samples) as $sample) {
                 $samples->append($sample);
                 --$remaining;

@@ -27,6 +27,7 @@ class SampleCaseSelect
             $limit = $count - count($samples);
             $results = $this->sampleRepository->loadMultiple(
                 $limit,
+                $exclude,
                 $words,
                 $filter->getDeclination(),
                 $filter->getGender(),
