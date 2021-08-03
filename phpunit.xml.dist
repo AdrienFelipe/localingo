@@ -28,8 +28,8 @@
         <log type="coverage-html" target="report/html"/>
     </logging>-->
   <extensions>
-    <extension class="App\Shared\Application\Test\SessionTestHook"/>
-    <extension class="App\Shared\Application\Test\RepositoryTestHook"/>
-    <extension class="App\Shared\Application\Test\FileTestHook"/>
+    <extension class="App\Tests\Shared\Infrastructure\Phpunit\SessionTestHook"/>
+    <extension class="App\Tests\Shared\Infrastructure\Phpunit\RepositoryTestHook"/>
+    <extension class="App\Tests\Shared\Infrastructure\Phpunit\FileTestHook"/>
   </extensions>
 </phpunit>

@@ -3,7 +3,7 @@
 namespace App\Tests\Localingo\Domain\Sample;
 
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
-use App\Shared\Application\Test\ApplicationTestCase;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class SampleRepositoryTest extends ApplicationTestCase
 {

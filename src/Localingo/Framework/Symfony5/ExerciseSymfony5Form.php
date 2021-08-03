@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Infrastructure\Framework\Symfony5;
+namespace App\Localingo\Framework\Symfony5;
 
 use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Exercise\ExerciseDTO;

@@ -5,7 +5,7 @@ namespace App\Tests\Localingo\Application\User;
 use App\Localingo\Application\User\UserCreate;
 use App\Localingo\Application\User\UserGet;
 use App\Localingo\Domain\User\User;
-use App\Shared\Application\Test\ApplicationTestCase;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class UserGetTest extends ApplicationTestCase
 {

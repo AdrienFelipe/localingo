@@ -3,7 +3,7 @@
 namespace App\Tests\Localingo\Domain\Word;
 
 use App\Localingo\Domain\Word\WordRepositoryInterface;
-use App\Shared\Application\Test\ApplicationTestCase;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class WordRepositoryTest extends ApplicationTestCase
 {

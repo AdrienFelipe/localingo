@@ -7,8 +7,8 @@ use App\Localingo\Domain\Experience\ValueObject\ExperienceItem;
 use App\Localingo\Domain\Sample\Sample;
 use App\Localingo\Domain\Sample\SampleCollection;
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
-use App\Shared\Application\Test\ApplicationTestCase;
 use App\Tests\Localingo\Domain\Experience\ExperienceProvider;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class SampleCaseSelectTest extends ApplicationTestCase
 {

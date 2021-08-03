@@ -3,8 +3,8 @@
 namespace App\Tests\Localingo\Application\Word;
 
 use App\Localingo\Application\Word\WordSelect;
-use App\Shared\Application\Test\ApplicationTestCase;
 use App\Tests\Localingo\Domain\Experience\ExperienceProvider;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class WordSelectTest extends ApplicationTestCase
 {

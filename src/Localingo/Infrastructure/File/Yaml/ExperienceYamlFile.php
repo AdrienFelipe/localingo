@@ -14,7 +14,7 @@ class ExperienceYamlFile extends YamlFile implements ExperienceFileInterface
 
     public function read(User $user): ?Experience
     {
-        if (!$data = self::readYaml($this->filepath($user))) {
+        if (!$data = $this->readYaml($this->filepath($user))) {
             return null;
         }
 
@@ -27,7 +27,7 @@ class ExperienceYamlFile extends YamlFile implements ExperienceFileInterface
 
     public function write(Experience $experience): void
     {
-        self::writeYaml($this->filepath($experience->getUser()), $experience->serialize());
+        $this->writeYaml($this->filepath($experience->getUser()), $experience->serialize());
     }
 
     private function filepath(User $user): string

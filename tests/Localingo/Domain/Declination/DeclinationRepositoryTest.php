@@ -3,7 +3,7 @@
 namespace App\Tests\Localingo\Domain\Declination;
 
 use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
-use App\Shared\Application\Test\ApplicationTestCase;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class DeclinationRepositoryTest extends ApplicationTestCase
 {

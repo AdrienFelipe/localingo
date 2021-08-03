@@ -5,8 +5,8 @@ namespace App\Tests\Localingo\Domain\Experience;
 use App\Localingo\Domain\Experience\Experience;
 use App\Localingo\Domain\Experience\ValueObject\ExperienceItem;
 use App\Localingo\Domain\Sample\SampleCollection;
-use App\Shared\Application\Test\ApplicationTestCase;
 use App\Tests\Localingo\Domain\User\UserProvider;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class ExperienceProvider
 {

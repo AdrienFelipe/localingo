@@ -3,7 +3,7 @@
 namespace App\Tests\Localingo\Domain\User;
 
 use App\Localingo\Domain\User\User;
-use App\Shared\Application\Test\ApplicationTestCase;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class UserProvider
 {

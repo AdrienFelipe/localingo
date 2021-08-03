@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Localingo\Domain\Sample;
 
 use App\Localingo\Domain\Sample\SampleCharRepositoryInterface;
-use App\Shared\Application\Test\ApplicationTestCase;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class SampleCharRepositoryTest extends ApplicationTestCase
 {

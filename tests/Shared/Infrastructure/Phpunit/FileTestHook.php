@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shared\Application\Test;
+namespace App\Tests\Shared\Infrastructure\Phpunit;
 
 use App\Shared\Domain\File\FileInterface;
 use PHPUnit\Runner\BeforeTestHook;

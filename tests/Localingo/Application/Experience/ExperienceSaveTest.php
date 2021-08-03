@@ -5,8 +5,8 @@ namespace App\Tests\Localingo\Application\Experience;
 use App\Localingo\Application\Experience\ExperienceSave;
 use App\Localingo\Domain\Experience\ExperienceFileInterface;
 use App\Localingo\Domain\Experience\ExperienceRepositoryInterface;
-use App\Shared\Application\Test\ApplicationTestCase;
 use App\Tests\Localingo\Domain\Experience\ExperienceProvider;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class ExperienceSaveTest extends ApplicationTestCase
 {

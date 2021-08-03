@@ -11,7 +11,7 @@ use App\Localingo\Domain\Sample\SampleCaseRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleCharRepositoryInterface;
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
 use App\Localingo\Domain\Word\WordRepositoryInterface;
-use App\Shared\Application\Test\ApplicationTestCase;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class DatasetInitializeTest extends ApplicationTestCase
 {

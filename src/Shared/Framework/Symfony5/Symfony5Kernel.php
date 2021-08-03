@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Shared\Infrastructure\Framework\Symfony5;
+namespace App\Shared\Framework\Symfony5;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-class Kernel extends BaseKernel
+class Symfony5Kernel extends BaseKernel
 {
     use MicroKernelTrait;
     public const FRAMEWORK_DIR = '/app/active-framework';

@@ -3,11 +3,16 @@
 namespace App\Localingo\Infrastructure\File\Yaml;
 
 use App\Shared\Domain\File\FileInterface;
-use Symfony\Component\Yaml\Yaml;
 
 class YamlFile implements FileInterface
 {
     protected const FILE_EXTENSION = '.local.yaml';
+    private YamlInterface $yaml;
+
+    public function __construct(YamlInterface $yaml)
+    {
+        $this->yaml = $yaml;
+    }
 
     public function clear(): void
     {
@@ -39,22 +44,22 @@ class YamlFile implements FileInterface
     /**
      * @param array<mixed> $data
      */
-    protected static function writeYaml(string $filepath, array $data): void
+    protected function writeYaml(string $filepath, array $data): void
     {
-        $yaml = Yaml::dump($data);
+        $yaml = $this->yaml->dump($data);
         file_put_contents($filepath, $yaml);
     }
 
     /**
      * @return ?array<mixed> $data
      */
-    protected static function readYaml(string $filepath): ?array
+    protected function readYaml(string $filepath): ?array
     {
         // Cleanly exit if file does not exist.
         if (!file_exists($filepath)) {
             return null;
         }
 
-        return (array) Yaml::parseFile($filepath);
+        return (array) $this->yaml->parseFile($filepath);
     }
 }

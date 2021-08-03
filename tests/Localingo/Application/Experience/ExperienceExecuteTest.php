@@ -7,9 +7,9 @@ use App\Localingo\Application\Experience\ExperienceGet;
 use App\Localingo\Application\Experience\ExperienceSave;
 use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Experience\ExperienceFileInterface;
-use App\Shared\Application\Test\ApplicationTestCase;
 use App\Tests\Localingo\Domain\Episode\EpisodeProvider;
 use App\Tests\Localingo\Domain\Exercise\ExerciseProvider;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 use LogicException;
 
 class ExperienceExecuteTest extends ApplicationTestCase

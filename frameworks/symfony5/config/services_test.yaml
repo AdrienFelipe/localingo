@@ -11,3 +11,5 @@ services:
     # File parent service: keep it available in tests as it is not directly used otherwise.
     App\Shared\Domain\File\FileInterface:
         class: App\Localingo\Infrastructure\File\Yaml\YamlFile
+        arguments:
+          [ '@App\Localingo\Infrastructure\File\Yaml\YamlInterface' ]

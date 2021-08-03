@@ -4,7 +4,7 @@ namespace App\Tests\Localingo\Domain\Experience;
 
 use App\Localingo\Domain\Experience\Experience;
 use App\Localingo\Domain\Experience\ExperienceRepositoryInterface;
-use App\Shared\Application\Test\ApplicationTestCase;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class ExperienceRepositoryTest extends ApplicationTestCase
 {

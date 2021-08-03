@@ -6,7 +6,7 @@ use App\Localingo\Application\User\UserCreate;
 use App\Localingo\Application\User\UserSession;
 use App\Localingo\Domain\User\User;
 use App\Localingo\Domain\User\UserRepositoryInterface;
-use App\Shared\Application\Test\ApplicationTestCase;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class UserCreateTest extends ApplicationTestCase
 {

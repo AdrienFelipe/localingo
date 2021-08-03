@@ -11,9 +11,6 @@ layers:
     collectors:
       - type: directory
         regex: src/.*/Application/.*
-      # PHPUnit is mandatory for all implemented frameworks, hence considered an Application layer.
-      - type: className
-        regex: PHPUnit\.*
   - name: UI
     collectors:
       - type: directory
@@ -22,26 +19,32 @@ layers:
     collectors:
       - type: directory
         regex: src/.*/Infrastructure/.*
+      - type: classNameRegex
+        regex: '/^(?!App\\|PHPUnit\\|Symfony\\).*\\.*/'
   - name: Framework
     collectors:
-      - type: classNameRegex
-        regex: '/^(?!App\\|PHPUnit\\).*\\.*/'
+      - type: className
+        regex: Symfony\.*
   - name: Test
     collectors:
+      - type: className
+        regex: PHPUnit\.*
       - type: directory
         regex: tests/.*
 
 ruleset:
-  Domain:
-  Application:
-    - Domain
   UI:
     - Application
     - Domain
+  Application:
+    - Domain
+  Domain:
   Infrastructure:
     - Domain
-    - Framework
   Framework:
+    - Domain
+    - Infrastructure
   Test:
+    - UI
     - Application
     - Domain

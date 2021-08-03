@@ -7,8 +7,8 @@ use App\Localingo\Application\Sample\SampleSelect;
 use App\Localingo\Domain\Dataset\Exception\DatasetDirectoryException;
 use App\Localingo\Domain\Experience\ValueObject\ExperienceItem;
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
-use App\Shared\Application\Test\ApplicationTestCase;
 use App\Tests\Localingo\Domain\Experience\ExperienceProvider;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class SampleSelectTest extends ApplicationTestCase
 {

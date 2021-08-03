@@ -6,8 +6,8 @@ namespace App\Tests\Localingo\Application\User;
 
 use App\Localingo\Application\User\UserSession;
 use App\Localingo\Domain\User\User;
-use App\Shared\Application\Test\ApplicationTestCase;
 use App\Tests\Localingo\Domain\User\UserProvider;
+use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 
 class UserSessionTest extends ApplicationTestCase
 {

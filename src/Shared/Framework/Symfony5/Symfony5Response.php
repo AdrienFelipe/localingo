@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Infrastructure\Framework\Symfony5;
+namespace App\Shared\Framework\Symfony5;
 
 use App\Shared\Domain\Controller\ResponseInterface;
 use App\Shared\Domain\Templating\Template;
