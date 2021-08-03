@@ -28,7 +28,7 @@ erase: stop ## delete containers
 
 .PHONY: build
 build: ## build environment from the docker files
-		$(COMPOSE) build
+		DOCKER_BUILDKIT=1 $(COMPOSE) build
 
 .PHONY: up
 up: ## spin up environment
