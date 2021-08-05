@@ -3,7 +3,7 @@
 This is a **Duolingo**-like app to learn Polish declensions, with more than 500 words and their corresponding 5400 declensions.
 It is intended to run locally from **Docker**, hence its name **LocaLingo** :rocket:.
 
-**It learns** what words, cases or declinations you struggle with, to review them more frequently than the others. 
+**It learns** what words, cases or declinations you struggle with, to review them more frequently. 
 
 Some screenshots:
 <p>
