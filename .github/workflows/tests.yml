@@ -12,9 +12,5 @@ jobs:
         run: ENV=ci make start
       - name: Code Analyze
         run: ENV=ci make cs ca
-#      - name: Tests
-#        run: make env=ci xon;make env=ci test
-#      - name: DB Schema validation
-#        run: make env=ci schema-validate
-#      - name: ARTIFACT
-#        run: make env=ci artifact
+      - name: Tests
+        run: make ENV=ci test
