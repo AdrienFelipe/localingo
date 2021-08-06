@@ -96,16 +96,6 @@ class SampleCaseSelectTest extends ApplicationTestCase
                 ],
                 'count' => 10, 'exclude' => ['S1'], 'words' => ['Word1', 'Word2', 'Word4'], '$expected' => ['S2'],
             ],
-            // Multiple samples with the same case and a single bad experience, with limit.
-            [
-                'rawData' => [
-                    ['S1	DeclinationA	NumberA	GenderA	Word1	Translation1	State	End	Case1', 1],
-                    ['S2	DeclinationA	NumberA	GenderA	Word2	Translation2	State	End	Case1', 1],
-                    ['S3	DeclinationA	NumberA	GenderA	Word3	Translation3	State	End	Case1', -10],
-                    ['S4	DeclinationA	NumberA	GenderA	Word4	Translation4	State	End	Case2', ExperienceItem::KNOWN_RATIO],
-                ],
-                'count' => 2, 'exclude' => [], 'words' => [], '$expected' => ['S3', 'S2'],
-            ],
         ];
     }
 
