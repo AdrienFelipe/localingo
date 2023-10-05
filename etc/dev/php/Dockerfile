@@ -1,11 +1,11 @@
-FROM php:8-fpm-alpine AS base
+FROM php:8.0-fpm-alpine AS base
 WORKDIR /app
 
 
 FROM base AS dev
 
 # Install and enable xdebug.
-RUN apk add --no-cache $PHPIZE_DEPS \
+RUN apk add --no-cache $PHPIZE_DEPS --update linux-headers \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug
 COPY xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
