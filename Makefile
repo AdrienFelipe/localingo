@@ -45,6 +45,7 @@ setup: ## configure the containers and install dependencies
 		$(EXEC) chown app:www-data /app/files
 		$(EXEC) chmod g+wr /app/files
 # Install project dependencies
+		$(EXEC_U) "$(COMPOSER) update symfony/flex --no-plugins --no-scripts"
 		$(EXEC_U) "$(COMPOSER) install"
 		$(EXEC_U) "$(YARN) install"
 		$(EXEC_U) "$(YARN) encore dev"
