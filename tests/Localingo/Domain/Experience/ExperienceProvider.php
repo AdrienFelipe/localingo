@@ -70,7 +70,7 @@ class ExperienceProvider
 
         if ($good !== null) {
             foreach ($good as $sample) {
-                $score !== null or $score = ExperienceItem::INCREASE_GOOD;
+                $score ??= ExperienceItem::INCREASE_GOOD;
                 $experience->wordItem($sample)->addGood($score);
                 $experience->declinationItem($sample)->addGood($score);
                 $experience->caseItem($sample)->addGood($score);
@@ -78,7 +78,7 @@ class ExperienceProvider
         }
         if ($bad !== null) {
             foreach ($bad as $sample) {
-                $score !== null or $score = ExperienceItem::INCREASE_BAD;
+                $score ??= ExperienceItem::INCREASE_BAD;
                 $experience->wordItem($sample)->addBad($score);
                 $experience->declinationItem($sample)->addBad($score);
                 $experience->caseItem($sample)->addBad($score);

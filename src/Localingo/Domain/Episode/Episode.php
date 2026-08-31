@@ -12,7 +12,7 @@ use App\Localingo\Domain\User\User;
 
 class Episode
 {
-    private const VERSION = 9;
+    private const int VERSION = 9;
 
     private int $version;
     private string $id;

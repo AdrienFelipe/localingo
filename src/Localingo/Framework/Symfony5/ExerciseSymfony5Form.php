@@ -18,9 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInterface
 {
-    private const STYLE_ROW_BIG = 'big';
-    private const STYLE_ROW_NORMAL = 'normal';
-    private const STYLE_ROW_HIDDEN = 'hidden';
+    private const string STYLE_ROW_BIG = 'big';
+    private const string STYLE_ROW_NORMAL = 'normal';
+    private const string STYLE_ROW_HIDDEN = 'hidden';
 
     /**
      * @psalm-suppress TooManyTemplateParams

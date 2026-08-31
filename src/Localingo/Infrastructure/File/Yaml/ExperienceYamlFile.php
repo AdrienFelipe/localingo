@@ -10,7 +10,7 @@ use App\Localingo\Domain\User\User;
 
 class ExperienceYamlFile extends YamlFile implements ExperienceFileInterface
 {
-    private const FILENAME = '-experience'.self::FILE_EXTENSION;
+    private const string FILENAME = '-experience'.self::FILE_EXTENSION;
 
     public function read(User $user): ?Experience
     {

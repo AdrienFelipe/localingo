@@ -6,7 +6,7 @@ use App\Shared\Domain\File\FileInterface;
 
 class YamlFile implements FileInterface
 {
-    protected const FILE_EXTENSION = '.local.yaml';
+    protected const string FILE_EXTENSION = '.local.yaml';
     private YamlInterface $yaml;
 
     public function __construct(YamlInterface $yaml)

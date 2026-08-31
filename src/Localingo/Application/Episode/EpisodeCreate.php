@@ -13,9 +13,9 @@ use App\Localingo\Domain\Episode\Episode;
 
 class EpisodeCreate
 {
-    private const MAX_WORDS = 20;
-    private const MAX_SAMPLES = 15;
-    private const MAX_EXERCISES = 10;
+    private const int MAX_WORDS = 20;
+    private const int MAX_SAMPLES = 15;
+    private const int MAX_EXERCISES = 10;
 
     private UserGet $userGet;
     private UserCreate $userCreate;

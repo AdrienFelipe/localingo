@@ -9,7 +9,7 @@ use App\Localingo\Domain\User\UserRepositoryInterface;
 
 class UserCreate
 {
-    private const DEFAULT_USER_NAME = 'anonymous';
+    private const string DEFAULT_USER_NAME = 'anonymous';
     private UserSession $session;
     private UserRepositoryInterface $repository;
 

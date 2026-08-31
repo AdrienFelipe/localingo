@@ -21,7 +21,7 @@ class ExperienceRedisRepository extends RedisRepository implements ExperienceRep
             /**
              * @var ?Experience $experience
              */
-            $experience = unserialize($data, ['allow_classes' => true]);
+            $experience = unserialize($data, ['allowed_classes' => true]);
         } catch (ErrorException | TypeError | ExperienceVersionException) {
             return null;
         }

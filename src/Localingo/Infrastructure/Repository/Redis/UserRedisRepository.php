@@ -11,7 +11,7 @@ use TypeError;
 
 class UserRedisRepository extends RedisRepository implements UserRepositoryInterface
 {
-    private const KEY_USER_ID = 'user_id';
+    private const string KEY_USER_ID = 'user_id';
 
     public function load(string $user_id): ?User
     {

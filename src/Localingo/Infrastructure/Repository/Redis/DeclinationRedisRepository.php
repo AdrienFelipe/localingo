@@ -8,7 +8,7 @@ use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
 
 class DeclinationRedisRepository extends RedisRepository implements DeclinationRepositoryInterface
 {
-    private const DECLINATION_INDEX = 'declinations';
+    private const string DECLINATION_INDEX = 'declinations';
 
     public function saveFromRawData(array $data): void
     {

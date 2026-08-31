@@ -6,9 +6,9 @@ namespace App\Localingo\Domain\Exercise\ValueObject;
 
 class ExerciseType
 {
-    private const TYPE_TRANSLATION = 'translation';
-    private const TYPE_DECLINED = 'declined';
-    private const TYPE_WORD = 'word';
+    private const string TYPE_TRANSLATION = 'translation';
+    private const string TYPE_DECLINED = 'declined';
+    private const string TYPE_WORD = 'word';
 
     private string $value;
 

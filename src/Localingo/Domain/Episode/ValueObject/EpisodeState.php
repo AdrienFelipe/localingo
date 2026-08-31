@@ -6,10 +6,10 @@ namespace App\Localingo\Domain\Episode\ValueObject;
 
 class EpisodeState
 {
-    private const STATE_QUESTION = 'question';
-    private const STATE_ANSWER = 'answer';
-    private const STATE_NEXT = 'next';
-    private const STATE_FINISHED = 'finished';
+    private const string STATE_QUESTION = 'question';
+    private const string STATE_ANSWER = 'answer';
+    private const string STATE_NEXT = 'next';
+    private const string STATE_FINISHED = 'finished';
 
     private string $value;
 

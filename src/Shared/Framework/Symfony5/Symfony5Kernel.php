@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 class Symfony5Kernel extends BaseKernel
 {
     use MicroKernelTrait;
-    public const FRAMEWORK_DIR = '/app/active-framework';
+    public const string FRAMEWORK_DIR = '/app/active-framework';
 
     private static function configPath(): string
     {

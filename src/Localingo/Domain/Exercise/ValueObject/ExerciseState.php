@@ -8,12 +8,13 @@ use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
 
 class ExerciseState
 {
-    private const STATE_NEW = 'new';
-    private const STATE_FAILED = 'failed';
-    private const STATE_OPEN = 'open';
-    private const STATE_DONE = 'done';
+    private const string STATE_NEW = 'new';
+    private const string STATE_FAILED = 'failed';
+    private const string STATE_OPEN = 'open';
+    private const string STATE_DONE = 'done';
 
-    private const STATES_ORDER = [
+    /** @var list<string> */
+    private const array STATES_ORDER = [
         self::STATE_FAILED,
         self::STATE_OPEN,
         self::STATE_DONE,
@@ -71,12 +72,13 @@ class ExerciseState
      */
     public function previous(): self
     {
-        $key = array_search($this->value, self::STATES_ORDER);
+        $key = array_search($this->value, self::STATES_ORDER, true);
         if (!is_int($key)) {
             throw new ExerciseMissingStateOrder();
         }
 
-        $value = self::STATES_ORDER[$key - 1] ?? $this->value;
+        $previous = $key - 1;
+        $value = $previous >= 0 ? self::STATES_ORDER[$previous] : $this->value;
 
         return new self($value);
     }
@@ -91,12 +93,13 @@ class ExerciseState
             return self::open();
         }
 
-        $key = array_search($this->value, self::STATES_ORDER);
+        $key = array_search($this->value, self::STATES_ORDER, true);
         if (!is_int($key)) {
             throw new ExerciseMissingStateOrder();
         }
 
-        $value = self::STATES_ORDER[$key + 1] ?? $this->value;
+        $next = $key + 1;
+        $value = $next < count(self::STATES_ORDER) ? self::STATES_ORDER[$next] : $this->value;
 
         return new self($value);
     }

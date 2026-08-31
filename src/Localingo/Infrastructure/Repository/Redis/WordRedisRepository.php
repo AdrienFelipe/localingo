@@ -8,7 +8,7 @@ use App\Localingo\Domain\Word\WordRepositoryInterface;
 
 class WordRedisRepository extends RedisRepository implements WordRepositoryInterface
 {
-    private const WORD_INDEX = 'words';
+    private const string WORD_INDEX = 'words';
 
     public function saveFromRawData(array $data): void
     {

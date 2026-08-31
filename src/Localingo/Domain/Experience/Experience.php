@@ -13,15 +13,15 @@ use App\Localingo\Domain\User\User;
 
 class Experience
 {
-    private const VERSION = 1;
+    private const int VERSION = 1;
 
-    private const KEY_USER = 'user';
-    private const KEY_VERSION = 'version';
-    private const KEY_DECLINATIONS = 'declinations';
-    private const KEY_WORDS = 'words';
-    private const KEY_CASES = 'cases';
-    private const SEPARATOR = ':';
-    private const ESCAPER = ';;';
+    private const string KEY_USER = 'user';
+    private const string KEY_VERSION = 'version';
+    private const string KEY_DECLINATIONS = 'declinations';
+    private const string KEY_WORDS = 'words';
+    private const string KEY_CASES = 'cases';
+    private const string SEPARATOR = ':';
+    private const string ESCAPER = ';;';
 
     private int $version;
     private User $user;
@@ -140,15 +140,15 @@ class Experience
     {
         $this->version = (int) ($data[self::KEY_VERSION] ?? 0);
 
-        /** @var array<string, array> $items */
+        /** @var array<string, array<string, mixed>> $items */
         $items = (array) ($data[self::KEY_DECLINATIONS] ?? []);
         $this->declinationExperiences->unserializeArray($items);
 
-        /** @var array<string, array> $items */
+        /** @var array<string, array<string, mixed>> $items */
         $items = (array) ($data[self::KEY_WORDS] ?? []);
         $this->wordExperiences->unserializeArray($items);
 
-        /** @var array<string, array> $items */
+        /** @var array<string, array<string, mixed>> $items */
         $items = (array) ($data[self::KEY_CASES] ?? []);
         $this->caseExperiences->unserializeArray($items);
 

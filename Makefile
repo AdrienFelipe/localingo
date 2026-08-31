@@ -67,7 +67,7 @@ cs: ## Code Style (quality)
 
 .PHONY: ca
 ca: ## Code Analyzers (quality)
-		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/phpstan analyse -c phpstan.neon src tests'
+		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G src tests'
 		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/psalm --show-info=false'
 		$(EXEC_U) 'cd $(FRAMEWORK) && vendor/bin/deptrac analyze /app/depfile.yaml'
 

@@ -29,7 +29,7 @@ class ExperienceExecuteTest extends ApplicationTestCase
     }
 
     /**
-     * @return array[]
+     * @return array<int, array<int|string, mixed>>
      */
     public static function answerProvider(): array
     {

@@ -8,12 +8,12 @@ use DateTimeImmutable;
 
 class ExperienceItem
 {
-    private const DECREASE_BAD = 0.9;
-    private const DECREASE_GOOD = 0.8;
-    private const DECREASE_GOOD_DAYS = 7;
-    public const INCREASE_BAD = 5;
-    public const INCREASE_GOOD = 1;
-    public const KNOWN_RATIO = 3;
+    private const float DECREASE_BAD = 0.9;
+    private const float DECREASE_GOOD = 0.8;
+    private const int DECREASE_GOOD_DAYS = 7;
+    public const int INCREASE_BAD = 5;
+    public const int INCREASE_GOOD = 1;
+    public const int KNOWN_RATIO = 3;
 
     private string $key;
     private int $bad;

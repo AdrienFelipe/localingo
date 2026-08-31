@@ -9,7 +9,7 @@ use App\Shared\Domain\Session\SessionInterface;
 
 class EpisodeSession
 {
-    private const KEY_EPISODE_ID = 'episode_id';
+    private const string KEY_EPISODE_ID = 'episode_id';
     private SessionInterface $session;
 
     public function __construct(SessionInterface $session)

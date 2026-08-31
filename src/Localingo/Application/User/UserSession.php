@@ -9,7 +9,7 @@ use App\Shared\Domain\Session\SessionInterface;
 
 class UserSession
 {
-    private const KEY_USER_ID = 'user_id';
+    private const string KEY_USER_ID = 'user_id';
     private SessionInterface $session;
 
     public function __construct(SessionInterface $session)

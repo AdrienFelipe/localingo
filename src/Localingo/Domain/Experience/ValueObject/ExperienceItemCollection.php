@@ -37,7 +37,7 @@ class ExperienceItemCollection extends ArrayObject
     }
 
     /**
-     * @return array<string, array>
+     * @return array<string, array<string, mixed>>
      */
     public function serializeArray(): array
     {
@@ -50,7 +50,7 @@ class ExperienceItemCollection extends ArrayObject
     }
 
     /**
-     * @param array<string, array> $data
+     * @param array<string, array<string, mixed>> $data
      */
     public function unserializeArray(array $data): self
     {

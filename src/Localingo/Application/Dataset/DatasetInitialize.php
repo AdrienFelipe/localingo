@@ -17,12 +17,12 @@ use App\Shared\Domain\File\FileInterface;
 
 class DatasetInitialize
 {
-    private const FILES_LIST = [
+    private const array FILES_LIST = [
         'declinations' => 'declinations.tsv',
         'words' => 'words.tsv',
         'samples' => 'samples.tsv',
     ];
-    private const FILES_SEPARATOR = "\t";
+    private const string FILES_SEPARATOR = "\t";
 
     private DatasetRepositoryInterface $datasetRepository;
     private DeclinationRepositoryInterface $declinationRepository;
@@ -134,7 +134,9 @@ class DatasetInitialize
             // But lets keep it simple with a trim, as this loop is necessary anyway.
             $value = trim($value);
             // Force all values as lowercase except for the 'Case' column.
-            $key === DatasetRawInterface::FILE_CASE or $value = strtolower($value);
+            if ($key !== DatasetRawInterface::FILE_CASE) {
+                $value = strtolower($value);
+            }
         });
 
         /** @var array<string, string> $values */

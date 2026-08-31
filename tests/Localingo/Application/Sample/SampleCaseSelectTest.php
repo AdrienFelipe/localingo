@@ -101,7 +101,7 @@ class SampleCaseSelectTest extends ApplicationTestCase
     }
 
     /**
-     * @param array[]  $rawData
+     * @param array<int, array{string, int}> $rawData
      * @param string[] $exclude
      * @param string[] $words
      * @param string[] $expected

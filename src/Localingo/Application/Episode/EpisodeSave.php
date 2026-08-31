@@ -9,7 +9,7 @@ use App\Localingo\Domain\Episode\EpisodeRepositoryInterface;
 
 class EpisodeSave
 {
-    private const EPISODE_EXPIRE = 604800; // 1 week in seconds.
+    private const int EPISODE_EXPIRE = 604800; // 1 week in seconds.
 
     private EpisodeSession $session;
     private EpisodeRepositoryInterface $repository;

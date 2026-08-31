@@ -10,7 +10,7 @@ use App\Localingo\Domain\Sample\SampleCollection;
 
 class SampleCaseRedisRepository extends RedisRepository implements SampleCaseRepositoryInterface
 {
-    private const CASE_INDEX = 'cases';
+    private const string CASE_INDEX = 'cases';
 
     /**
      * @Warning: affects caseToSample() method.

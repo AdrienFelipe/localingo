@@ -19,7 +19,7 @@ class EpisodeRedisRepository extends RedisRepository implements EpisodeRepositor
         try {
             // TODO: make \__PHP_Incomplete_Class throw an exception from php.ini
             /** @var ?Episode $episode */
-            $episode = unserialize($data, ['allow_classes' => true]);
+            $episode = unserialize($data, ['allowed_classes' => true]);
         } catch (ErrorException | TypeError | EpisodeVersionException) {
             return null;
         }

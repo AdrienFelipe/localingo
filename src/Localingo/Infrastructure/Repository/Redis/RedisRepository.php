@@ -9,9 +9,9 @@ use Predis\Client;
 
 class RedisRepository implements RepositoryInterface
 {
-    private const ITEMS_PER_ITERATION = 10;
-    protected const SEPARATOR = ':';
-    protected const ESCAPER = ';;';
+    private const int ITEMS_PER_ITERATION = 10;
+    protected const string SEPARATOR = ':';
+    protected const string ESCAPER = ';;';
 
     protected Client $redis;
 

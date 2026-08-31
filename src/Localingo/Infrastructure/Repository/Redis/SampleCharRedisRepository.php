@@ -8,7 +8,7 @@ use App\Localingo\Domain\Sample\SampleCharRepositoryInterface;
 
 class SampleCharRedisRepository extends RedisRepository implements SampleCharRepositoryInterface
 {
-    private const SAMPLE_INDEX = 'chars';
+    private const string SAMPLE_INDEX = 'chars';
 
     public function saveFromRawData(array $data): void
     {

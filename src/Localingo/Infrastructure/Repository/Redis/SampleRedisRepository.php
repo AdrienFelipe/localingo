@@ -10,7 +10,7 @@ use App\Localingo\Domain\Sample\SampleRepositoryInterface;
 
 class SampleRedisRepository extends RedisRepository implements SampleRepositoryInterface
 {
-    private const SAMPLE_INDEX = 'sample';
+    private const string SAMPLE_INDEX = 'sample';
 
     public function saveFromRawData(array $data): void
     {

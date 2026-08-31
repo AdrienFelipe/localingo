@@ -13,10 +13,10 @@ use App\Localingo\Domain\Sample\SampleCollection;
 
 class ExerciseCreate
 {
-    private const SELECT_TRANSLATION_MAX = 2;
-    private const SELECT_WORD_MAX = 5;
-    private const SELECT_DECLINED_MIN = 2;
-    private const SKIP_NEW_BAD_RATIO_MAX = 2;
+    private const int SELECT_TRANSLATION_MAX = 2;
+    private const int SELECT_WORD_MAX = 5;
+    private const int SELECT_DECLINED_MIN = 2;
+    private const int SKIP_NEW_BAD_RATIO_MAX = 2;
 
     public function forEpisode(Episode $episode, Experience $experience, SampleCollection $samples, int $limit): ExerciseCollection
     {
