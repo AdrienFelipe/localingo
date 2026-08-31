@@ -45,10 +45,6 @@ Encore
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
-    .configureBabel((config) => {
-        config.plugins.push('@babel/plugin-proposal-class-properties');
-    })
-
     // enables @babel/preset-env polyfills
     .configureBabelPresetEnv((config) => {
         config.useBuiltIns = 'usage';
@@ -56,7 +52,12 @@ Encore
     })
 
     // enables Sass/SCSS support
-    .enableSassLoader()
+    .enableSassLoader((options) => {
+        // Bootstrap 5.3 still uses @import internally: silence upstream-only noise.
+        options.sassOptions = Object.assign({}, options.sassOptions, {
+            silenceDeprecations: ['import', 'global-builtin', 'color-functions'],
+        });
+    })
 
     // transform your CSS in a lot of cool ways
     .enablePostCssLoader()
@@ -70,9 +71,6 @@ Encore
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher
     //.enableIntegrityHashes(Encore.isProduction())
-
-    // uncomment if you're having problems with a jQuery plugin
-    .autoProvidejQuery()
 ;
 
 module.exports = Encore.getWebpackConfig();
