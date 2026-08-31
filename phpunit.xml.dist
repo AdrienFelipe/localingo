@@ -2,22 +2,21 @@
 <!-- https://phpunit.de/manual/current/en/appendixes.configuration.html -->
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
         colors="true"
         bootstrap="active-framework/tests/bootstrap.php"
+        cacheDirectory="active-framework/var/cache/.phpunit.cache"
 >
-  <coverage processUncoveredFiles="true">
+  <source>
     <include>
       <directory>./src/</directory>
     </include>
-  </coverage>
+  </source>
   <php>
     <ini name="error_reporting" value="-1"/>
-    <env name="SYMFONY_PHPUNIT_VERSION" value="9"/>
     <env name="APP_ENV" value="test"/>
     <env name="SHELL_VERBOSITY" value="-1"/>
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="7"/>
-    <env name="USE_AWS_ES" value="false"/>
   </php>
   <testsuites>
     <testsuite name="localingo Test Suite">
@@ -28,8 +27,8 @@
         <log type="coverage-html" target="report/html"/>
     </logging>-->
   <extensions>
-    <extension class="App\Tests\Shared\Infrastructure\Phpunit\SessionTestHook"/>
-    <extension class="App\Tests\Shared\Infrastructure\Phpunit\RepositoryTestHook"/>
-    <extension class="App\Tests\Shared\Infrastructure\Phpunit\FileTestHook"/>
+    <bootstrap class="App\Tests\Shared\Infrastructure\Phpunit\SessionTestHook"/>
+    <bootstrap class="App\Tests\Shared\Infrastructure\Phpunit\RepositoryTestHook"/>
+    <bootstrap class="App\Tests\Shared\Infrastructure\Phpunit\FileTestHook"/>
   </extensions>
 </phpunit>

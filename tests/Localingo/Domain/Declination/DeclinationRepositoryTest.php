@@ -4,6 +4,7 @@ namespace App\Tests\Localingo\Domain\Declination;
 
 use App\Localingo\Domain\Declination\DeclinationRepositoryInterface;
 use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DeclinationRepositoryTest extends ApplicationTestCase
 {
@@ -17,7 +18,7 @@ class DeclinationRepositoryTest extends ApplicationTestCase
     /**
      * @return array<int, array<string, mixed>>
      */
-    public function rawDataProvider(): array
+    public static function rawDataProvider(): array
     {
         return [
             [
@@ -41,11 +42,10 @@ class DeclinationRepositoryTest extends ApplicationTestCase
     }
 
     /**
-     * @dataProvider rawDataProvider
-     *
      * @param array<int, mixed>                $values
      * @param array<int, array<string, mixed>> $expectations
      */
+    #[DataProvider('rawDataProvider')]
     public function testRepository(array $values, array $expectations): void
     {
         foreach ($values as $value) {

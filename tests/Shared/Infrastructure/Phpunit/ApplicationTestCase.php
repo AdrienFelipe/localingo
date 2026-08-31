@@ -19,7 +19,12 @@ abstract class ApplicationTestCase extends TestCase
         return self::createKernel()::loadService($class);
     }
 
-    public static function createKernel(): TestKernelInterface
+    /**
+     * The kernel only exposes static methods, so it is never instantiated.
+     *
+     * @return class-string<TestKernelInterface>
+     */
+    public static function createKernel(): string
     {
         if (!isset($_SERVER[self::TEST_CLASS]) && !isset($_ENV[self::TEST_CLASS])) {
             throw new \LogicException(sprintf('"%s" variable must be defined in $_SERVER or $_ENV', self::TEST_CLASS));
@@ -29,11 +34,10 @@ abstract class ApplicationTestCase extends TestCase
             throw new \RuntimeException(sprintf('Class "%s" doesn\'t exist or cannot be autoloaded', $classname));
         }
 
-        /** @psalm-suppress MixedMethodCall */
-        if (!is_a($kernel = new $classname(), TestKernelInterface::class)) {
+        if (!is_a($classname, TestKernelInterface::class, true)) {
             throw new \LogicException(sprintf('Class "%s" must implement "%s"', $classname, TestKernelInterface::class));
         }
 
-        return $kernel;
+        return $classname;
     }
 }

@@ -10,6 +10,7 @@ use App\Localingo\Domain\Experience\ExperienceFileInterface;
 use App\Tests\Localingo\Domain\Episode\EpisodeProvider;
 use App\Tests\Localingo\Domain\Exercise\ExerciseProvider;
 use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use LogicException;
 
 class ExperienceExecuteTest extends ApplicationTestCase
@@ -30,7 +31,7 @@ class ExperienceExecuteTest extends ApplicationTestCase
     /**
      * @return array[]
      */
-    public function answerProvider(): array
+    public static function answerProvider(): array
     {
         $noExperience = ['word' => 'none', 'declination' => 'none', 'case' => 'none'];
         $goodExperienceWordOnly = ['word' => 'good', 'declination' => 'none', 'case' => 'none'];
@@ -40,32 +41,31 @@ class ExperienceExecuteTest extends ApplicationTestCase
 
         return [
             // New exercises should have no experience added from applying an answer, regardless of the 'correct' value.
-            [ExerciseProvider::word(true), 'correct' => true, 'experience' => $noExperience],
-            [ExerciseProvider::word(true), 'correct' => false, 'experience' => $noExperience],
-            [ExerciseProvider::translation(true), 'correct' => false, 'experience' => $noExperience],
-            [ExerciseProvider::translation(true), 'correct' => false, 'experience' => $noExperience],
-            [ExerciseProvider::declined(true), 'correct' => false, 'experience' => $noExperience],
-            [ExerciseProvider::declined(true), 'correct' => false, 'experience' => $noExperience],
+            [ExerciseProvider::word(true), 'isCorrect' => true, 'expectedExperiences' => $noExperience],
+            [ExerciseProvider::word(true), 'isCorrect' => false, 'expectedExperiences' => $noExperience],
+            [ExerciseProvider::translation(true), 'isCorrect' => false, 'expectedExperiences' => $noExperience],
+            [ExerciseProvider::translation(true), 'isCorrect' => false, 'expectedExperiences' => $noExperience],
+            [ExerciseProvider::declined(true), 'isCorrect' => false, 'expectedExperiences' => $noExperience],
+            [ExerciseProvider::declined(true), 'isCorrect' => false, 'expectedExperiences' => $noExperience],
 
             // Correct 'translation' answers should only add 'good' experience to the word item.
-            [ExerciseProvider::word(false), 'correct' => true, 'experience' => $goodExperienceWordOnly],
-            [ExerciseProvider::translation(false), 'correct' => true, 'experience' => $goodExperienceWordOnly],
+            [ExerciseProvider::word(false), 'isCorrect' => true, 'expectedExperiences' => $goodExperienceWordOnly],
+            [ExerciseProvider::translation(false), 'isCorrect' => true, 'expectedExperiences' => $goodExperienceWordOnly],
             // Incorrect 'translation' answers should only add 'bad' experience to the word item.
-            [ExerciseProvider::word(false), 'correct' => false, 'experience' => $badExperienceWordOnly],
-            [ExerciseProvider::translation(false), 'correct' => false, 'experience' => $badExperienceWordOnly],
+            [ExerciseProvider::word(false), 'isCorrect' => false, 'expectedExperiences' => $badExperienceWordOnly],
+            [ExerciseProvider::translation(false), 'isCorrect' => false, 'expectedExperiences' => $badExperienceWordOnly],
 
             // Correct 'declination' answers should add 'good' experience to all items.
-            [ExerciseProvider::declined(false), 'correct' => true, 'experience' => $goodExperienceAll],
+            [ExerciseProvider::declined(false), 'isCorrect' => true, 'expectedExperiences' => $goodExperienceAll],
             // Incorrect 'declination' answers should add 'bad' experience to all items.
-            [ExerciseProvider::declined(false), 'correct' => false, 'experience' => $badExperienceAll],
+            [ExerciseProvider::declined(false), 'isCorrect' => false, 'expectedExperiences' => $badExperienceAll],
         ];
     }
 
     /**
-     * @dataProvider answerProvider
-     *
      * @param array<string, string> $expectedExperiences
      */
+    #[DataProvider('answerProvider')]
     public function testApplyAnswer(Exercise $exercise, bool $isCorrect, array $expectedExperiences): void
     {
         $user = $exercise->getEpisode()->getUser();

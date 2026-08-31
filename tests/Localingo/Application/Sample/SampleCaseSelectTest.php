@@ -9,6 +9,7 @@ use App\Localingo\Domain\Sample\SampleCollection;
 use App\Localingo\Domain\Sample\SampleRepositoryInterface;
 use App\Tests\Localingo\Domain\Experience\ExperienceProvider;
 use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SampleCaseSelectTest extends ApplicationTestCase
 {
@@ -24,12 +25,12 @@ class SampleCaseSelectTest extends ApplicationTestCase
     /**
      * @return mixed[][]
      */
-    public function sampleExperienceProvider(): array
+    public static function sampleExperienceProvider(): array
     {
         return [
             // Check code handles empty data.
             [
-                'rawData' => [], 'count' => 5, 'exclude' => [], 'words' => [], '$expected' => [],
+                'rawData' => [], 'count' => 5, 'exclude' => [], 'words' => [], 'expected' => [],
             ],
             // All samples with good or non existent experience. Nothing should be returned.
             [
@@ -38,7 +39,7 @@ class SampleCaseSelectTest extends ApplicationTestCase
                     ['S2	DeclinationA	NumberA	GenderA	Word2	Translation2	State	End	Case2', 10], // Good experience
                     ['S3	DeclinationA	NumberA	GenderA	Word3	Translation3	State	End	Case3', 20],
                 ],
-                'count' => 5, 'exclude' => ['S1'], 'words' => [], '$expected' => [],
+                'count' => 5, 'exclude' => ['S1'], 'words' => [], 'expected' => [],
             ],
             // Similar samples but different cases. Only samples with bad experience should be returned.
             [
@@ -47,7 +48,7 @@ class SampleCaseSelectTest extends ApplicationTestCase
                     ['S2	DeclinationA	NumberA	GenderA	Word2	Translation2	State	End	Case2', -1], // Bad experience
                     ['S3	DeclinationA	NumberA	GenderA	Word3	Translation3	State	End	Case3', 0],
                 ],
-                'count' => 2, 'exclude' => ['S1'], 'words' => [], '$expected' => ['S2'],
+                'count' => 2, 'exclude' => ['S1'], 'words' => [], 'expected' => ['S2'],
             ],
             // Multiple cases with bad experience. All should be returned.
             [
@@ -56,7 +57,7 @@ class SampleCaseSelectTest extends ApplicationTestCase
                     ['S2	DeclinationA	NumberA	GenderA	Word2	Translation2	State	End	Case2', -1],
                     ['S3	DeclinationA	NumberA	GenderA	Word3	Translation3	State	End	Case3', -10],
                 ],
-                'count' => 3, 'exclude' => [], 'words' => [], '$expected' => ['S3', 'S1', 'S2'],
+                'count' => 3, 'exclude' => [], 'words' => [], 'expected' => ['S3', 'S1', 'S2'],
             ],
             // Multiple cases with bad experience. Filtering by word.
             [
@@ -65,7 +66,7 @@ class SampleCaseSelectTest extends ApplicationTestCase
                     ['S2	DeclinationA	NumberA	GenderA	Word2	Translation2	State	End	Case2', -1],
                     ['S3	DeclinationA	NumberA	GenderA	Word3	Translation3	State	End	Case3', -10],
                 ],
-                'count' => 3, 'exclude' => [], 'words' => ['Word1'], '$expected' => ['S1'],
+                'count' => 3, 'exclude' => [], 'words' => ['Word1'], 'expected' => ['S1'],
             ],
             // Multiple cases with bad experience. Filtering by word and applying exclusion.
             [
@@ -74,7 +75,7 @@ class SampleCaseSelectTest extends ApplicationTestCase
                     ['S2	DeclinationA	NumberA	GenderA	Word2	Translation2	State	End	Case2', -1],
                     ['S3	DeclinationA	NumberA	GenderA	Word3	Translation3	State	End	Case3', -10],
                 ],
-                'count' => 3, 'exclude' => ['S3', 'S1'], 'words' => ['Word1', 'Word2'], '$expected' => ['S2'],
+                'count' => 3, 'exclude' => ['S3', 'S1'], 'words' => ['Word1', 'Word2'], 'expected' => ['S2'],
             ],
             // Multiple samples with the same case and a single bad experience. All samples should be selected.
             [
@@ -84,7 +85,7 @@ class SampleCaseSelectTest extends ApplicationTestCase
                     ['S3	DeclinationA	NumberA	GenderA	Word3	Translation3	State	End	Case1', -10],
                     ['S4	DeclinationA	NumberA	GenderA	Word4	Translation4	State	End	Case2', ExperienceItem::KNOWN_RATIO],
                 ],
-                'count' => 10, 'exclude' => [], 'words' => [], '$expected' => ['S1', 'S2', 'S3'],
+                'count' => 10, 'exclude' => [], 'words' => [], 'expected' => ['S1', 'S2', 'S3'],
             ],
             // Multiple samples with the same case and a single bad experience, applying filters.
             [
@@ -94,19 +95,18 @@ class SampleCaseSelectTest extends ApplicationTestCase
                     ['S3	DeclinationA	NumberA	GenderA	Word3	Translation3	State	End	Case1', -10],
                     ['S4	DeclinationA	NumberA	GenderA	Word4	Translation4	State	End	Case2', ExperienceItem::KNOWN_RATIO],
                 ],
-                'count' => 10, 'exclude' => ['S1'], 'words' => ['Word1', 'Word2', 'Word4'], '$expected' => ['S2'],
+                'count' => 10, 'exclude' => ['S1'], 'words' => ['Word1', 'Word2', 'Word4'], 'expected' => ['S2'],
             ],
         ];
     }
 
     /**
-     * @dataProvider sampleExperienceProvider
-     *
      * @param array[]  $rawData
      * @param string[] $exclude
      * @param string[] $words
      * @param string[] $expected
      */
+    #[DataProvider('sampleExperienceProvider')]
     public function testSamplesFromExperience(array $rawData, int $count, array $exclude, array $words, array $expected): void
     {
         $experience = ExperienceProvider::empty();

@@ -3,11 +3,10 @@
 namespace App\Tests\Shared\Infrastructure\Phpunit;
 
 use App\Shared\Domain\Session\SessionInterface;
-use PHPUnit\Runner\BeforeTestHook;
 
-class SessionTestHook implements BeforeTestHook
+class SessionTestHook extends ClearBeforeTestExtension
 {
-    public function executeBeforeTest(string $test): void
+    protected function clear(): void
     {
         /** @var SessionInterface $session */
         $session = ApplicationTestCase::service(SessionInterface::class);

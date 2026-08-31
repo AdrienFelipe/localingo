@@ -5,6 +5,7 @@ namespace App\Tests\Localingo\Domain\Experience;
 use App\Localingo\Domain\Experience\Experience;
 use App\Localingo\Domain\Experience\ExperienceRepositoryInterface;
 use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ExperienceRepositoryTest extends ApplicationTestCase
 {
@@ -18,7 +19,7 @@ class ExperienceRepositoryTest extends ApplicationTestCase
     /**
      * @return Experience[][]
      */
-    public function experienceProvider(): array
+    public static function experienceProvider(): array
     {
         return [
             [ExperienceProvider::empty()],
@@ -26,9 +27,7 @@ class ExperienceRepositoryTest extends ApplicationTestCase
         ];
     }
 
-    /**
-     * @dataProvider experienceProvider
-     */
+    #[DataProvider('experienceProvider')]
     public function testSaveLoad(Experience $expected): void
     {
         // Save experience.

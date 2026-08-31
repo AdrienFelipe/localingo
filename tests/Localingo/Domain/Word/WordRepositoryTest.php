@@ -4,6 +4,7 @@ namespace App\Tests\Localingo\Domain\Word;
 
 use App\Localingo\Domain\Word\WordRepositoryInterface;
 use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class WordRepositoryTest extends ApplicationTestCase
 {
@@ -17,7 +18,7 @@ class WordRepositoryTest extends ApplicationTestCase
     /**
      * @return array<int, array<string, mixed>>
      */
-    public function rawDataProvider(): array
+    public static function rawDataProvider(): array
     {
         return [
             [
@@ -41,11 +42,10 @@ class WordRepositoryTest extends ApplicationTestCase
     }
 
     /**
-     * @dataProvider rawDataProvider
-     *
      * @param array<int, mixed>                $values
      * @param array<int, array<string, mixed>> $expectations
      */
+    #[DataProvider('rawDataProvider')]
     public function testRepository(array $values, array $expectations): void
     {
         foreach ($values as $value) {

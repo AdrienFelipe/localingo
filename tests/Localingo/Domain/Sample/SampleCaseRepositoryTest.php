@@ -6,6 +6,7 @@ namespace App\Tests\Localingo\Domain\Sample;
 
 use App\Localingo\Domain\Sample\SampleCaseRepositoryInterface;
 use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SampleCaseRepositoryTest extends ApplicationTestCase
 {
@@ -19,7 +20,7 @@ class SampleCaseRepositoryTest extends ApplicationTestCase
     /**
      * @return array<int, array<string, mixed>>
      */
-    public function rawDataProvider(): array
+    public static function rawDataProvider(): array
     {
         return [
             [
@@ -54,11 +55,10 @@ class SampleCaseRepositoryTest extends ApplicationTestCase
     }
 
     /**
-     * @dataProvider rawDataProvider
-     *
      * @param array<int, mixed>                $values
      * @param array<int, array<string, mixed>> $expectations
      */
+    #[DataProvider('rawDataProvider')]
     public function testGetCases(array $values, array $expectations): void
     {
         foreach ($values as $line) {
