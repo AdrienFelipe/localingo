@@ -1,7 +1,7 @@
 ENV?=dev
 # Compatibility with non TTY devices (ENV=ci).
 MODE?=exec $(if $(findstring ci,$(ENV)),-T,)
-COMPOSE=docker-compose -f docker-compose.yml
+COMPOSE=docker compose -f docker-compose.yml
 
 CONTAINER?=php
 FRAMEWORK='./active-framework'
@@ -81,11 +81,11 @@ console: ## Execute framework console.
 
 .PHONY: xconsole
 xconsole: ## Execute framework console. with xDebug enabled
-		docker-compose exec php sh -lc "export PHP_IDE_CONFIG='serverName=localingo' && php -dxdebug.client_host=host.docker.internal ./bin/console $(filter-out $@,$(MAKECMDGOALS))"
+		$(COMPOSE) exec php sh -lc "export PHP_IDE_CONFIG='serverName=localingo' && php -dxdebug.client_host=host.docker.internal ./bin/console $(filter-out $@,$(MAKECMDGOALS))"
 
 .PHONY: logs
 logs: ## look for 's' service logs, make s=php logs
-		docker-compose logs -f $(s)
+		$(COMPOSE) logs -f $(s)
 
 .PHONY: help
 help: ## Display this help message

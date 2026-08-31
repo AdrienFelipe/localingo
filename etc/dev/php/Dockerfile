@@ -1,18 +1,18 @@
-FROM php:8-fpm-alpine AS base
+FROM php:8.0-fpm-alpine AS base
 WORKDIR /app
 
 
 FROM base AS dev
 
 # Install and enable xdebug.
-RUN apk add --no-cache $PHPIZE_DEPS \
+RUN apk add --no-cache $PHPIZE_DEPS linux-headers \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug
 COPY xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN touch /var/log/xdebug.log && chmod go+w /var/log/xdebug.log
 
-# Install composer.
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+# Install composer. Pinned to 2.2 LTS: Composer 2.3+ breaks symfony/flex 1.x.
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer --version=2.2.25
 
 # Install ssh.
 RUN apk add openssh && ssh-keygen -A
