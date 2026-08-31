@@ -20,10 +20,10 @@ class SampleCaseRedisRepository extends RedisRepository implements SampleCaseRep
         // TODO: add proper checks.
         $value = $this::valuePattern(
             false,
-             $data[self::FILE_DECLINATION],
-             $data[self::FILE_GENDER],
-             $data[self::FILE_NUMBER],
-             $data[self::FILE_CASE],
+            $data[self::FILE_DECLINATION],
+            $data[self::FILE_GENDER],
+            $data[self::FILE_NUMBER],
+            $data[self::FILE_CASE],
         );
         $this->redis->sadd(self::CASE_INDEX, [$value]);
     }
@@ -68,7 +68,7 @@ class SampleCaseRedisRepository extends RedisRepository implements SampleCaseRep
     {
         $samples = new SampleCollection();
         $pattern = self::valuePattern(true, $declinations);
-        $results = (array) $this->redis->smembers(self::CASE_INDEX);
+        $results = $this->redis->smembers(self::CASE_INDEX);
         $results = array_filter($results, static function ($result) {return is_string($result); });
         $results = preg_grep("/$pattern/", $results) ?: [];
         foreach ($results as $result) {

@@ -8,8 +8,6 @@ use App\Localingo\Domain\Experience\Exception\ExperienceVersionException;
 use App\Localingo\Domain\Experience\Experience;
 use App\Localingo\Domain\Experience\ExperienceRepositoryInterface;
 use App\Localingo\Domain\User\User;
-use ErrorException;
-use TypeError;
 
 class ExperienceRedisRepository extends RedisRepository implements ExperienceRepositoryInterface
 {
@@ -22,7 +20,7 @@ class ExperienceRedisRepository extends RedisRepository implements ExperienceRep
              * @var ?Experience $experience
              */
             $experience = unserialize($data, ['allowed_classes' => true]);
-        } catch (ErrorException | TypeError | ExperienceVersionException) {
+        } catch (\ErrorException|\TypeError|ExperienceVersionException) {
             return null;
         }
 

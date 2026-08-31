@@ -15,7 +15,7 @@ class SampleCharRedisRepository extends RedisRepository implements SampleCharRep
         // Focus on values that will have to be written.
         $chars = $data[self::FILE_WORD].$data[self::FILE_TRANSLATION].$data[self::FILE_DECLINED];
         // Keep only letters which are outside of usual keyboards scope.
-        $chars = preg_replace('#[ -/a-z]#', '', $chars);
+        $chars = preg_replace('#[ -/a-z]#', '', $chars) ?? '';
         if ($chars = array_unique(mb_str_split($chars))) {
             $this->redis->sadd(self::SAMPLE_INDEX, $chars);
         }
@@ -23,7 +23,7 @@ class SampleCharRedisRepository extends RedisRepository implements SampleCharRep
 
     public function loadList(): array
     {
-        $values = (array) $this->redis->smembers(self::SAMPLE_INDEX);
+        $values = $this->redis->smembers(self::SAMPLE_INDEX);
 
         return array_filter($values, static function ($value) {return is_string($value); });
     }

@@ -1,16 +1,11 @@
 <?xml version="1.0"?>
-<psalm errorLevel="1">
+<!-- Unused code detection is off: services are wired by the DI container and
+     called from Twig, so Psalm cannot see those usages. -->
+<psalm errorLevel="1" findUnusedCode="false">
     <projectFiles>
         <directory name="src" />
         <ignoreFiles>
             <directory name="frameworks" />
         </ignoreFiles>
     </projectFiles>
-    <issueHandlers>
-        <PropertyNotSetInConstructor>
-            <errorLevel type="suppress">
-                <referencedProperty name="Symfony\Bundle\FrameworkBundle\Controller\AbstractController::$container"/>
-            </errorLevel>
-        </PropertyNotSetInConstructor>
-    </issueHandlers>
 </psalm>

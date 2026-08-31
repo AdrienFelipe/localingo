@@ -4,17 +4,10 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Exercise;
 
-use ArrayObject;
-
 /**
  * @extends \ArrayObject<string, Exercise>
- *
- * @psalm-suppress ImplementedReturnTypeMismatch
- *
- * @method false|Exercise offsetGet($key)
- * @method Exercise[]     getIterator()
  */
-class ExerciseCollection extends ArrayObject
+class ExerciseCollection extends \ArrayObject
 {
     /**
      * @param array<string, Exercise> $exercises

@@ -22,7 +22,7 @@ class SampleSelect
         SampleCaseRepositoryInterface $caseRepository,
         WordSelect $wordSelect,
         DeclinationRepositoryInterface $declinationRepository,
-        SampleCaseSelect $sampleCaseSelect
+        SampleCaseSelect $sampleCaseSelect,
     ) {
         $this->caseRepository = $caseRepository;
         $this->wordSelect = $wordSelect;

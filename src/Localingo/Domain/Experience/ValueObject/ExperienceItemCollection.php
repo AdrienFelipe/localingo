@@ -4,20 +4,15 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Experience\ValueObject;
 
-use ArrayObject;
-
 /**
  * @extends \ArrayObject<string, ExperienceItem>
- * @psalm-suppress ImplementedReturnTypeMismatch
- *
- * @method ExperienceItem[] getIterator()
  */
-class ExperienceItemCollection extends ArrayObject
+class ExperienceItemCollection extends \ArrayObject
 {
     /**
      * @param array<string, ExperienceItem> $array
      */
-    public function __construct($array = [])
+    public function __construct(array $array = [])
     {
         parent::__construct($array);
     }
@@ -42,7 +37,7 @@ class ExperienceItemCollection extends ArrayObject
     public function serializeArray(): array
     {
         $data = [];
-        foreach ($this->getIterator() as $key => $item) {
+        foreach ($this as $key => $item) {
             $data[$key] = $item->serialize();
         }
 
@@ -69,7 +64,7 @@ class ExperienceItemCollection extends ArrayObject
      */
     public function update(): void
     {
-        foreach ($this->getIterator() as $item) {
+        foreach ($this as $item) {
             $item->update();
         }
     }
@@ -80,22 +75,21 @@ class ExperienceItemCollection extends ArrayObject
      *
      * @param ?int $limit 0 or null wil return all elements
      *
-     * @psalm-suppress MixedReturnTypeCoercion
-     *
      * @return string[]
      */
-    public function getRevisionNeeded(int $limit = null): array
+    public function getRevisionNeeded(?int $limit = null): array
     {
-        /** @var string[] $support */
-        $support = [];
-        foreach ($this->getIterator() as $key => $item) {
-            $item->isKnow() or $support[$key] = $item->getBadRatio();
+        $ratios = [];
+        foreach ($this as $key => $item) {
+            if (!$item->isKnow()) {
+                $ratios[$key] = $item->getBadRatio();
+            }
         }
         // Sort by 'bad ratio' and keep only the keys.
-        arsort($support);
-        $support = array_keys($support);
+        arsort($ratios);
+        $support = array_keys($ratios);
 
-        return $limit ? array_slice($support, 0, $limit) : $support;
+        return $limit > 0 ? array_slice($support, 0, $limit) : $support;
     }
 
     /**
@@ -103,10 +97,11 @@ class ExperienceItemCollection extends ArrayObject
      */
     public function getCurrentlyKnown(): array
     {
-        /** @var string[] $support */
         $support = [];
-        foreach ($this->getIterator() as $key => $item) {
-            !$item->isKnow() or $support[] = $key;
+        foreach ($this as $key => $item) {
+            if ($item->isKnow()) {
+                $support[] = $key;
+            }
         }
 
         return $support;

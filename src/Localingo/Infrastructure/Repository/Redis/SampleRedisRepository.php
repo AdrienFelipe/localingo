@@ -39,7 +39,7 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
             self::FILE_CASE,
         ];
         /** @var string[]|null[] $data */
-        $data = (array) $this->redis->hmget($key, $fields);
+        $data = $this->redis->hmget($key, $fields);
         $data = self::unescapeSeparator($data);
         // Apply fields names.
         $data = array_combine($fields, $data);

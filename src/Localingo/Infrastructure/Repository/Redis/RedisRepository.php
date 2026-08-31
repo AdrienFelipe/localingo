@@ -39,7 +39,7 @@ class RedisRepository implements RepositoryInterface
         $cursor = '0';
         $keys = [];
         do {
-            $result = (array) $redis->scan($cursor);
+            $result = $redis->scan($cursor);
             $cursor = (string) ($result[0] ?? '0');
             $values = (array) ($result[1] ?? []);
             $values = array_filter($values, static function ($value) use ($exclude) {
@@ -68,7 +68,7 @@ class RedisRepository implements RepositoryInterface
         $cursor = 0;
         $range = self::ITEMS_PER_ITERATION - 1;
         $values = [];
-        while ($results = (array) $redis->zrange($key, $cursor, $range)) {
+        while ([] !== $results = $redis->zrange($key, $cursor, $range)) {
             $results = array_filter($results, static function ($value) use ($exclude) {
                 return is_string($value) && !in_array($value, $exclude, true);
             });

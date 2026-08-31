@@ -52,10 +52,10 @@ class DatasetInitialize
      *
      * @throws DatasetDirectoryException
      */
-    public function load(string $filesDirectory = null): void
+    public function load(?string $filesDirectory = null): void
     {
         // Check files directory. Should not have a trailing slash.
-        $filesDirectory !== null or $filesDirectory = (string) ($_ENV[FileInterface::KEY_FILES_DIR] ?? '');
+        $filesDirectory ??= $_ENV[FileInterface::KEY_FILES_DIR] ?? '';
         if (!is_dir($filesDirectory)) {
             throw new DatasetDirectoryException(sprintf('A valid files directory must be set in $_ENV or passed as argument: %s="%s"', FileInterface::KEY_FILES_DIR, $filesDirectory));
         }
@@ -66,7 +66,7 @@ class DatasetInitialize
             $new_hash = hash_file('md5', "$filesDirectory/$filename");
             $previous_hash = $this->datasetRepository->loadFileHash($filename);
             // Check for files changes, and if so update hashes.
-            if ($new_hash && $new_hash !== $previous_hash) {
+            if ($new_hash !== false && $new_hash !== $previous_hash) {
                 $updated_hashes[$filename] = $new_hash;
             }
         }
@@ -104,7 +104,7 @@ class DatasetInitialize
     private function buildHeader(string $line): DatasetHeader
     {
         // Remove (trailing) line breaks.
-        $line = preg_replace('/[\r\n]/', '', $line);
+        $line = preg_replace('/[\r\n]/', '', $line) ?? $line;
         // Extract headers.
         $labels = explode(self::FILES_SEPARATOR, $line);
         $headerSize = count($labels);
@@ -119,7 +119,7 @@ class DatasetInitialize
     private function getValues(string $line, DatasetHeader $header): array
     {
         // Remove (trailing) line breaks at the end of the line.
-        $line = preg_replace('/[\r\n]$/', '', $line);
+        $line = preg_replace('/[\r\n]$/', '', $line) ?? $line;
 
         $values = explode(self::FILES_SEPARATOR, $line);
         // Make sure all rows have the same size.
@@ -149,22 +149,24 @@ class DatasetInitialize
     private function readFile(string $filepath, array $repositories): void
     {
         $handle = fopen($filepath, 'rb');
-        if ($handle && $line = fgets($handle)) {
-            // Pre-calculate header properties.
-            $header = $this->buildHeader($line);
-
-            // Extract remaining lines.
-            while (($line = fgets($handle)) !== false) {
-                $values = $this->getValues($line, $header);
-                // Reuse same file line on multiple repositories.
-                foreach ($repositories as $repository) {
-                    $repository->saveFromRawData($values);
-                }
-            }
-            fclose($handle);
-        } else {
+        if ($handle === false || ($line = fgets($handle)) === false) {
             // TODO: properly handle error logs.
             echo 'File error';
+
+            return;
         }
+
+        // Pre-calculate header properties.
+        $header = $this->buildHeader($line);
+
+        // Extract remaining lines.
+        while (($line = fgets($handle)) !== false) {
+            $values = $this->getValues($line, $header);
+            // Reuse same file line on multiple repositories.
+            foreach ($repositories as $repository) {
+                $repository->saveFromRawData($values);
+            }
+        }
+        fclose($handle);
     }
 }

@@ -169,9 +169,10 @@ class Experience
             $case ?? $emptyPattern,
         ];
         // Escape separator.
-        array_walk($values, static function (string &$value) {
-            $value = str_replace(self::SEPARATOR, self::ESCAPER, $value);
-        });
+        $values = array_map(
+            static fn (string $value): string => str_replace(self::SEPARATOR, self::ESCAPER, $value),
+            $values
+        );
 
         return implode(self::SEPARATOR, $values);
     }

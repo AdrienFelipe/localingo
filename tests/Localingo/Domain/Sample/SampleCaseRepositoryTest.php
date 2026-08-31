@@ -35,13 +35,13 @@ class SampleCaseRepositoryTest extends ApplicationTestCase
             ],
             [
                 'values' => [
-                    'declined"1	declination/A	number\A	gender:A	word 1	translation\'1	state1	X	*:A',   //1 - #A1
-                    'declined"2	declination/A	number\A	gender:A	word 2	translation\'2			*:A',       //1 - #A1
-                    'declined"3	declination/A	number\A	gender:A	word 3	translation\'3	state3	X	*:B',   //2 - #A2
-                    'declined"1	declination/A	number\B	gender:A	word 1	translation\'1	state1		*:A',   //3 - #A3
-                    'declined"2	declination/A	number\B	gender:B	word 2	translation\'2	state2	X	*:A',   //4 - #A4
-                    'declined"1	declination/B	number\A	gender:A	word 1	translation\'1			*:A',       //5 - #B1
-                    'declined"2	declination/B	number\A	gender:A	word 2	translation\'2	state2	X	*:C',   //6 - #B2
+                    'declined"1	declination/A	number\A	gender:A	word 1	translation\'1	state1	X	*:A',   // 1 - #A1
+                    'declined"2	declination/A	number\A	gender:A	word 2	translation\'2			*:A',       // 1 - #A1
+                    'declined"3	declination/A	number\A	gender:A	word 3	translation\'3	state3	X	*:B',   // 2 - #A2
+                    'declined"1	declination/A	number\B	gender:A	word 1	translation\'1	state1		*:A',   // 3 - #A3
+                    'declined"2	declination/A	number\B	gender:B	word 2	translation\'2	state2	X	*:A',   // 4 - #A4
+                    'declined"1	declination/B	number\A	gender:A	word 1	translation\'1			*:A',       // 5 - #B1
+                    'declined"2	declination/B	number\A	gender:A	word 2	translation\'2	state2	X	*:C',   // 6 - #B2
                 ],
                 'expectations' => [
                     1 => ['declinations' => [], 'count' => 6],

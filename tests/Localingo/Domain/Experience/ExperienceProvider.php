@@ -64,7 +64,7 @@ class ExperienceProvider
         $test::assertEquals($expectedExperience->getCaseExperiences(), $experience->getCaseExperiences(), "$message cases");
     }
 
-    public static function fromSamples(?SampleCollection $good, ?SampleCollection $bad = null, int $score = null): Experience
+    public static function fromSamples(?SampleCollection $good, ?SampleCollection $bad = null, ?int $score = null): Experience
     {
         $experience = self::empty();
 

@@ -6,8 +6,6 @@ namespace App\Localingo\Infrastructure\Repository\Redis;
 
 use App\Localingo\Domain\User\User;
 use App\Localingo\Domain\User\UserRepositoryInterface;
-use ErrorException;
-use TypeError;
 
 class UserRedisRepository extends RedisRepository implements UserRepositoryInterface
 {
@@ -20,7 +18,7 @@ class UserRedisRepository extends RedisRepository implements UserRepositoryInter
             // TODO: make \__PHP_Incomplete_Class throw an exception from php.ini
             /** @var mixed|User $user */
             $user = unserialize($user_data, ['allowed_classes' => true]);
-        } catch (ErrorException | TypeError) {
+        } catch (\ErrorException|\TypeError) {
             return null;
         }
 

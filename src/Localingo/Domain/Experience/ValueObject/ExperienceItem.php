@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Localingo\Domain\Experience\ValueObject;
 
-use DateTimeImmutable;
-
 class ExperienceItem
 {
     private const float DECREASE_BAD = 0.9;
@@ -18,7 +16,7 @@ class ExperienceItem
     private string $key;
     private int $bad;
     private int $good;
-    private DateTimeImmutable $updated;
+    private \DateTimeImmutable $updated;
 
     public function __construct(string $key)
     {
@@ -108,13 +106,13 @@ class ExperienceItem
         $this->bad = (int) $values['bad'];
         // Prevent timezone issues.
         $updated = "{$values['updated']} 00:00:00";
-        $this->updated = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $updated) ?: $this->getCurrentDate();
+        $this->updated = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $updated) ?: $this->getCurrentDate();
 
         return $this;
     }
 
-    private function getCurrentDate(): DateTimeImmutable
+    private function getCurrentDate(): \DateTimeImmutable
     {
-        return new DateTimeImmutable('today midnight');
+        return new \DateTimeImmutable('today midnight');
     }
 }

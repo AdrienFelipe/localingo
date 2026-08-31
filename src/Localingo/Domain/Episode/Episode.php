@@ -71,20 +71,21 @@ class Episode
     {
         $key = $this->exercises->randomKeyFromAvailable();
         $this->currentExerciseKey = $key;
-        if (!is_string($key)) {
+        if (!is_string($key) || !$this->exercises->offsetExists($key)) {
             return null;
         }
 
-        return $this->exercises->offsetGet($key) ?: null;
+        return $this->exercises->offsetGet($key);
     }
 
     public function getCurrentExercise(): ?Exercise
     {
-        if (!is_string($this->currentExerciseKey)) {
+        $key = $this->currentExerciseKey;
+        if (!is_string($key) || !$this->exercises->offsetExists($key)) {
             return null;
         }
 
-        return $this->exercises->offsetGet($this->currentExerciseKey) ?: null;
+        return $this->exercises->offsetGet($key);
     }
 
     public function setState(EpisodeState $state): void

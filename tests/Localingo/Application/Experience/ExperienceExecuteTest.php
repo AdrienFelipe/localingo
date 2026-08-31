@@ -11,7 +11,6 @@ use App\Tests\Localingo\Domain\Episode\EpisodeProvider;
 use App\Tests\Localingo\Domain\Exercise\ExerciseProvider;
 use App\Tests\Shared\Infrastructure\Phpunit\ApplicationTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use LogicException;
 
 class ExperienceExecuteTest extends ApplicationTestCase
 {
@@ -99,7 +98,7 @@ class ExperienceExecuteTest extends ApplicationTestCase
                 $previousGood = $caseGood;
                 $previousBad = $caseBad;
             } else {
-                throw new LogicException("Item type not mapped: $itemType");
+                throw new \LogicException("Item type not mapped: $itemType");
             }
 
             // Assertions error message.
@@ -115,7 +114,7 @@ class ExperienceExecuteTest extends ApplicationTestCase
                 self::assertSame($previousGood, $item->getGood(), "$message good");
                 self::assertGreaterThan($previousBad, $item->getBad(), "$message bad");
             } else {
-                throw new LogicException("Experience type not mapped: $experienceType");
+                throw new \LogicException("Experience type not mapped: $experienceType");
             }
         }
     }

@@ -69,7 +69,7 @@ cs: ## Code Style (quality)
 ca: ## Code Analyzers (quality)
 		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G src tests'
 		$(EXEC_U) '$(FRAMEWORK)/vendor/bin/psalm --show-info=false'
-		$(EXEC_U) 'cd $(FRAMEWORK) && vendor/bin/deptrac analyze /app/depfile.yaml'
+		$(EXEC_U) 'cd $(FRAMEWORK) && vendor/bin/deptrac analyse --config-file=/app/depfile.yaml'
 
 .PHONY: sh
 sh: ## gets inside a container (make sh php)

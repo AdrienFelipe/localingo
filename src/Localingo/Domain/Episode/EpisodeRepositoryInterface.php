@@ -13,5 +13,5 @@ interface EpisodeRepositoryInterface
     /**
      * @param int|null $expires TTL in seconds
      */
-    public function save(Episode $episode, int $expires = null): void;
+    public function save(Episode $episode, ?int $expires = null): void;
 }

@@ -102,9 +102,9 @@ class SampleCaseSelectTest extends ApplicationTestCase
 
     /**
      * @param array<int, array{string, int}> $rawData
-     * @param string[] $exclude
-     * @param string[] $words
-     * @param string[] $expected
+     * @param string[]                       $exclude
+     * @param string[]                       $words
+     * @param string[]                       $expected
      */
     #[DataProvider('sampleExperienceProvider')]
     public function testSamplesFromExperience(array $rawData, int $count, array $exclude, array $words, array $expected): void

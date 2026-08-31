@@ -19,7 +19,7 @@ class YamlFile implements FileInterface
         // Find files.
         $files = glob(self::directory().'*'.self::FILE_EXTENSION);
         // Delete them.
-        if ($files) {
+        if ($files !== false) {
             /** @psalm-suppress UnusedFunctionCall */
             array_map('unlink', $files);
         }
@@ -30,7 +30,7 @@ class YamlFile implements FileInterface
      */
     protected static function directory(): string
     {
-        $path = (string) ($_ENV[FileInterface::KEY_FILES_DIR] ?? '');
+        $path = $_ENV[FileInterface::KEY_FILES_DIR] ?? '';
         if (!is_dir($path)) {
             throw new \RuntimeException(sprintf('A valid directory must be set in $_ENV: %s="%s"', FileInterface::KEY_FILES_DIR, $path));
         }

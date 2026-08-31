@@ -14,7 +14,8 @@ class ExperienceYamlFile extends YamlFile implements ExperienceFileInterface
 
     public function read(User $user): ?Experience
     {
-        if (!$data = $this->readYaml($this->filepath($user))) {
+        $data = $this->readYaml($this->filepath($user));
+        if ($data === null || $data === []) {
             return null;
         }
 
