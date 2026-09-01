@@ -3,3 +3,16 @@ $primary: darken(#428bca, 20%);
 
 // the ~ allows you to reference things in node_modules
 @import "~bootstrap/scss/bootstrap";
+
+// Fills the screen on phones, keeps the original card width from small screens up.
+.card-exercise {
+  width: 100%;
+  max-width: 20rem;
+  margin-inline: auto;
+}
+
+// 44px is the minimum comfortable tap target on touch screens.
+.btn-char {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+}

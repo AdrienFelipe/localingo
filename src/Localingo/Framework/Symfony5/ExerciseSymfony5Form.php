@@ -22,6 +22,10 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
     private const string STYLE_ROW_NORMAL = 'normal';
     private const string STYLE_ROW_HIDDEN = 'hidden';
 
+    // Drives the mobile keyboard layout: only these fields are ever typed into.
+    private const string LANG_TRANSLATION = 'en';
+    private const string LANG_LEARNED = 'pl';
+
     /**
      * @psalm-suppress TooManyTemplateParams
      *
@@ -107,12 +111,12 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
 
         // Exercise values.
         $properties = $exercise->getDTO()->asPropertyNames();
-        $this->addTextRow($builder, (string) $properties->translation, self::STYLE_ROW_BIG, $isExercise, $questions, $corrections);
-        $this->addTextRow($builder, (string) $properties->declined, $declinedStyle, $isExercise, $questions, $corrections);
-        $this->addTextRow($builder, (string) $properties->word, $wordStyle, $isExercise, $questions, $corrections);
-        $this->addTextRow($builder, (string) $properties->gender, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
-        $this->addTextRow($builder, (string) $properties->state, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections);
-        $this->addTextRow($builder, (string) $properties->case, $caseStyle, $isExercise, $questions, $corrections);
+        $this->addTextRow($builder, (string) $properties->translation, self::STYLE_ROW_BIG, $isExercise, $questions, $corrections, self::LANG_TRANSLATION);
+        $this->addTextRow($builder, (string) $properties->declined, $declinedStyle, $isExercise, $questions, $corrections, self::LANG_LEARNED);
+        $this->addTextRow($builder, (string) $properties->word, $wordStyle, $isExercise, $questions, $corrections, self::LANG_LEARNED);
+        $this->addTextRow($builder, (string) $properties->gender, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections, self::LANG_TRANSLATION);
+        $this->addTextRow($builder, (string) $properties->state, self::STYLE_ROW_NORMAL, $isExercise, $questions, $corrections, self::LANG_TRANSLATION);
+        $this->addTextRow($builder, (string) $properties->case, $caseStyle, $isExercise, $questions, $corrections, self::LANG_TRANSLATION);
 
         // Submit button.
         $this->addSubmitRow($builder, $isExercise);
@@ -126,11 +130,13 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
      * @param FormBuilderInterface<mixed> $builder
      * @param string[]                    $questions
      * @param array<string, bool>         $corrections
+     * @param string                      $lang        BCP 47 tag hinting the mobile keyboard language
      */
-    private function addTextRow(FormBuilderInterface $builder, string $name, string $style, bool $isExercise, array $questions, array $corrections): void
+    private function addTextRow(FormBuilderInterface $builder, string $name, string $style, bool $isExercise, array $questions, array $corrections, string $lang): void
     {
         $style_classes = $style === self::STYLE_ROW_BIG ? 'form-control-lg text-success' : 'form-control-sm bg-white';
         $isQuestion = in_array($name, $questions, true);
+        $isEditable = $isExercise && $isQuestion;
 
         if ($isExercise || !$isQuestion) {
             $correction_classes = '';
@@ -141,10 +147,15 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
             'required' => false,
             'attr' => [
                 'class' => "border-0 rounded-0 bg-light $style_classes $correction_classes",
-                'disabled' => !($isExercise && $isQuestion),
-                'readonly' => !($isExercise && $isQuestion),
+                'disabled' => !$isEditable,
+                'readonly' => !$isEditable,
                 'autocomplete' => 'off',
-                'autofocus ' => true,
+                'autofocus' => $isEditable,
+                'lang' => $lang,
+                // Mobile keyboards would otherwise capitalize and "correct" the answer.
+                'autocapitalize' => 'off',
+                'autocorrect' => 'off',
+                'spellcheck' => 'false',
             ],
             'row_attr' => [
                 'class' => 'form-floating mb-1 border-top',

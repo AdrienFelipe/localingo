@@ -1,24 +1,7 @@
-{# @var sample \App\Localingo\Domain\Sample\Sample #}
+{% extends 'base.html.twig' %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% block title %}LocaLingo!{% endblock %}
 
-
-    <meta charset="UTF-8">
-    <title>{% block title %}LocaLingo!{% endblock %}</title>
-
+{% block card %}
     Done!
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
-
-    {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
-    {% endblock %}
-
-</head>
-<body>
-{% block body %}{% endblock %}
-</body>
-</html>
+{% endblock %}

@@ -1,3 +1,6 @@
-{% for char in chars %}
-    <button data-controller="char" class="border p-2 pt-0 pb-1 mb-2 d-inline-block rounded bg-white user-select-none">{{ char }}</button>
-{% endfor %}
+<div class="p-2 d-flex flex-wrap gap-2 justify-content-center">
+    {% for char in chars %}
+        <button type="button" data-controller="char"
+                class="btn-char border rounded bg-white user-select-none">{{ char }}</button>
+    {% endfor %}
+</div>

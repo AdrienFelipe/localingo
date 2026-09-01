@@ -1,61 +1,37 @@
 {# @var sample \App\Localingo\Domain\Sample\Sample #}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'base.html.twig' %}
 
-    {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
-    {% endblock %}
+{% block title %}LocaLingo episode!{% endblock %}
 
-
-    <meta charset="UTF-8">
-    <title>{% block title %}LocaLingo episode!{% endblock %}</title>
-
-    <div class="container">
-        <div class="row justify-content-center mt-4">
-            <div class="col-auto">
-                <div class="card bg-light" style="width: 20rem;">
-                    {{ form_start(form) }}
-                    <div class="card-header border-0">
-                        <div class="row align-items-start">
-                            <div class="col">
-                                {{ sample.declination }}
-                            </div>
-                            <div class="col text-end">
-                                {{ sample.number }}
-                            </div>
-                        </div>
-                    </div>
-                    {{ form_row(form.translation) }}
-                    {{ form_row(form.declined) }}
-                    {{ form_row(form.word) }}
-                    {{ form_row(form.gender) }}
-                    {{ form_row(form.state) }}
-                    {{ form_row(form.case) }}
-                    {{ form_row(form.next) }}
-                    {{ form_end(form) }}
-
-                    {% if chars is not empty %}
-                        <div class="p-2">
-                            {% include '_exercise_card_chars.html.twig' with {'chars': chars}  %}
-                        </div>
-                    {% endif %}
-
-                    <div class="card-footer">
-                        <a href="#" class="card-link">Grammar tables</a>
-                    </div>
+{% block card %}
+    <div class="card bg-light card-exercise">
+        {{ form_start(form) }}
+        <div class="card-header border-0">
+            <div class="row align-items-start">
+                <div class="col">
+                    {{ sample.declination }}
+                </div>
+                <div class="col text-end">
+                    {{ sample.number }}
                 </div>
             </div>
         </div>
+        {{ form_row(form.translation) }}
+        {{ form_row(form.declined) }}
+        {{ form_row(form.word) }}
+        {{ form_row(form.gender) }}
+        {{ form_row(form.state) }}
+        {{ form_row(form.case) }}
+        {{ form_row(form.next) }}
+        {{ form_end(form) }}
+
+        {% if chars is not empty %}
+            {% include '_exercise_card_chars.html.twig' with {'chars': chars} %}
+        {% endif %}
+
+        <div class="card-footer">
+            <a href="#" class="card-link">Grammar tables</a>
+        </div>
     </div>
-
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
-
-</head>
-<body>
-{% block body %}{% endblock %}
-</body>
-</html>
+{% endblock %}
