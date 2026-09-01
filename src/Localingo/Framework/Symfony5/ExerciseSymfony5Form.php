@@ -22,7 +22,8 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
     private const string STYLE_ROW_NORMAL = 'normal';
     private const string STYLE_ROW_HIDDEN = 'hidden';
 
-    // Drives the mobile keyboard layout: only these fields are ever typed into.
+    // Content language of each field. Browsers use it for dictation and spellcheck,
+    // but no web API can switch the mobile keyboard layout.
     private const string LANG_TRANSLATION = 'en';
     private const string LANG_LEARNED = 'pl';
 
@@ -130,7 +131,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
      * @param FormBuilderInterface<mixed> $builder
      * @param string[]                    $questions
      * @param array<string, bool>         $corrections
-     * @param string                      $lang        BCP 47 tag hinting the mobile keyboard language
+     * @param string                      $lang        content language, used by dictation and spellcheck (it cannot switch the mobile keyboard)
      */
     private function addTextRow(FormBuilderInterface $builder, string $name, string $style, bool $isExercise, array $questions, array $corrections, string $lang): void
     {
@@ -152,6 +153,8 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
                 'autocomplete' => 'off',
                 'autofocus' => $isEditable,
                 'lang' => $lang,
+                // Labels the mobile return key as "go", so it submits the card.
+                'enterkeyhint' => 'go',
                 // Mobile keyboards would otherwise capitalize and "correct" the answer.
                 'autocapitalize' => 'off',
                 'autocorrect' => 'off',
