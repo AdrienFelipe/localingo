@@ -4,6 +4,9 @@ services:
     build:
       context: etc/dev/redis
       dockerfile: Dockerfile
+    volumes:
+      # Named volume: 'docker compose rm -v' only drops anonymous ones, so data survives.
+      - redis-data:/data
 
   nginx:
     image: nginx:1.15-alpine
@@ -26,3 +29,6 @@ services:
       - .:/app
     depends_on:
       - redis
+
+volumes:
+  redis-data:

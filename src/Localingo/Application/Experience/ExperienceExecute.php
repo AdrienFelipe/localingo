@@ -27,6 +27,8 @@ class ExperienceExecute
             $experience = $this->getExperience($exercise->getEpisode()->getUser());
             $isCorrect ? $experience->addGood($exercise) : $experience->addBad($exercise);
             $this->experienceSave->toRepository($experience);
+            // The repository is not durable, so keep the file in step with every answer.
+            $this->experienceSave->toFile($experience);
         }
     }
 

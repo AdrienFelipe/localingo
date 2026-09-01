@@ -47,7 +47,11 @@ class YamlFile implements FileInterface
     protected function writeYaml(string $filepath, array $data): void
     {
         $yaml = $this->yaml->dump($data);
-        file_put_contents($filepath, $yaml);
+        // Write then rename, so an interrupted write cannot truncate saved progress.
+        $temporary = $filepath.'.tmp';
+        if (file_put_contents($temporary, $yaml) === false || !rename($temporary, $filepath)) {
+            throw new \RuntimeException("Could not write '$filepath'");
+        }
     }
 
     /**
