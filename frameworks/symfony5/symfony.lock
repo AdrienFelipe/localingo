@@ -44,9 +44,6 @@
     "doctrine/lexer": {
         "version": "1.2.1"
     },
-    "felixfbecker/advanced-json-rpc": {
-        "version": "v3.2.1"
-    },
     "felixfbecker/language-server-protocol": {
         "version": "1.5.1"
     },
@@ -327,9 +324,6 @@
         "version": "v1.23.0"
     },
     "symfony/polyfill-mbstring": {
-        "version": "v1.23.0"
-    },
-    "symfony/polyfill-php73": {
         "version": "v1.23.0"
     },
     "symfony/polyfill-php80": {
