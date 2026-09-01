@@ -9,7 +9,7 @@ services:
       - redis-data:/data
 
   nginx:
-    image: nginx:1.15-alpine
+    image: nginx:1.29-alpine
     ports:
       - "8099:80"
     volumes:
