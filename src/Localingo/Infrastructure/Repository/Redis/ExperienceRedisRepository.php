@@ -11,6 +11,7 @@ use App\Localingo\Domain\User\User;
 
 class ExperienceRedisRepository extends RedisRepository implements ExperienceRepositoryInterface
 {
+    #[\Override]
     public function load(User $user): ?Experience
     {
         $data = (string) $this->redis->get($this->key($user));
@@ -27,6 +28,7 @@ class ExperienceRedisRepository extends RedisRepository implements ExperienceRep
         return is_a($experience, Experience::class) ? $experience : null;
     }
 
+    #[\Override]
     public function save(Experience $experience): void
     {
         $key = $this->key($experience->getUser());

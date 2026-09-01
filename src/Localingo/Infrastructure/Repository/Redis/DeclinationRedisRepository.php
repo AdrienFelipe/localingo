@@ -10,12 +10,14 @@ class DeclinationRedisRepository extends RedisRepository implements DeclinationR
 {
     private const string DECLINATION_INDEX = 'declinations';
 
+    #[\Override]
     public function saveFromRawData(array $data): void
     {
         $values = [$data[self::FILE_DECLINATION] => $data[self::FILE_PRIORITY]];
         $this->redis->zadd(self::DECLINATION_INDEX, $values);
     }
 
+    #[\Override]
     public function getByPriority(int $limit = 0, array $exclude = []): array
     {
         return self::sortedScan($this->redis, self::DECLINATION_INDEX, $limit, $exclude);

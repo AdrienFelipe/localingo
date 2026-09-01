@@ -10,12 +10,14 @@ class WordRedisRepository extends RedisRepository implements WordRepositoryInter
 {
     private const string WORD_INDEX = 'words';
 
+    #[\Override]
     public function saveFromRawData(array $data): void
     {
         $values = [$data[self::FILE_WORD] => $data[self::FILE_PRIORITY]];
         $this->redis->zadd(self::WORD_INDEX, $values);
     }
 
+    #[\Override]
     public function getByPriority(int $limit, array $exclude = []): array
     {
         return self::sortedScan($this->redis, self::WORD_INDEX, $limit, $exclude);

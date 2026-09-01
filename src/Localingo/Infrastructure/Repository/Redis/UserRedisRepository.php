@@ -11,6 +11,7 @@ class UserRedisRepository extends RedisRepository implements UserRepositoryInter
 {
     private const string KEY_USER_ID = 'user_id';
 
+    #[\Override]
     public function load(string $user_id): ?User
     {
         $user_data = (string) $this->redis->get($this->key($user_id));
@@ -25,6 +26,7 @@ class UserRedisRepository extends RedisRepository implements UserRepositoryInter
         return is_a($user, User::class) ? $user : null;
     }
 
+    #[\Override]
     public function save(User $user): void
     {
         $this->redis->set($this->key($user->getId()), serialize($user));

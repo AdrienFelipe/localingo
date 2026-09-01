@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Symfony5Response extends AbstractController implements ResponseInterface
 {
+    #[\Override]
     public function build(Template $template): Response
     {
         return $this->render($template->filename(), $template->variables());

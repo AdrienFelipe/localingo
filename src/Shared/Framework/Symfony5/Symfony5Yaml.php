@@ -7,11 +7,13 @@ use Symfony\Component\Yaml\Yaml;
 
 class Symfony5Yaml implements YamlInterface
 {
+    #[\Override]
     public function dump(array $data): string
     {
         return Yaml::dump($data);
     }
 
+    #[\Override]
     public function parseFile(string $filepath): mixed
     {
         return Yaml::parseFile($filepath);

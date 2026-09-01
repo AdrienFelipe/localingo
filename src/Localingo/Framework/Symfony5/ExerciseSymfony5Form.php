@@ -41,6 +41,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
         $this->form->handleRequest($request);
     }
 
+    #[\Override]
     public function isSubmitted(Exercise $exercise): bool
     {
         // Initialize form if not done yet.
@@ -52,6 +53,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
         return $this->form->isSubmitted() && $this->form->isValid();
     }
 
+    #[\Override]
     public function getSubmitted(Exercise $exercise): ExerciseDTO
     {
         // Initialize form if not done yet.
@@ -72,6 +74,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
      *
      * @return FormView<mixed>
      */
+    #[\Override]
     public function buildExerciseForm(Exercise $exercise): FormView
     {
         $questions = $exercise->getQuestions();
@@ -80,6 +83,7 @@ class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInt
         return $this->formBuilder($exercise, true, $questions)->getForm()->createView();
     }
 
+    #[\Override]
     public function buildAnswersForm(Exercise $exercise, array $corrections): FormView
     {
         return $this->formBuilder($exercise, false, $corrections)->getForm()->createView();

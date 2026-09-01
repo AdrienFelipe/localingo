@@ -3,6 +3,8 @@
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
+# Auto-generated for PHP config autocompletion; this app configures in YAML.
+/config/reference.php
 /public/bundles/
 /var/
 /vendor/

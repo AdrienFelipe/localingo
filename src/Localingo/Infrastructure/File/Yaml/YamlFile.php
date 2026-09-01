@@ -14,6 +14,7 @@ class YamlFile implements FileInterface
         $this->yaml = $yaml;
     }
 
+    #[\Override]
     public function clear(): void
     {
         // Find files.

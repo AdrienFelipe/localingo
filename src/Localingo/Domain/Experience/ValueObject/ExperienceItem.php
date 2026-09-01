@@ -35,7 +35,7 @@ class ExperienceItem
     {
         $this->update();
         $this->good += $score;
-        $this->bad = (int) ($this->bad * self::DECREASE_BAD);
+        $this->bad = (int) ((float) $this->bad * self::DECREASE_BAD);
     }
 
     public function getGood(): float
@@ -81,7 +81,7 @@ class ExperienceItem
             return;
         }
 
-        $this->good = (int) ($this->good * self::DECREASE_GOOD ** ($days / self::DECREASE_GOOD_DAYS));
+        $this->good = (int) ((float) $this->good * self::DECREASE_GOOD ** ((float) $days / self::DECREASE_GOOD_DAYS));
         $this->updated = $currentDate;
     }
 

@@ -12,6 +12,7 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
 {
     private const string SAMPLE_INDEX = 'sample';
 
+    #[\Override]
     public function saveFromRawData(array $data): void
     {
         // TODO: add proper checks.
@@ -56,6 +57,7 @@ class SampleRedisRepository extends RedisRepository implements SampleRepositoryI
         );
     }
 
+    #[\Override]
     public function loadMultiple(int $limit = 0, ?SampleCollection $exclude = null, mixed $words = null, mixed $declinations = null, mixed $genders = null, mixed $numbers = null, mixed $cases = null): SampleCollection
     {
         // Transform excluded samples into a list of strings.

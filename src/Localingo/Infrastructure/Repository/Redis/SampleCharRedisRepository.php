@@ -10,6 +10,7 @@ class SampleCharRedisRepository extends RedisRepository implements SampleCharRep
 {
     private const string SAMPLE_INDEX = 'chars';
 
+    #[\Override]
     public function saveFromRawData(array $data): void
     {
         // Focus on values that will have to be written.
@@ -21,6 +22,7 @@ class SampleCharRedisRepository extends RedisRepository implements SampleCharRep
         }
     }
 
+    #[\Override]
     public function loadList(): array
     {
         $values = $this->redis->smembers(self::SAMPLE_INDEX);

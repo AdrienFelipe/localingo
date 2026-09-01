@@ -29,6 +29,7 @@ class Symfony5Session implements SessionInterface
     /**
      * Enforce type-hinting.
      */
+    #[\Override]
     public function set(string $name, mixed $value): void
     {
         $this->session->set($name, $value);
@@ -37,11 +38,13 @@ class Symfony5Session implements SessionInterface
     /**
      * Enforce type-hinting.
      */
+    #[\Override]
     public function get(string $name, mixed $default = null): mixed
     {
         return $this->session->get($name, $default);
     }
 
+    #[\Override]
     public function clear(): void
     {
         $this->session->clear();

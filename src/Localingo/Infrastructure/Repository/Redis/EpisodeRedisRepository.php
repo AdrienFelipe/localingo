@@ -11,6 +11,7 @@ use App\Localingo\Domain\User\User;
 
 class EpisodeRedisRepository extends RedisRepository implements EpisodeRepositoryInterface
 {
+    #[\Override]
     public function load(User $user, string $episode_id): ?Episode
     {
         $data = (string) $this->redis->get(self::key($user, $episode_id));
@@ -25,6 +26,7 @@ class EpisodeRedisRepository extends RedisRepository implements EpisodeRepositor
         return is_a($episode, Episode::class) ? $episode : null;
     }
 
+    #[\Override]
     public function save(Episode $episode, ?int $expires = null): void
     {
         $key = self::key($episode->getUser(), $episode->getId());

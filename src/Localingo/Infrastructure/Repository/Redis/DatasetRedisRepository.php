@@ -8,16 +8,19 @@ use App\Localingo\Domain\Dataset\DatasetRepositoryInterface;
 
 class DatasetRedisRepository extends RedisRepository implements DatasetRepositoryInterface
 {
+    #[\Override]
     public function clearAllData(): void
     {
         $this->redis->flushall();
     }
 
+    #[\Override]
     public function saveFileHash(string $filename, string $fileHash): void
     {
         $this->redis->set($this->hashKey($filename), $fileHash);
     }
 
+    #[\Override]
     public function loadFileHash(string $filename): string
     {
         return (string) $this->redis->get($this->hashKey($filename));

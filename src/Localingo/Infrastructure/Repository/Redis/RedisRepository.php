@@ -20,6 +20,7 @@ class RedisRepository implements RepositoryInterface
         $this->redis = $redis;
     }
 
+    #[\Override]
     public function clear(): void
     {
         $this->redis->flushall();

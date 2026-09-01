@@ -24,7 +24,7 @@ class Symfony5Kernel extends BaseKernel
 
         if (is_file(self::configPath().'/services.yaml')) {
             $container->import(self::configPath().'/services.yaml');
-            $container->import(self::configPath().'/{services}_'.(string) $this->environment.'.yaml');
+            $container->import(self::configPath().'/{services}_'.$this->environment.'.yaml');
         } else {
             $container->import(self::configPath().'/{services}.php');
         }
@@ -32,7 +32,7 @@ class Symfony5Kernel extends BaseKernel
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import(self::configPath().'/{routes}/'.(string) $this->environment.'/*.yaml');
+        $routes->import(self::configPath().'/{routes}/'.$this->environment.'/*.yaml');
         $routes->import(self::configPath().'/{routes}/*.yaml');
 
         if (is_file(self::configPath().'/routes.yaml')) {
@@ -42,6 +42,7 @@ class Symfony5Kernel extends BaseKernel
         }
     }
 
+    #[\Override]
     public function getProjectDir(): string
     {
         return self::FRAMEWORK_DIR;

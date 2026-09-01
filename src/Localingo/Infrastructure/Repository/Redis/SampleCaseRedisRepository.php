@@ -15,6 +15,7 @@ class SampleCaseRedisRepository extends RedisRepository implements SampleCaseRep
     /**
      * @Warning: affects caseToSample() method.
      */
+    #[\Override]
     public function saveFromRawData(array $data): void
     {
         // TODO: add proper checks.
@@ -64,6 +65,7 @@ class SampleCaseRedisRepository extends RedisRepository implements SampleCaseRep
         ]);
     }
 
+    #[\Override]
     public function getCases(array $declinations): SampleCollection
     {
         $samples = new SampleCollection();

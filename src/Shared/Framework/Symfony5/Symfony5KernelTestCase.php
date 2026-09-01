@@ -10,11 +10,13 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class Symfony5KernelTestCase extends KernelTestCase implements TestKernelInterface
 {
+    #[\Override]
     public static function boot(): void
     {
         self::bootKernel();
     }
 
+    #[\Override]
     public static function loadService(string $class): ?object
     {
         return self::getContainer()->get($class);

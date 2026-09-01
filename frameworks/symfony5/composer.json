@@ -8,16 +8,16 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "predis/predis": "^1.1",
-        "symfony/asset": "6.4.*",
-        "symfony/console": "6.4.*",
-        "symfony/dotenv": "6.4.*",
+        "symfony/asset": "7.4.*",
+        "symfony/console": "7.4.*",
+        "symfony/dotenv": "7.4.*",
         "symfony/flex": "^2.0",
-        "symfony/form": "6.4.*",
-        "symfony/framework-bundle": "6.4.*",
-        "symfony/runtime": "6.4.*",
-        "symfony/twig-bundle": "6.4.*",
+        "symfony/form": "7.4.*",
+        "symfony/framework-bundle": "7.4.*",
+        "symfony/runtime": "7.4.*",
+        "symfony/twig-bundle": "7.4.*",
         "symfony/webpack-encore-bundle": "^2.0",
-        "symfony/yaml": "6.4.*",
+        "symfony/yaml": "7.4.*",
         "twig/extra-bundle": "^3.0",
         "twig/twig": "^3.0"
     },
@@ -66,7 +66,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.4.*"
+            "require": "7.4.*"
         }
     },
     "require-dev": {
@@ -74,8 +74,8 @@
         "friendsofphp/php-cs-fixer": "^3.0",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^11.0",
-        "symfony/browser-kit": "6.4.*",
-        "symfony/css-selector": "6.4.*",
+        "symfony/browser-kit": "7.4.*",
+        "symfony/css-selector": "7.4.*",
         "symfony/phpunit-bridge": "^7.0",
         "vimeo/psalm": "^6.0"
     }

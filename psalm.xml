@@ -8,4 +8,9 @@
             <directory name="frameworks" />
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <!-- The app advertises being extendable to other languages and frameworks,
+             so sealing every class is a design call, not a lint fix. -->
+        <ClassMustBeFinal errorLevel="suppress"/>
+    </issueHandlers>
 </psalm>

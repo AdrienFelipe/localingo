@@ -12,6 +12,7 @@ class ExperienceYamlFile extends YamlFile implements ExperienceFileInterface
 {
     private const string FILENAME = '-experience'.self::FILE_EXTENSION;
 
+    #[\Override]
     public function read(User $user): ?Experience
     {
         $data = $this->readYaml($this->filepath($user));
@@ -26,6 +27,7 @@ class ExperienceYamlFile extends YamlFile implements ExperienceFileInterface
         return $experience;
     }
 
+    #[\Override]
     public function write(Experience $experience): void
     {
         $this->writeYaml($this->filepath($experience->getUser()), $experience->serialize());
