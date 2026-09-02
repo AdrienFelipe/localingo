@@ -81,7 +81,7 @@ class ExperienceItem
             return;
         }
 
-        $this->good = (int) ((float) $this->good * self::DECREASE_GOOD ** ((float) $days / self::DECREASE_GOOD_DAYS));
+        $this->good = (int) ((float) $this->good * self::DECREASE_GOOD ** ((float) $days / (float) self::DECREASE_GOOD_DAYS));
         $this->updated = $currentDate;
     }
 

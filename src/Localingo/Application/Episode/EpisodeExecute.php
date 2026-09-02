@@ -7,6 +7,7 @@ namespace App\Localingo\Application\Episode;
 use App\Localingo\Application\Exercise\ExerciseExecute;
 use App\Localingo\Application\Exercise\ExerciseValidate;
 use App\Localingo\Application\Experience\ExperienceExecute;
+use App\Localingo\Application\History\HistoryRecord;
 use App\Localingo\Domain\Episode\Episode;
 use App\Localingo\Domain\Episode\ValueObject\EpisodeState;
 use App\Localingo\Domain\Exercise\Exception\ExerciseMissingStateOrder;
@@ -19,13 +20,15 @@ class EpisodeExecute
     private ExerciseValidate $exerciseValidate;
     private ExerciseExecute $exerciseExecute;
     private ExperienceExecute $experienceExecute;
+    private HistoryRecord $historyRecord;
 
-    public function __construct(EpisodeSave $episodeSave, ExerciseValidate $exerciseValidate, ExerciseExecute $exerciseExecute, ExperienceExecute $experienceExecute)
+    public function __construct(EpisodeSave $episodeSave, ExerciseValidate $exerciseValidate, ExerciseExecute $exerciseExecute, ExperienceExecute $experienceExecute, HistoryRecord $historyRecord)
     {
         $this->episodeSave = $episodeSave;
         $this->exerciseValidate = $exerciseValidate;
         $this->exerciseExecute = $exerciseExecute;
         $this->experienceExecute = $experienceExecute;
+        $this->historyRecord = $historyRecord;
     }
 
     public function applyQuestion(Episode $episode): void
@@ -44,6 +47,7 @@ class EpisodeExecute
         // Update exercise state.
         $corrections = $this->exerciseValidate->getCorrections($exercise, $answers);
         $isCorrect = $this->exerciseValidate->isCorrect($corrections);
+        $this->historyRecord->answered($exercise, $answers, $corrections, $isCorrect);
         $this->exerciseExecute->applyAnswer($exercise, $isCorrect);
 
         // Update episode state.

@@ -2,9 +2,10 @@
 
 namespace App\Localingo\Infrastructure\File\Yaml;
 
+use App\Localingo\Infrastructure\File\LocalFile;
 use App\Shared\Domain\File\FileInterface;
 
-class YamlFile implements FileInterface
+class YamlFile extends LocalFile implements FileInterface
 {
     protected const string FILE_EXTENSION = '.local.yaml';
     private YamlInterface $yaml;
@@ -17,29 +18,13 @@ class YamlFile implements FileInterface
     #[\Override]
     public function clear(): void
     {
-        // Find files.
-        $files = glob(self::directory().'*'.self::FILE_EXTENSION);
+        // Every local file, not just YAML: this is the entry point tests use to reset state.
+        $files = glob(self::directory().'*.local.*');
         // Delete them.
         if ($files !== false) {
             /** @psalm-suppress UnusedFunctionCall */
             array_map('unlink', $files);
         }
-    }
-
-    /**
-     * Always returns a directory with path with a trailing slash.
-     */
-    protected static function directory(): string
-    {
-        $path = $_ENV[FileInterface::KEY_FILES_DIR] ?? '';
-        if (!is_dir($path)) {
-            throw new \RuntimeException(sprintf('A valid directory must be set in $_ENV: %s="%s"', FileInterface::KEY_FILES_DIR, $path));
-        }
-        if (!is_writable($path)) {
-            throw new \RuntimeException("'$path' is not writable");
-        }
-
-        return rtrim($path, '/').'/';
     }
 
     /**
