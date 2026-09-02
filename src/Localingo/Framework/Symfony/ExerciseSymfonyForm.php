@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Localingo\Framework\Symfony5;
+namespace App\Localingo\Framework\Symfony;
 
 use App\Localingo\Domain\Exercise\Exercise;
 use App\Localingo\Domain\Exercise\ExerciseDTO;
@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 
-class ExerciseSymfony5Form extends AbstractController implements ExerciseFormInterface
+class ExerciseSymfonyForm extends AbstractController implements ExerciseFormInterface
 {
     private const string STYLE_ROW_BIG = 'big';
     private const string STYLE_ROW_NORMAL = 'normal';

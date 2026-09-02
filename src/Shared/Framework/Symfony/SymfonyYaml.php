@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Shared\Framework\Symfony5;
+namespace App\Shared\Framework\Symfony;
 
 use App\Localingo\Infrastructure\File\Yaml\YamlInterface;
 use Symfony\Component\Yaml\Yaml;
 
-class Symfony5Yaml implements YamlInterface
+class SymfonyYaml implements YamlInterface
 {
     #[\Override]
     public function dump(array $data): string

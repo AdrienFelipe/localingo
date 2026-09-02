@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shared\Framework\Symfony5;
+namespace App\Shared\Framework\Symfony;
 
 use App\Shared\Domain\Test\TestKernelInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 /**
  * @psalm-suppress PropertyNotSetInConstructor
  */
-class Symfony5KernelTestCase extends KernelTestCase implements TestKernelInterface
+class SymfonyKernelTestCase extends KernelTestCase implements TestKernelInterface
 {
     #[\Override]
     public static function boot(): void

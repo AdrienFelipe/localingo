@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Framework\Symfony5;
+namespace App\Shared\Framework\Symfony;
 
 use App\Shared\Domain\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface as SymfonySession;
+use Symfony\Component\HttpFoundation\Session\SessionInterface as SymfonySessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
-class Symfony5Session implements SessionInterface
+class SymfonySession implements SessionInterface
 {
-    private SymfonySession $session;
+    private SymfonySessionInterface $session;
 
     public function __construct(RequestStack $requestStack)
     {
